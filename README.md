@@ -1,7 +1,7 @@
 
 ```bash
 .
-├── 2023_serrapilheira_ICTP.Rproj   # RStudio project
+├── 2024_statistical_modeling.Rproj   # RStudio project
 ├── README.md                       # this file
 ├── _site.yml                       # site config
 ├── 00_instructions.Rmd
