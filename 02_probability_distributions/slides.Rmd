@@ -1,0 +1,463 @@
+---
+title: "Random variables and probability distributions"
+subtitle: "Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology - 2023"  
+author: 
+  - "Andrea Sánchez-Tapia"
+date: 'January 10th-11th 2023'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+self-contained: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+options(servr.daemon = TRUE)#para que no bloquee la sesión
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_accent(
+  base_color = "#03045E",
+  colors = c(
+    red = "#A70000",
+    white = "#FFFFFF",
+    black = "#181818"
+  ),
+  text_bold_color = "#03045E",
+  header_font_google = google_font("Roboto Condensed"),
+  text_font_google = google_font("Roboto Condensed", "300", "300i"),
+  code_font_google = google_font("Fira Mono"), text_font_size = "32px",
+  code_font_size = "32px"
+)
+xaringanExtra::use_share_again()
+
+# clipboard
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
+    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
+  ),
+  rmarkdown::html_dependency_font_awesome()
+)
+
+```
+
+ 
+
+## Today's key concepts
+
++ Random variables
++ Discrete random variables: Bernoulli, Binomial, Poisson.
++ Continuous random variables
+    + Probability density functions, PDFs
+    + Cumulative density functions, CDFs
++ Expected value, variance
++ Gaussian distribution and its key properties
++ Central limit theorem and the Law of large Numbers
+
+---
+
+## Empirical data
+
++ Assuming __random__ and __independent__ sampling 
+
+--
+
++ We study variables for which __the specific outcome of a single trial or measurement is unknown__ even if we understand the set of all possible outcomes (the sample space)
+
+--
+
++ Given enough experiments/trials, we can hypothesize/estimate how often the possible outcomes will happen: their __probability distribution__ 
+
+--
+    + A coin toss/the presence of a species
+--
+    + The number of individuals in a given sample
+--
+    + The length of a body part
+
+---
+## Random variables
+
++ __Random variables__ are mathematical formalizations of these several types of data
+
+--
+
++ Some experiment outcomes are __discrete__, countable and some are not, they can take any value inside __continuous__ intervals.
+
+--
+
++ __Probability distributions__: they represent __theoretical__ distribution of a random variable of a certain kind. (How probable are each of the outcomes)
+
+--
+
++ Random variables can be described by their __parameters__: key properties that allow us to reconstruct their probability distributions
+
+???
+somebody talked yesterday about "probabilistic models"
+
+---
+class: inverse, middle, center 
+
+# Discrete random variables
+
+---
+## Bernoulli distribution
+
++ The simplest experiment has only two outcomes. A coin flip. 
+
+--
+
++ The probability $p$ and $q$ of the two outcomes sums 1. $p + q = 1$   
+
+--
+
++ If equiprobable, then $p = q = 0.5$ 
+$$X \thicksim  Bernoulli(p)$$
+--
+
++ Repeated Bernoulli trials form a __Binomial Random Variable__. The parameter $n$ = number of trials is key to understanding Binomial Random Variables
+
+
+---
+## Binomial distribution 
+
+$$X \thicksim  Bin(n,p)$$
+
+--
+
++ The number of successes $X$ in $n$ independent Bernoulli trials with $P(success) = p$
+
+--
+
++ The probability of $X$ successes: $p^X$
+
+--
+
++ The probability of $n-X$ failures: $(1-p)^{(n-X)}$
+
+--
+
++ The number of __combinations__ of X successes in n trials: $$\binom{n}{X}$$
+
+---
+class: inverse 
+
+What is the probability of 11 successes in 25 trials when $p = 0.5$?
+
+```{r}
+n <- 25
+p <- 0.5
+X <- 11
+P_success <- p^X
+P_failure <- (1 - p)^(n - X)
+combinations <- choose(n, X)
+P_success * P_failure * combinations
+dbinom(X, size = n, prob = p)
+```
+
+---
+### We can calculate P(X) for every X in 0:25
+
+```{r, eval = F}
+P_X <- dbinom(1:25, size = n, prob = p)
+
+plot(P_X, xlab = "X")
+title(
+  "Probability distribution of X ~ Binomial(25, 0.5)")
+abline(v = X ,col = "red")
+abline(h = dbinom(X, size = n, prob = p) ,col = "red")
+```
+
+---
+### We can calculate P(X) for every X in 0:25
+
+```{r, echo = F}
+P_X <- dbinom(1:25, size = n, prob = p)
+plot(P_X, xlab = "X")
+title("Probability distribution of X ~ Binomial(25, 0.5)")
+abline(v = X ,col = "red")
+abline(h = dbinom(X, size = n, prob = p) ,col = "red")
+```
+
+
+<!--
+```
+dbinom(x, size, prob)
+pbinom(x, size, prob)
+qbinom(p, size, prob)
+rbinom(n, size, prob)
+```
+
++ `size` is $n$, the number of trials 
++ `prob` is $p$, the probability of a success in a single Bernoulli trial
++ `dbinom` gives the probability density for the values in `x`
++ `pbinom` gives the cumulative density of the distribution (e.g. for values equal or lesser than `x`)
++ `qbinom` gives the value in x that correspond to the cumulative probability p
++ `rbinom` samples n values from the distribution defined by $n$ (`size`) and $p$ (`prob`)
+-->
+
+
+---
+
+## Poisson random variables
+
+ <!-- + n large, p small, ex. rare plants, animals, unobserved trials --> 
+
++ The number of events (__counts__) in samples of fixed area, or during a fixed interval of time
+
+--
+
++ Each sample independent from the other
+
+--
+
++ The starting point of such a distribution is zero, a count. 
+
+--
+
+
++ A single parameter: $\lambda$, a _rate_ parameter: the __average number of events per sample__. 
+
+--
+
+$$X \sim Poisson(\lambda)$$
+
+---
+## Poisson random variables
+
++ The probability of any observation is: 
+
+$$P(X) = \frac{\lambda^X}{X!} e^{-\lambda} $$  
+
+--
+
++ When the event is not very frequent, a reverse-J-shaped curve with a long right tail 
+
+--
+
++ When the event becomes more frequent, the most frequent value increases too and the curve becomes more symmetrical.
+
+--
+
++ With large lambda values, the distribution approaches the shape of a normal curve (but remember it is discrete!)
+
+
+ <!-- Relationship between binomial, Poisson and normal distributions
+ A binomial can be approached to a Poisson when n is large compared to p
+ When \lambda increases, the Poisson distribution becomes more symmetrical and approaches a normal distribution. 
+ Binomial between 0 and n (number of trials)
+ Poisson is not bounded, long left tail --> 
+
+---
+class: inverse
+
+```{r, echo = TRUE, eval = TRUE}
+p_poisson <- function(x, lambda) {
+  (lambda ^ x / factorial(x)) * exp(-lambda)
+}
+P_x <- p_poisson(0:5, lambda = 1)
+#P_x <- dpois(0:5, lambda = 1)
+P_x
+#plot(P_x, xlab = X)
+
+```
+
+---
+
+## Expected value of discrete variables
+
++ __Weighted average__, where each value is given the importance according to its probability 
+
+--
+
+$$ E(X) = \sum_{1=1}^{n}{a_ip_i}$$
+
+--
+
++ Bernoulli: $p$
++ Binomial: $np$
++ Poisson: $\lambda$
+
+--
+
+Important: This expectation just marks the tendency and may be outside of the range of possible values of $X$. 
+
+---
+## Variance of a discrete random variable
+
+$$\sigma^2(X) = E[X-E(X)]^2$$
+--
+
++ Bernoulli: $p(1-p)$
++ binomial: $np(1-p)$
++ Poisson: $\lambda$
+
+---
+class: inverse, center, middle
+
+# Continuous random variables
+
+
+---
+
+## Continuous random variables
+
++ Measurements (length, biomass, weight) in a continuous scale, imposible to count or to define the specific set of outcomes
+
+--
+
++ Precision depends on measurement
+
+--
+
++ The random variable is represented by a __probability density function__, a continuous curve depicting "relative" probabilities
+
+---
+## Probability density function (PDF)
+
+
++ Total area under the PDF curve equals 1
+
+--
+
++ The specific probability of a single value is zero. Asking this does not make sense because there are infinite possible values
+    
+--
+
++ Instead, We define the probability of $X$ belonging to an interval.
+
+--
+
++ The probability is __the area under the curve__ within the interval: the __integral__
+
+---
+
+## Cumulative distribution function (CDF)
+
++ The probability of $X$ being lower than $Y$
+$F(Y) = P(X < Y)$ is the area under the PDF curve in the interval where $X < Y$
+
++ The CDF sums the areas below Y and therefore is an ever-increasing (monotonic) curve from 0 to 1
+
+
+---
+## Uniform random variable
+
+$X \thicksim {Uniform[a,b]}$
+
++ Defined for an interval $[a, b]$
+
+--
+
++ The probability of sub-intervals of the same width is the same $[a, b]$
+
+--
+
++ The Distribution Probability Function is $1/b-a$ for all the $[a, b]$ interval. (The area under the curve is "divided" by the width of this interval)
+
+
+<!-- $E(X) = \frac{b + a}{2}$
+$\sigma^2(X) = \frac{(b - a)^2}{12}$-->
+
+
+
+---
+
+## Expected value 
+
++ For any particular observation, 0
++ Subintervals $\Delta x$
+
+$$\sum_{i=1}^{n}{x_if(x_i)\Delta x}$$
+$$E(X) = \int{xf(x)dx}$$
+
+---
+## Normal random variables
+
++ "Gaussian" or normal distribution
+
+--
+
++ The basis for linear regression and analysis of variance
+
+--
+
++ Fits many empirical datasets
+
+--
+
++ Measurements, symmetric around some average value, with some variation around this value
+
+--
+
+$$X \thicksim{\mathcal{N}(\mu, \sigma})$$
+--
+
++ $E(X) = \mu$, Variance: $\sigma^2(X) = \sigma^2$
+
+--
+
+$$\mathcal{N}(\mu, \sigma) = \frac{1}{\sigma \sqrt{2\pi}}\;e^{-\frac{1}{2}\left(\frac{Y-\mu}{\sigma}\right)^2} $$
+
+---
+## Normal random variables
+
++ Standard normal random variable: $Z$ $\mu = 0$ and $\sigma = 1$
+
+--
+
++  Standardizing: substract the mean and divide by the standard deviation
+
+--
+
++ Any random variable can be standardized that way.
+
+---
+## Other continuous random variables
+
++ __Log-normal__ 
+    + $X$ such that $ln(X)$ is a normal random variable. 
+    + Skewed, long tail to the right 
+    
+    $$E(X) = e^ {\frac{2\mu + \sigma^2}{2}}$$
+
++ __Exponential__
+    + Related to Poisson. Rare events in a continuous space. 
++ Others... Student-t, $\chi^2$, F, gamma, inverse gamma, beta.
+
+---
+## The Central Limit Theorem
+
++ Several _independent_ random variables with the same expected value and variance, any distribution 
+
+--
+
+- Their sum or average can be standardized to a standard normal random variable ( $Z$ ) _provided the sample size is large enough_.
+
+--
+
+- "Arithmetic means of large samples or random variables conform to normal distribution even if the underlying distribution does not"
+
+
+### This allows using statistical tests that assume/require normal distributions. 
+
+---
+## Law of Large Numbers 
+
+Given increasing sampling size, the means of samples will converge towards the means of the population, $\mu$. 
+
+---
+## References
+
++ Gotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.
+
++ McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.

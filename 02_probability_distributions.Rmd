@@ -1,0 +1,30 @@
+---
+title: "Probability distributions"
+description: |
+author:
+  - name: Paulo Inácio K. L. Prado
+date: "2024-01-29"
+output: 
+    distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+# Slides
+
+```{r slides}
+#| eval: true
+xaringanExtra::embed_xaringan("02_probability_distributions/slides.html")
+```
+
+# Lab
+
+[Lab](02_probability_distributions/lab.html)
+
+# References
+
+
+

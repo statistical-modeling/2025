@@ -1,0 +1,55 @@
+---
+title: "Maximum likelihood method"
+description: |
+  What's the likelihood function, and how it can be used to fit statistical models to data.
+author:
+  - name: Paulo Inácio K. L. Prado (PI)
+    url: 
+    affiliation: 
+    affiliation_url:
+date: "2024-02-02"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Slides
+
+```{r slides}
+#| eval: true
+xaringanExtra::embed_xaringan("04_maximum_likelihood/slides.html")
+```
+
+```{r slides-2}
+#| eval: true
+xaringanExtra::embed_xaringan("04_maximum_likelihood/slides_2.html")
+```
+
+# Lab
+
+[Maximum likelihood fitting and inference](04_maximum_likelihood/lab.html)
+
+# Further reading
+
+ * Likelihood and all that. chapter 6 in: Bolker, B.M. 2008
+    Ecological Models and Data in R Princeton: Princeton University
+    Press.
+ * Hobbs, N.T. & Hilborn, R. 2006. Alternatives to statistical
+   hypothesis testing in ecology: A guide to self-teaching. Ecological
+   Applications: 16(1): 5-19.
+ * The  Concept of Likelihood , chapter 2 *in*: Edwards, A.W.F., 1992
+    Likelihood. Baltimore: John Hopkins University Press.   
+ * Introduction, and Information and likelihood theory. chapters 1-2
+  **in** Burnham, K. P., & Anderson, D. R. (2002). Model Selection and
+  Multimodel Inference: A Practical-Theoretic Approach, 2nd ed. New
+  York, Springer-Verlag.	
+ * [Vignette of the package `bbmle`](https://cran.r-project.org/web/packages/bbmle/vignettes/mle2.pdf) 
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+---
+title: "Multiple regression and model comparison"
+description: |
+  Multiple regression, model selection, AIC, overfitting.
+author:
+  - name: Paulo Inácio K. L. Prado (PI)
+    url: 
+    affiliation: 
+    affiliation_url:
+date: "2024-01-31"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Slides
+
+```{r slides}
+#| eval: true
+xaringanExtra::embed_xaringan("06_multiple_regression/slides.html")
+```
+
+
+# Further reading
+
+
+
+
+
+
+

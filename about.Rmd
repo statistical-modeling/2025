@@ -1,0 +1,12 @@
+---
+title: "About us"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Sara Mortara
+Diogo Melo  
+Paulo Inácio Prado

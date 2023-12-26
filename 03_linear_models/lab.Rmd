@@ -1,0 +1,147 @@
+---
+title: "Linear regression Lab"
+author:
+ - "Andrea Sánchez-Tapia"
+ - "Paulinha Lemos-Costa"
+date: "2023-01-13"
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---
+
+
+```{r setup, echo=FALSE}
+library(rmarkdown)
+knitr::opts_chunk$set(eval = TRUE)
+# clipboard
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
+    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
+  ),
+  rmarkdown::html_dependency_font_awesome()
+  )
+```
+
+# Simple linear models
+
+Linear regressions in R assume a linear relationship between one or more predictor variables $X_i$ and a response variable $Y$. 
+
+$$y_i \sim \mathcal{N}(\mu_i, \sigma) \\
+\mu_i = \beta_0 + \beta_1 x_i$$
+
+The first element of this model describes how the response variable $Y$ can be modeled as a normal random variable with mean and standard deviation. 
+
+The second element of this model adds the effect of the predictor variable $X$ on $Y$, based on the causal relationship 
+$X \rightarrow Y$. In this simple case, the relationship is linear and can be described by the equation of a line with intercept $\beta_0$ and slope $\beta_1$.
+
+## Generating the dataset
+
+In the introductory lecture for linear models, we used an example dataset to fit a simple regression model.
+
+_The dataset itself was generated according to the specifications of the model above_. We are going to recreate the dataset and some of the calculations presented during the class. 
+
+```{r create_dataset}
+set.seed(4) #ensures the result is reproducible. The random number generation can vary between Operative systems so maybe there will be different datasets in the classroom
+x_i <- seq(1, 5, by = 0.5)
+n <- length(x_i)
+mu <- 1.2 + 3.5 * x_i
+y_i <- rnorm(n = 9, mean = mu, sd = 3)
+lm_data <- data.frame(x_i,  mu, y_i, res = y_i - mu)
+```
+
+Create a plot for the dataset
+
+```{r plot, fig.asp=1}
+plot(y_i ~ x_i)
+```
+
+
+As you can see, plotting the data suggests a linear relationship between these two variables
+
+## Regression coefficients
+
+Let's calculate the coefficients for the regression line according to the Ordinal Least Squares method: 
+
+$$\widehat{\beta_1}=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2}$$
+
+and 
+
+$$
+\hat{\beta_0} = \bar{y} - \hat{\beta_1}\bar{x} 
+$$
+
+
+```{r beta0 and beta1}
+x <- x_i
+y <- y_i
+beta1_hat <- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x)) ^ 2)
+beta1_hat
+
+# Since mu = beta0 + beta1(X): 
+beta0_hat <- mean(y) - beta1_hat * mean(x)
+beta0_hat
+```
+
+
+Add a regression line with the values of the coefficients you calculated
+
+
+```{r OLS, fig.asp=1}
+plot(y ~ x)
+abline(a = beta0_hat, b = beta1_hat, col = "red")
+```
+
+## The sample is not the population 
+
+When we generated the dataset ([here](#generating-the-dataset)), $\mu$ was specified as: 
+
+```r
+mu <- 1.2 + 3.5 * x_i
+```
+
+This means $\beta_0 = 1.2$ and $\beta_1 = 3.5$. How do these values compare to the coefficients you just calculated? 
+
+Add a population line to the plot you previously created by completing the code below: 
+
+```r
+plot(y ~ x)
+abline(a = beta0_hat, b = beta1_hat, col = "red")
+abline(a = ..., b = ..., col = "blue")
+```
+
+See the code by clicking __Show code__: 
+
+```{r regression_line, code_folding = TRUE, fig.asp = 1}
+plot(y ~ x)
+abline(a = beta0_hat, b = beta1_hat, col = "red")
+abline(a = 1.2, b = 3.5, col = "blue")
+```
+
+## Fitting a linear model in R
+
+Function `lm()` fits regression models using Ordinal Least Squares. 
+The values of the coefficients can be found using function `coef()`.
+
+```{r model_coefs}
+mod <- lm(y ~ x)
+coef(mod)
+```
+
+Compare this result with the calculations you did previously. 
+
+### Let's do the calculations for Sums of squares, residual sum of squares and Sums of squares of the regression
+
+$SS_y$, $RSS$, and $SS_{Reg}$
+
+$$RSS = \sum_{i=1}^{n}(y_i-\hat{y}_i)^2 $$
+
+
+
+$SS_y = {\sum_{i=1}^{n}(y_i-\bar{y})^2}$
+
+
+$$SS_Y = SS_{Reg} + RSS$$
+

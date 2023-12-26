@@ -1,0 +1,563 @@
+---
+title: "Probability distribution functions Lab"
+author:
+ - "Andrea Sánchez-Tapia"
+ - "Paulo Inácio Prado"
+date: "2023-01-11"
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---
+
+
+```{r setup, echo=FALSE}
+library(rmarkdown)
+knitr::opts_chunk$set(eval = FALSE)
+# clipboard
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
+    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
+  ),
+  rmarkdown::html_dependency_font_awesome()
+  )
+
+## Function to shade under normal curve
+## From https://www.r-bloggers.com/2011/04/how-to-shade-under-a-normal-density-in-r/
+shadenorm <- function(below = NULL,
+                      above = NULL,
+                      pcts = c(0.025, 0.975),
+                      mu = 0,
+                      sig = 1,
+                      numpts = 500,
+                      color = "gray",
+                      dens = 40,
+                      justabove = FALSE,
+                      justbelow = FALSE,
+                      lines = FALSE,
+                      between = NULL,
+                      outside = NULL) {
+  if (is.null(between)) {
+
+
+    below = ifelse(is.null(below), qnorm(pcts[1], mu, sig), below)
+    above = ifelse(is.null(above), qnorm(pcts[2], mu, sig), above)
+  }
+  if (is.null(outside) == FALSE) {
+    below = min(outside)
+    above = max(outside)
+  }
+  lowlim = mu - 4 * sig
+  uplim  = mu + 4 * sig
+  x.grid = seq(lowlim, uplim, length = numpts)
+  dens.all = dnorm(x.grid, mean = mu, sd = sig)
+  if (lines == FALSE) {
+    plot(x.grid,
+         dens.all,
+         type = "l",
+         xlab = "X",
+         ylab = "Density")
+  }
+  if (lines == TRUE) {
+    lines(x.grid, dens.all)
+  }
+  if (justabove == FALSE) {
+    x.below    = x.grid[x.grid < below]
+    dens.below = dens.all[x.grid < below]
+    polygon(c(x.below, rev(x.below)),
+            c(rep(0, length(x.below)), rev(dens.below)),
+            col = color,
+            density = dens)
+  }
+  if (justbelow == FALSE) {
+    x.above    = x.grid[x.grid > above]
+    dens.above = dens.all[x.grid > above]
+    polygon(c(x.above, rev(x.above)),
+            c(rep(0, length(x.above)), rev(dens.above)),
+            col = color,
+            density = dens)
+  }
+  if (is.null(between) == FALSE) {
+    from = min(between)
+    to   = max(between)
+    x.between    = x.grid[x.grid > from & x.grid < to]
+    dens.between = dens.all[x.grid > from & x.grid < to]
+    polygon(c(x.between, rev(x.between)),
+            c(rep(0, length(x.between)), rev(dens.between)),
+            col = color,
+            density = dens)
+  }
+}
+```
+
+
+# Some important things about the normal distribution
+
+The normal or Gaussian distribution is by far the most used
+probability distribution in statistical modeling and also in
+statistical inference. This section
+will help you to understand why, and also to get familiar with the
+properties of this distribution.
+
+## Know your beast: exploring the Gaussian function
+
+Let's start exploring the normal, or Gaussian function as a
+mathematical object. Try to forget its meanings and applications for a moment, and
+just think on its behavior.
+
+### Parameters
+
+You can think in parameters of a function as radio buttons that you
+turn right or left to changes some aspect of the function. The normal,
+or Gaussian, function is always bell-shaped. Is has two parameters,
+usually referred by the Greek letters $\mu$ and $\sigma$.
+
+The parameter $\mu$ defines the position of the bell-shaped curve
+along the x-axis.
+
+Use the R code below to plot normal curves of constant value of
+$\sigma=1$, but values of $\mu$ ranging from -2 to 2. The function
+*dnorm* returns the value of the normal function. We use the function
+*curve* to calculate and plot the value of the normal function over
+the x-axis:
+
+```{r}
+vals <- seq(from = -2, to = 2, by = 0.5)
+cores <- rainbow(n = length(vals))
+curve(dnorm(x, mean = vals[1], sd = 1),
+  from = -5, to = 5, col = cores[1])
+for (i in 2:length(vals))
+  curve(dnorm(x, mean = vals[i], sd = 1),
+        add = TRUE, col = cores[i])
+```
+
+**Challenge:** change the code above to plot normal curves with
+constant value of $\mu$ and values of sigma varying from 0.25
+to 2. After you try it, you can check one solution unfolding the code
+below.
+
+
+```{r  code_folding=TRUE}
+vals <- seq(from = 0.25, to = 2, by = 0.5)
+cores <- rainbow(n = length(vals))
+curve(dnorm(x, mean = 0, sd = vals[1]),
+      from = -5, to = 5, col = cores[1])
+for (i in 2:length(vals))
+    curve(dnorm(x, mean = 0, sd = vals[i]),
+          add = TRUE, col = cores[i])
+```
+
+### Getting probabilities from a normal curve
+
+It is important to distinguish the *probability density function* of a
+continuous variable and the probability of that variable.
+
+The bell-shaped curve of the normal is a density function. As it is
+not a probability, it can reach values greater than one
+^[probabilities are bounded between zero and one].  This happens for
+the normal density function when the standard deviation is low. See
+how this curve goes well beyond one:
+
+```{r }
+curve(dnorm(x, mean = 0, sd = 0.1), from =  -0.35, to = 0.35)
+```
+
+For continuous distributions, you get probabilities from the area
+under the curves of the density functions. The function *pnorm*
+returns the **area under the normal density curve** up to a value. We
+call this quantity the *accumulated probability*
+
+For example, to get the accumulated probability of a normal  with
+$\mu=0$ and $\sigma=1$ in R type:
+
+```{r }
+pnorm(q = 0, mean = 0, sd = 1)
+```
+Which is the area under this normal curve up to the value $x = 0$:
+
+```{r , echo =FALSE, eval=TRUE}
+shadenorm(below = 0, justbelow = TRUE)
+```
+
+As you can see in the figure above, the area under the curve in this
+case is half of the total area.  Therefore, this area corresponds to
+the probability of $p=0.5$.
+
+The inverse function of the accumulated probability is called
+*quantile*. A quantile of a probability distribution tells you up
+which value a distribution accumulates a given probability. The normal
+quantile function in R is *qnorm*. To check what is the value in a
+normal curve with $\mu=0$ and $\sigma=1$ that accumulates half of the
+area (or $p=0.5$) run this command in R:
+
+```{r }
+qnorm(p = 0.5, mean = 0, sd = 1)
+```
+
+Finally, to get the probability of an interval, you can take the difference between the
+accumulated probabilities for the upper limit and for the lower limit of the interval:
+
+```{r, echo=FALSE, eval=TRUE, out.width=600}
+knitr::include_graphics("figs/dif_normal.png")
+```
+
+Take, for example, [the length in centimeters of baby girls at
+birth](https://cdn.who.int/media/docs/default-source/child-growth/child-growth-standards/indicators/length-height-for-age/lfa-girls-0-2-percentiles.pdf?sfvrsn=d5f0d7c1_5),
+which follows a normal distribution with $\mu = 49.1$ and $\sigma
+=1.86$. This distribution predicts that the probability of a girl born
+with length between $40$ and $50$ cm is:
+
+
+```{r }
+pnorm(50, mean = 49.1, sd = 1.86) - pnorm(40, mean = 49.1, sd = 1.86)
+```
+
+**Challenge:** Assume that the precision of the length measurement of
+the baby girls is $0.1$ cm. Therefore a recorded length of $50.0$ is actually
+in the interval $50.0 \pm 0.05$ cm. Calculate the probability of
+recording this measurement from a baby girl picked at random.
+
+```{r  code_folding=TRUE}
+pnorm(50 + 0.05, mean = 49.1, sd = 1.86) - pnorm(50 - 0.05, mean = 49.1, sd = 1.86)
+```
+
+## Simulating samples from a normal
+
+The R function *rnorm* generates random numbers from a normal
+distribution. Let's simulate a sample of 30 lengths of newborn girls
+from the normal distribution defined above and the get mean length in this sample:
+
+
+```{r , eval=FALSE}
+sample1 <- rnorm( n = 30, mean = 49.1, sd = 1.86)
+mean(sample1)
+```
+
+Is the sample mean equal to $\mu$ ? How do you explain this result?
+Would you say that the sample mean is a good guess of the parametric
+mean (or expected value) of the sampled distribution? The answer
+depends on what you call 'a good guess'.
+
+Here is a hint: if you repeat
+this simulation a ten thousand times you will have ten thousand sample
+means. Take a look on the distribution of these values:
+
+```{r }
+my.samples <- c() # an empty vector
+for (i in 1:1e4)
+    my.samples[i] <- mean (rnorm( n = 30, mean = 49.1, sd = 1.86))
+hist(my.samples)
+abline(v = 49.1, lty = 2, col ="blue") # mu
+```
+
+The blue line is the value of $\mu$. There are more sample means close
+to $\mu$ than sample means that deviate much from $\mu$. The
+distribution looks pretty symmetric around $\mu$ too, showing that a
+given under or overestimation of $\mu$ by the sample are equally
+likely.
+
+If you agree with these interpretations, you probably agree that the
+mean of the distribution of the samples means equals to $\mu$. That
+is, sample means on average hit the parametric mean of the population
+from which the sample was drawn.
+
+In fact, we have a mathematical deduction that proves this result that
+we have approximated with simulated samples. The **Law of Large Numbers** says that the expected value
+of the distribution of sample means tends to the value of the
+parametric mean of the sampled distribution (which in this case is
+$\mu$).
+
+On the other hand, the __Central Limit Theorem__ states that the
+distribution of sample means tends to a Gaussian with parameter
+$\sigma$ equal to the parametric standard deviation of the sampled
+distribution divided by the square root of the size of the samples. 
+In statistical syntax:
+
+$$
+\begin{align}
+x & \sim \mathcal{N}(\mu_x, \sigma_x) \\
+\mu_x & = \mu \\
+\sigma_x &= \frac{\sigma}{\sqrt{N}}
+\end{align}
+$$
+
+where $x$ are the sample means,  $\mu_x$ and
+$\sigma_x$ are the parameters of the normal distributions of
+samples means, and $N$ is the sample size.
+
+Let's check how close to these theoretical results our simulations
+got. The mean of the ten thousand simulated sample means should equal to
+$\mu = 49.1$:
+
+```{r }
+mean(my.samples)
+```
+
+And the standard deviation of the simulated sample means should equal
+to $\sigma / \sqrt{N} = 1.86/\sqrt{30}$:
+
+```{r }
+sd(my.samples)
+1.86 / sqrt(30) # theoretical value
+```
+
+
+# The Law of Large numbers
+
+The __Law of large numbers__ states that the means of samples of increasing size will converge towards the mean of the population, $\mu$.
+
+We can observe that with samples from a normal random variable up to size n = 5000, with $\mu = 0.2$ and $\sigma = 1$. Look how when increasing sample size, the sample means converge towards $\mu$.
+
+```{r}
+population <- rnorm(n = 5000, mean = 0.2)
+plot(x = 5000, y = 0 , xlim = c(0, 5000), ylim = c(0, 0.4), cex = 0, xlab = "Sample size", ylab = "Sample mean")
+
+for (size in seq(50, 5000, 100)) {
+  media <- mean(sample(population, size = size))
+  points(x = size, y = media, col = "blue", pch = 15, cex = 0.8)
+}
+abline(h = mean(population), col = "red", lwd = 2)
+
+```
+
+__Challenge:__ Adapt the previous code to a Poisson distribution with $\lambda = 0.7$, with a population size of $n = 500$. Then create different samples with increasing sizes, from 50 to 500 points in 10 intervals. 
+
+A solution for this can be seen in the following chunk of code (click Show code when you're done).
+
+```{r, code_folding = T}
+population <- rpois(n = 500, lambda = 0.7)
+plot(x = 500, y = 0 , xlim = c(0, 500), ylim = c(0, 1), cex = 0, xlab = "Sample size", ylab = "Sample mean")
+
+for (size in seq(50, 500, 10)) {
+  media <- mean(sample(population, size = size))
+  points(x = size, y = media, col = "blue", pch = 15, cex = 0.8)
+}
+abline(h = mean(population), col = "red", lwd = 2)
+
+```
+
+# The Central Limit Theorem
+
+The __Central Limit Theorem__ states that the arithmetic means of large samples of random variables conform to normal distributions _even if the underlying random variables are not normal_.
+
+Let's see this starting with a uniform random variable in the [0, 100] interval, for example:
+
+```{r}
+pop <-  runif(n = 1000, min = 0, max = 100)
+hist(pop, main = "Histogram of measurements from a uniform \n random variable")
+```
+
+As can be seen in the histogram, the probability distribution of this population is not normal.
+
+
+Since the Central Limit Theorem applies to samples that are large enough, let's make different tests with increasing sample sizes from this population.
+The function `sample()` executes this sampling from vector `pop`. First, let's make a single sample of size 5.
+
+```{r}
+# One sample
+n <- 5
+sample <- sample(x = pop, size = n)
+sample
+```
+
+
+
+To repeat this sampling, we will create a loop and save each mean in an empty vector.
+
+```{r}
+# We create the empty vector
+means_vector <- vector()
+s_size <- 5
+# We create a loop
+for (i in 1:500) {
+  means_vector[i] <- mean(sample(x = pop, size = s_size))
+}
+
+
+hist(means_vector, breaks = 50, freq = F)
+curve(dnorm(x, mean = mean(means_vector), sd = sd(means_vector)), from = 0 , to = 100, col = "red", add = T)
+```
+
+
+Compare these results when you increase the sample size from 5 to 30. 
+
+## Large enough sample size and skewness
+
+The CLT assumes that the sample size is large, but sometimes it is difficult to understand what size is enough. This can be especially true in the case of distributions that are more skewed. For skewed disttributions, a larger sample size may be needed to obtain normal distribuitions from the sample means than for symmetrical distributions. Let's compare this effect in the case of Poisson distributions for different sample sizes and $\lambda$ values.
+
+
+```{r, poisson lambda0.5}
+pop <-  rpois(n = 1000, lambda = 0.5)
+# Less skewed with larger lambda values
+hist(pop, main = "")
+# Create empty vector
+sample_means <- c()
+# Define sample size
+sample_size <- 5
+# Calculate the means of 1000 samples
+for (i in 1:1000) {
+  sample_means[i] <- mean(sample(pop, size = sample_size))
+}
+# Plot the distribution
+hist(sample_means, freq = F, main = "")
+# Add a normal curve with mean and standard deviation from the sample
+curve(dnorm(x, mean = mean(sample_means), sd = sd(sample_means)), from = 0 , to = 1.5, col = "red", add = T)
+```
+
+In this case, the sample means are not distributed according to a normal random variable. Repeat these calculations for larger sample sizes, like 20 or 30. What can you observe
+about the effect of the sample size on the distribution of the sample means?
+
+
+```{r, code_folding = T}
+# Create empty vector
+sample_means <- c()
+# Define sample size
+sample_size <- 30
+# Calculate the means of 1000 samples
+for (i in 1:1000) {
+  sample_means[i] <- mean(sample(pop, size = sample_size))
+}
+# Plot the distribution
+hist(sample_means, freq = F, main = "")
+# Add a normal curve with mean and standard deviation from the sample
+curve(dnorm(x, mean = mean(sample_means), sd = sd(sample_means)), from = 0 , to = 1.5, col = "red", add = T)
+```
+
+Do the same comparison with a more symmetric Poisson random variable (that is, with a higher Lambda value). The sample size needed to obtain a normal distribution from the sample means is lower than in the case of more skewed distributions.
+
+See an example with $\lambda = 3$ and sample size = 5: 
+
+```{r, poisson lambda30, code_folding = T}
+pop <-  rpois(n = 1000, lambda = 3)
+# Less skewed with larger lambda values
+hist(pop, main = "")
+# Create empty vector
+sample_means <- c()
+# Define sample size
+sample_size <- 5
+# Calculate the means of 1000 samples
+for (i in 1:1000) {
+  sample_means[i] <- mean(sample(pop, size = sample_size))
+}
+# Plot the distribution
+hist(sample_means, freq = F, main = "")
+# Add a normal curve with mean and standard deviation from the sample
+curve(dnorm(x, mean = mean(sample_means), sd = sd(sample_means)), from = 0 , to = 5, col = "red", add = T)
+```
+
+# More on the Central Limit Theorem
+
+The Central Limit Theorem applies to the distribution of sums of any
+random variable^[It applies to the distribution of means because means
+are summations too]. To show this, we will simulate a sum of a very
+simple random variate, that assumes values $1$ and $-1$ with equal
+probability. We can simulate a sample of 100 values of this random
+variate with
+
+
+```{r }
+set.seed(42)
+Y <- sample(x = c(1,-1), size = 100, replace = TRUE)
+```
+
+Let's imagine that this random sequence represents a walk where the
+value 1 means a step forward, and a value -1 represent a step
+backwards. The plot below draws this random walk, starting at position zero:
+
+
+```{r}
+X <- 0:length(Y) # time
+Y <- c(0,Y) # adds initial position at zero
+plot(X ~ cumsum(Y), ylab = "Time",
+     xlab = "Distance from origin", type ="l",
+     ylim = rev(range(X)),
+     col = "blue")
+text(0,0 , "Start", adj =1.3, col ="red")
+text(sum(Y),X[length(X)] , "End", adj = 1.3, col ="red")
+points(c(0,sum(Y)),c(0,X[length(X)]), pch =19, col="red")
+```
+
+The final position of this walk sequence is the sum of the 100 sampled
+values. Now let's simulate a million of walks like that, and record
+the final position of each one. We then plot the histogram of all simulated
+final positions:
+
+
+```{r }
+my.walks <- c()
+for(i in 1:1e6)
+    my.walks[i] <- sum(sample(x = c(1,-1), size = 100, replace = TRUE))
+hist(my.walks, breaks = 50)
+```
+
+The distribution of the variable "final position" looks pretty
+bell-shaped. Indeed, as this variable is a sum of 100 random
+variables, the Central Limit Theorem states that it will tend to a
+normal distribution. The mean of this normal distribution is equal to
+the theoretical mean of the random variate that was sampled and summed
+up, which is:
+
+$$ E[Y] = \sum y P(y) = -1 \times 0.5 \; + \; 1 \times 0.5 = 0$$
+
+You can check the mean of the simulated final positions with
+
+
+```{r }
+mean(my.walks)
+```
+
+Also, the Theorem states that the standard deviation of the normal
+distribution of final positions tends to the standard deviation of the
+random variable that was sampled, divided by the square root of the
+sample size.
+
+To check this, we first calculate the theoretical standard deviation
+of the original random variate^[Because the final position is a sum and not a mean, its theoretical
+standard deviation should be multiplied by the sample size.
+]:
+
+$$S[Y] = N \sqrt{\sum(y - E[Y])^2 p(y) } = 100 \sqrt{(-1 -0)^2 \times 0.5 \; + \; (1 - 0)^2 \times 0.5} = 100$$
+
+Now we can check if the standard deviation of the simulated final positions matches $S[Y]\sqrt{N}$:
+
+
+```{r }
+sd(my.walks)
+100 / sqrt(100) # value predicted by the theorem
+```
+
+And you can add the Normal distribution deduced from the Central Limit
+Theorem to the bar plots of the simulated values ^[The argument `freq=FALSE` used below makes a histogram in density scale, to allow superimposing the theoretical probability density function]:
+
+
+```{r }
+hist(my.walks, breaks=50, freq=FALSE)
+curve(dnorm(x, 0, sd = 100/sqrt(100)),
+      add=TRUE, col = "red", lwd =2)
+```
+
+**CODA:**  A device called 'Galton Board' was used to run this simulation well before computers. Check this out in this [nice video by Atila
+Iamarino](https://www.youtube.com/watch?v=YINTTVjBrY4).
+
+
+# More learning resources
+
+ - [Probability distribution
+  viewer](https://github.com/ksmzn/ProbabilityDistributionsViewer), a
+  interactive app and web page to play with the parameters of
+  probability distributions. Check also [this
+  video in Portuguese](https://youtu.be/MYwJNCYJAg0) about this resource.
+
+ - Video lectures with more details on
+ probability distributions, from a [more extensive Course on
+ Statistical Models](http://insilvaarbores.com.br/BIE5781/)
+ of the Graduate Program of Ecology at USP (in Portuguese):
+   - [Introduction to probability distributions](https://youtu.be/5U72x-u-dvE)
+   - [Discrete probability distributions](https://youtu.be/j9nCwfDWqkw)
+   - [Introduction to continuous distributions](https://youtu.be/j9nCwfDWqkw)
+   - [Continuous distributions for time](https://youtu.be/XsXjyPtTlk8)
+   - [Normal, log-normal and uniform distributions](https://youtu.be/bO2e-y9E5mg)
+ 
+ - [Python notebooks](https://mybinder.org/v2/gh/piLaboratory/bie5782/master?filepath=jupyter%2F) with mathematical deductions of some simple MLEs (in portuguese).

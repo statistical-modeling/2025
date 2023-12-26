@@ -1,0 +1,32 @@
+---
+title: "Generalized Linear Models"
+description: |
+  An extension of linear models that use other probability distributions. 
+author:
+  - name: Sara Mortara 
+    affiliation: 
+date: "2024-02-08"
+output: distill::distill_article
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+# Slides
+
+```{r slides}
+#| eval: true
+xaringanExtra::embed_xaringan("08_glm/slides.html")
+```
+
+# Lab
+
+[Lab](08_glm/lab.html)
+
+# References
+
+
+
