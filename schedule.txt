@@ -1,0 +1,22 @@
+Week	Date	N	Theme	Instructor
+1	29/jan	1	Course presentation: statistical models link data to theory	Sara
+1	29/jan	2	Probability distributions	Paulo
+1	30/jan	0	Probability distributions lab	Paulo
+1	30/jan	0	Q&A	todes
+1	31/jan	3	Linear models	Sara
+1	31/jan	4	Multiple regression and model comparison	Paulo
+1	01/fev	0	Linear models lab	Sara
+1	01/fev	0	Q&A	todes
+1	02/fev	5	Maximum likelihood fitting - I	Paulo
+1	02/fev	0	Maximum likelihood fitting lab	Paulo/Diogo
+2	05/fev	6	Bayesian statistics - I	Diogo
+2	05/fev	7	Bayesian statistics - II	Diogo
+2	06/fev	0	Bayesian fitting lab	Sara
+2	06/fev	0	Q&A	todes
+2	07/fev	8	Causal thinking and model building	Diogo
+2	07/fev	0	Causal thinking Lab	Diogo / PI
+2	08/fev	9	Generalized linear models	Sara
+2	08/fev	0	Q&A	todes
+2	09/fev	10	Mixed and hierachical models	Diogo
+2	09/fev	0	Mixed and hierachical models lab	PI
+	Extra	0	GLM(M)s lab	Sara/PI

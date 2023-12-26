@@ -19,17 +19,17 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-xaringanExtra::embed_xaringan("04_maximum_likelihood/slides.html")
+#xaringanExtra::embed_xaringan("04_maximum_likelihood/slides.html")
 ```
 
 ```{r slides-2}
 #| eval: true
-xaringanExtra::embed_xaringan("04_maximum_likelihood/slides_2.html")
+#xaringanExtra::embed_xaringan("04_maximum_likelihood/slides_2.html")
 ```
 
 # Lab
 
-[Maximum likelihood fitting and inference](04_maximum_likelihood/lab.html)
+[Maximum likelihood fitting and inference]()
 
 # Further reading
 

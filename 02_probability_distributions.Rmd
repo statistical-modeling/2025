@@ -17,12 +17,12 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-xaringanExtra::embed_xaringan("02_probability_distributions/slides.html")
+#xaringanExtra::embed_xaringan("02_probability_distributions/slides.html")
 ```
 
 # Lab
 
-[Lab](02_probability_distributions/lab.html)
+[Lab]()
 
 # References
 

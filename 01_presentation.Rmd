@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-xaringanExtra::embed_xaringan("01_presentation/slides.html")
+#xaringanExtra::embed_xaringan("01_presentation/slides.html")
 ```
 
 # Further reading

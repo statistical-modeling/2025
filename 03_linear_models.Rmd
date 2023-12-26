@@ -19,14 +19,14 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-xaringanExtra::embed_xaringan("03_linear_models/slides.html")
+#xaringanExtra::embed_xaringan("03_linear_models/slides.html")
 ```
 
 # Lab
 
-[Simple linear regression Lab](03_linear_models/lab.html)
+[Simple linear regression Lab]()
 
-[Multiple linear regression Lab](03_linear_models/lab2.html)
+[Multiple linear regression Lab]()
 
 
 
