@@ -1,0 +1,172 @@
+{
+  "articles": [
+    {
+      "path": "01_presentation.html",
+      "title": "Course presentation: statistical models link data to theory",
+      "author": [
+        {
+          "name": "Sara Mortara & Diogo Melo",
+          "url": {}
+        }
+      ],
+      "date": "2024-01-29",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nFurther reading\r\nQuantitative Reasoning in Ecology: Chapter 1 in Schneider,\r\nD. 2009. Quantitative Ecology: Measurement, Models, and\r\nScaling. New York, Academic Press, 2nd Ed.\r\n(Nice synthesis of\r\nstatistical analyses in the context of quantitative reasoning. It has\r\nalso many important highlights on quantities and measurements)\r\nAlternative views of scientific method and of modelling:\r\nChapter 2 in Hilborn, R & Mangel, M. 1997. The Ecological\r\nDetective - Confronting Models with Data. Princeton, Princeton\r\nUniversity Press.\r\n(The whole book is a true classic on\r\nthe use of statistical models in ecology. This chapter has a quick\r\nepistemological review and highlights the key distinction between\r\nmodels and hypothesis. It also brings a typology of models, and\r\nthe concept of model complexity.)\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:03-03:00"
+    },
+    {
+      "path": "02_probability_distributions.html",
+      "title": "Probability distributions",
+      "author": [
+        {
+          "name": "Paulo Inácio K. L. Prado",
+          "url": {}
+        }
+      ],
+      "date": "2024-01-29",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nLab\r\nLab\r\nReferences\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:05-03:00"
+    },
+    {
+      "path": "03_linear_models.html",
+      "title": "Linear models",
+      "description": "An introduction to the linear regression model.\n",
+      "author": [
+        {
+          "name": "Sara Mortara",
+          "url": {}
+        }
+      ],
+      "date": "2024-01-31",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nLab\r\nSimple linear regression Lab\r\nMultiple linear regression Lab\r\nReferences\r\nGotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.\r\nJames, G., Witten, D., Hastie, T., Tibshirani, R., 2013. An Introduction to Statistical Learning: with Applications in R, 1st ed. 2013. Corr. 4th printing 2014 edition. ed. Springer, New York, NY.\r\nMcElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:06-03:00"
+    },
+    {
+      "path": "04_multiple_regression.html",
+      "title": "Multiple regression and model comparison",
+      "description": "Multiple regression, model selection, AIC, overfitting.\n",
+      "author": [
+        {
+          "name": "Paulo Inácio K. L. Prado (PI)",
+          "url": {}
+        }
+      ],
+      "date": "2024-01-31",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nFurther reading\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:10-03:00"
+    },
+    {
+      "path": "05_maximum_likelihood.html",
+      "title": "Maximum likelihood method",
+      "description": "What's the likelihood function, and how it can be used to fit statistical models to data.\n",
+      "author": [
+        {
+          "name": "Paulo Inácio K. L. Prado (PI)",
+          "url": {}
+        }
+      ],
+      "date": "2024-02-02",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nLab\r\nMaximum likelihood fitting and inference\r\nFurther reading\r\nLikelihood and all that. chapter 6 in: Bolker, B.M. 2008\r\nEcological Models and Data in R Princeton: Princeton University\r\nPress.\r\nHobbs, N.T. & Hilborn, R. 2006. Alternatives to statistical\r\nhypothesis testing in ecology: A guide to self-teaching. Ecological\r\nApplications: 16(1): 5-19.\r\nThe Concept of Likelihood , chapter 2 in: Edwards, A.W.F., 1992\r\nLikelihood. Baltimore: John Hopkins University Press.\r\nIntroduction, and Information and likelihood theory. chapters 1-2\r\nin Burnham, K. P., & Anderson, D. R. (2002). Model Selection and\r\nMultimodel Inference: A Practical-Theoretic Approach, 2nd ed. New\r\nYork, Springer-Verlag.\r\nVignette of the package bbmle\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:11-03:00"
+    },
+    {
+      "path": "06_bayesian_statistics.html",
+      "title": "Bayesian Statistcs - I",
+      "description": "Bayesian fitting method, priors, how to interpret/report results.\n",
+      "author": [
+        {
+          "name": "Diogo Melo",
+          "url": {}
+        }
+      ],
+      "date": "2024-02-05",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nFurther reading\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:13-03:00"
+    },
+    {
+      "path": "07_bayesian_statistics.html",
+      "title": "Bayesian Statistcs - II",
+      "description": "Comparisons between bayes and ML.\n",
+      "author": [
+        {
+          "name": "Diogo Melo",
+          "url": {}
+        }
+      ],
+      "date": "2024-02-05",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nFurther reading\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:14-03:00"
+    },
+    {
+      "path": "08_causal_thinking.html",
+      "title": "Causal thinking ",
+      "description": "Principles of causal thinking to infer causation from statistical models.\n",
+      "author": [
+        {
+          "name": "Diogo Melo",
+          "url": {}
+        }
+      ],
+      "date": "2024-02-07",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nLab\r\nCausal model building lab\r\nFurther reading\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:16-03:00"
+    },
+    {
+      "path": "09_dynamic_models.html",
+      "title": "Dynamic models",
+      "description": "Bridging dynamical and statistical models\n",
+      "author": [
+        {
+          "name": "Paula Lemos-Costa and Diogo Melo",
+          "url": {}
+        }
+      ],
+      "date": "2023-02-02",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nLab\r\nDynamical Models Lab\r\nFurther reading\r\nTheoretical developments\r\n“Predicting coexistence in experimental ecological communities.”\r\nNature ecology & evolution 4.1 (2020): 91-100. Maynard, Daniel S.,\r\nZachary R. Miller, and Stefano Allesina.\r\n“Modelling ecological communities when composition is manipulated\r\nexperimentally.”\r\nMethods in Ecology and Evolution (2022) Skwara, Abigail, Paula Lemos‐Costa,\r\nZachary R. Miller, and Stefano Allesina.\r\nExperimental studies\r\n“Phytoplankton diversity affects biomass and energy production differently during community development.”\r\nGhedini, Giulia, Dustin J. Marshall, and Michel Loreau. Functional Ecology 36.2 (2022): 446-457.\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:21-03:00"
+    },
+    {
+      "path": "09_glm.html",
+      "title": "Generalized Linear Models",
+      "description": "An extension of linear models that use other probability distributions. \n",
+      "author": [
+        {
+          "name": "Sara Mortara",
+          "url": {}
+        }
+      ],
+      "date": "2024-02-08",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nLab\r\nLab\r\nReferences\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:22-03:00"
+    },
+    {
+      "path": "10_mixed_and_hierarchical_models.html",
+      "title": "Mixed-effects linear models",
+      "description": "Linear models that mix random and fixed effects.\n",
+      "author": [
+        {
+          "name": "Paulo Inácio K. L. Prado",
+          "url": {}
+        }
+      ],
+      "date": "2024-02-09",
+      "contents": "\r\nSlides\r\n\r\n\r\n\r\n\r\n\r\nLab\r\nHierachical Models Lab\r\nFurther reading\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:24-03:00"
+    },
+    {
+      "path": "about.html",
+      "title": "About us",
+      "author": [],
+      "contents": "\r\nSara Mortara\r\nDiogo Melo\r\nPaulo Inácio Prado\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:26-03:00"
+    },
+    {
+      "path": "index.html",
+      "title": "Statistical models: linking data to theory",
+      "description": "Serrapilheira Training Program in Quantitative Biology and Ecology - 2024\n",
+      "author": [],
+      "contents": "\r\nWelcome to the Statistical Inference module of the\r\nSerrapilheira Training Program in Quantitative Biology and\r\nEcology 2024. Statistical models are a useful tool to bridge theory\r\nand data. Why do ecologists fit statistical models? There are three\r\nmain reasons: explore data, make inferences, and derive predictions.\r\nGoal\r\nOur general goal is to provide appropriate conceptual foundations on\r\nstatistical thinking in ecology. We will teach you basic tools needed to connect\r\ntheory and hypothesis to data and show you additional paths you can\r\ntake to further explore more advanced topics. There are two main steps\r\nin this endeavor: (i) the construction and fit of statistical models;\r\nand (ii) the inferences that can be made with and about the models.\r\nInstructors\r\nSara Mortara re.green, ¡liibre!\r\nDiogo Melo, Princeton University\r\nPaulo Inácio Prado, Universidade de São Paulo\r\nInstuctors from previous courses\r\nAndrea Sánchez-Tapia, Universidade Federal do ABC, ¡liibre!\r\nPaula Lemos-Costa, The University of Chicago\r\nPreparing for the course\r\nBefore the course starts, follow these\r\ninstructions to install R  and\r\nthe necessary R packages in your computer, and also to recap the\r\nbasics on R we’ll need to start.\r\nCourse schedule\r\n\r\n\r\nWeek;Date;N;Theme;Instructor\r\n\r\n\r\n1;29/jan;1;Course presentation: statistical models link data to theory;Sara\r\n\r\n\r\n1;29/jan;2;Probability distributions;Paulo\r\n\r\n\r\n1;30/jan;3;Probability distributions lab;Paulo\r\n\r\n\r\n1;30/jan;0;Q&A;todes\r\n\r\n\r\n1;31/jan;4;Linear models;Sara\r\n\r\n\r\n1;31/jan;6;Multiple regression and model comparison;Paulo\r\n\r\n\r\n1;01/fev;5;Linear models lab;Sara\r\n\r\n\r\n1;01/fev;0;Q&A;todes\r\n\r\n\r\n1;02/fev;7;Maximum likelihood fitting - I;Paulo\r\n\r\n\r\n1;02/fev;8;Maximum likelihood fitting lab;Paulo/Diogo\r\n\r\n\r\n2;05/fev;9;Bayesian statistics - I;Diogo\r\n\r\n\r\n2;05/fev;10;Bayesian statistics - II;Diogo\r\n\r\n\r\n2;06/fev;11;Bayesian fitting lab;Sara\r\n\r\n\r\n2;06/fev;0;Q&A;todes\r\n\r\n\r\n2;07/fev;12;Causal thinking and model building;Diogo\r\n\r\n\r\n2;07/fev;13;Causal thinking Lab;Diogo / PI\r\n\r\n\r\n2;08/fev;14;Generalized linear models;Sara\r\n\r\n\r\n2;08/fev;0;Q&A;todes\r\n\r\n\r\n2;09/fev;15;Mixed and hierachical models;Diogo\r\n\r\n\r\n2;09/fev;;Mixed and hierachical models lab;PI\r\n\r\n\r\n;Extra;16;GLM(M)s lab;Sara/PI\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n;;;;\r\n\r\n\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-12-26T15:58:29-03:00"
+    }
+  ],
+  "collections": []
+}

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Random variables and probability distributions</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Andrea Sánchez-Tapia" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Random variables and probability distributions
+]
+.subtitle[
+## Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology - 2023
+]
+.author[
+### Andrea Sánchez-Tapia
+]
+.date[
+### January 10th-11th 2023
+]
+
+---
+
+
+
+
+
+
+ 
+
+## Today's key concepts
+
++ Random variables
++ Discrete random variables: Bernoulli, Binomial, Poisson.
++ Continuous random variables
+    + Probability density functions, PDFs
+    + Cumulative density functions, CDFs
++ Expected value, variance
++ Gaussian distribution and its key properties
++ Central limit theorem and the Law of large Numbers
+
+---
+
+## Empirical data
+
++ Assuming __random__ and __independent__ sampling 
+
+--
+
++ We study variables for which __the specific outcome of a single trial or measurement is unknown__ even if we understand the set of all possible outcomes (the sample space)
+
+--
+
++ Given enough experiments/trials, we can hypothesize/estimate how often the possible outcomes will happen: their __probability distribution__ 
+
+--
+    + A coin toss/the presence of a species
+--
+    + The number of individuals in a given sample
+--
+    + The length of a body part
+
+---
+## Random variables
+
++ __Random variables__ are mathematical formalizations of these several types of data
+
+--
+
++ Some experiment outcomes are __discrete__, countable and some are not, they can take any value inside __continuous__ intervals.
+
+--
+
++ __Probability distributions__: they represent __theoretical__ distribution of a random variable of a certain kind. (How probable are each of the outcomes)
+
+--
+
++ Random variables can be described by their __parameters__: key properties that allow us to reconstruct their probability distributions
+
+???
+somebody talked yesterday about "probabilistic models"
+
+---
+class: inverse, middle, center 
+
+# Discrete random variables
+
+---
+## Bernoulli distribution
+
++ The simplest experiment has only two outcomes. A coin flip. 
+
+--
+
++ The probability `\(p\)` and `\(q\)` of the two outcomes sums 1. `\(p + q = 1\)`   
+
+--
+
++ If equiprobable, then `\(p = q = 0.5\)` 
+`$$X \thicksim  Bernoulli(p)$$`
+--
+
++ Repeated Bernoulli trials form a __Binomial Random Variable__. The parameter `\(n\)` = number of trials is key to understanding Binomial Random Variables
+
+
+---
+## Binomial distribution 
+
+`$$X \thicksim  Bin(n,p)$$`
+
+--
+
++ The number of successes `\(X\)` in `\(n\)` independent Bernoulli trials with `\(P(success) = p\)`
+
+--
+
++ The probability of `\(X\)` successes: `\(p^X\)`
+
+--
+
++ The probability of `\(n-X\)` failures: `\((1-p)^{(n-X)}\)`
+
+--
+
++ The number of __combinations__ of X successes in n trials: `$$\binom{n}{X}$$`
+
+---
+class: inverse 
+
+What is the probability of 11 successes in 25 trials when `\(p = 0.5\)`?
+
+
+```r
+n &lt;- 25
+p &lt;- 0.5
+X &lt;- 11
+P_success &lt;- p^X
+P_failure &lt;- (1 - p)^(n - X)
+combinations &lt;- choose(n, X)
+P_success * P_failure * combinations
+```
+
+```
+## [1] 0.1328409
+```
+
+```r
+dbinom(X, size = n, prob = p)
+```
+
+```
+## [1] 0.1328409
+```
+
+---
+### We can calculate P(X) for every X in 0:25
+
+
+```r
+P_X &lt;- dbinom(1:25, size = n, prob = p)
+
+plot(P_X, xlab = "X")
+title(
+  "Probability distribution of X ~ Binomial(25, 0.5)")
+abline(v = X ,col = "red")
+abline(h = dbinom(X, size = n, prob = p) ,col = "red")
+```
+
+---
+### We can calculate P(X) for every X in 0:25
+
+![](slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+
+&lt;!--
+```
+dbinom(x, size, prob)
+pbinom(x, size, prob)
+qbinom(p, size, prob)
+rbinom(n, size, prob)
+```
+
++ `size` is `\(n\)`, the number of trials 
++ `prob` is `\(p\)`, the probability of a success in a single Bernoulli trial
++ `dbinom` gives the probability density for the values in `x`
++ `pbinom` gives the cumulative density of the distribution (e.g. for values equal or lesser than `x`)
++ `qbinom` gives the value in x that correspond to the cumulative probability p
++ `rbinom` samples n values from the distribution defined by `\(n\)` (`size`) and `\(p\)` (`prob`)
+--&gt;
+
+
+---
+
+## Poisson random variables
+
+ &lt;!-- + n large, p small, ex. rare plants, animals, unobserved trials --&gt; 
+
++ The number of events (__counts__) in samples of fixed area, or during a fixed interval of time
+
+--
+
++ Each sample independent from the other
+
+--
+
++ The starting point of such a distribution is zero, a count. 
+
+--
+
+
++ A single parameter: `\(\lambda\)`, a _rate_ parameter: the __average number of events per sample__. 
+
+--
+
+`$$X \sim Poisson(\lambda)$$`
+
+---
+## Poisson random variables
+
++ The probability of any observation is: 
+
+$$P(X) = \frac{\lambda^X}{X!} e^{-\lambda} $$  
+
+--
+
++ When the event is not very frequent, a reverse-J-shaped curve with a long right tail 
+
+--
+
++ When the event becomes more frequent, the most frequent value increases too and the curve becomes more symmetrical.
+
+--
+
++ With large lambda values, the distribution approaches the shape of a normal curve (but remember it is discrete!)
+
+
+ &lt;!-- Relationship between binomial, Poisson and normal distributions
+ A binomial can be approached to a Poisson when n is large compared to p
+ When \lambda increases, the Poisson distribution becomes more symmetrical and approaches a normal distribution. 
+ Binomial between 0 and n (number of trials)
+ Poisson is not bounded, long left tail --&gt; 
+
+---
+class: inverse
+
+
+```r
+p_poisson &lt;- function(x, lambda) {
+  (lambda ^ x / factorial(x)) * exp(-lambda)
+}
+P_x &lt;- p_poisson(0:5, lambda = 1)
+#P_x &lt;- dpois(0:5, lambda = 1)
+P_x
+```
+
+```
+## [1] 0.367879441 0.367879441 0.183939721 0.061313240 0.015328310 0.003065662
+```
+
+```r
+#plot(P_x, xlab = X)
+```
+
+---
+
+## Expected value of discrete variables
+
++ __Weighted average__, where each value is given the importance according to its probability 
+
+--
+
+$$ E(X) = \sum_{1=1}^{n}{a_ip_i}$$
+
+--
+
++ Bernoulli: `\(p\)`
++ Binomial: `\(np\)`
++ Poisson: `\(\lambda\)`
+
+--
+
+Important: This expectation just marks the tendency and may be outside of the range of possible values of `\(X\)`. 
+
+---
+## Variance of a discrete random variable
+
+`$$\sigma^2(X) = E[X-E(X)]^2$$`
+--
+
++ Bernoulli: `\(p(1-p)\)`
++ binomial: `\(np(1-p)\)`
++ Poisson: `\(\lambda\)`
+
+---
+class: inverse, center, middle
+
+# Continuous random variables
+
+
+---
+
+## Continuous random variables
+
++ Measurements (length, biomass, weight) in a continuous scale, imposible to count or to define the specific set of outcomes
+
+--
+
++ Precision depends on measurement
+
+--
+
++ The random variable is represented by a __probability density function__, a continuous curve depicting "relative" probabilities
+
+---
+## Probability density function (PDF)
+
+
++ Total area under the PDF curve equals 1
+
+--
+
++ The specific probability of a single value is zero. Asking this does not make sense because there are infinite possible values
+    
+--
+
++ Instead, We define the probability of `\(X\)` belonging to an interval.
+
+--
+
++ The probability is __the area under the curve__ within the interval: the __integral__
+
+---
+
+## Cumulative distribution function (CDF)
+
++ The probability of `\(X\)` being lower than `\(Y\)`
+`\(F(Y) = P(X &lt; Y)\)` is the area under the PDF curve in the interval where `\(X &lt; Y\)`
+
++ The CDF sums the areas below Y and therefore is an ever-increasing (monotonic) curve from 0 to 1
+
+
+---
+## Uniform random variable
+
+`\(X \thicksim {Uniform[a,b]}\)`
+
++ Defined for an interval `\([a, b]\)`
+
+--
+
++ The probability of sub-intervals of the same width is the same `\([a, b]\)`
+
+--
+
++ The Distribution Probability Function is `\(1/b-a\)` for all the `\([a, b]\)` interval. (The area under the curve is "divided" by the width of this interval)
+
+
+&lt;!-- `\(E(X) = \frac{b + a}{2}\)`
+`\(\sigma^2(X) = \frac{(b - a)^2}{12}\)`--&gt;
+
+
+
+---
+
+## Expected value 
+
++ For any particular observation, 0
++ Subintervals `\(\Delta x\)`
+
+`$$\sum_{i=1}^{n}{x_if(x_i)\Delta x}$$`
+`$$E(X) = \int{xf(x)dx}$$`
+
+---
+## Normal random variables
+
++ "Gaussian" or normal distribution
+
+--
+
++ The basis for linear regression and analysis of variance
+
+--
+
++ Fits many empirical datasets
+
+--
+
++ Measurements, symmetric around some average value, with some variation around this value
+
+--
+
+`$$X \thicksim{\mathcal{N}(\mu, \sigma})$$`
+--
+
++ `\(E(X) = \mu\)`, Variance: `\(\sigma^2(X) = \sigma^2\)`
+
+--
+
+$$\mathcal{N}(\mu, \sigma) = \frac{1}{\sigma \sqrt{2\pi}}\;e^{-\frac{1}{2}\left(\frac{Y-\mu}{\sigma}\right)^2} $$
+
+---
+## Normal random variables
+
++ Standard normal random variable: `\(Z\)` `\(\mu = 0\)` and `\(\sigma = 1\)`
+
+--
+
++  Standardizing: substract the mean and divide by the standard deviation
+
+--
+
++ Any random variable can be standardized that way.
+
+---
+## Other continuous random variables
+
++ __Log-normal__ 
+    + `\(X\)` such that `\(ln(X)\)` is a normal random variable. 
+    + Skewed, long tail to the right 
+    
+    `$$E(X) = e^ {\frac{2\mu + \sigma^2}{2}}$$`
+
++ __Exponential__
+    + Related to Poisson. Rare events in a continuous space. 
++ Others... Student-t, `\(\chi^2\)`, F, gamma, inverse gamma, beta.
+
+---
+## The Central Limit Theorem
+
++ Several _independent_ random variables with the same expected value and variance, any distribution 
+
+--
+
+- Their sum or average can be standardized to a standard normal random variable ( `\(Z\)` ) _provided the sample size is large enough_.
+
+--
+
+- "Arithmetic means of large samples or random variables conform to normal distribution even if the underlying distribution does not"
+
+
+### This allows using statistical tests that assume/require normal distributions. 
+
+---
+## Law of Large Numbers 
+
+Given increasing sampling size, the means of samples will converge towards the means of the population, `\(\mu\)`. 
+
+---
+## References
+
++ Gotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.
+
++ McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

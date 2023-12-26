@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistical models : linking data to theory</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="PI (Paulo Inácio Prado)" />
+    <meta name="date" content="2023-01-09" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <script src="libs/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistical models : linking data to theory
+]
+.subtitle[
+## Presentation - a brief tour on statistical models
+]
+.author[
+### PI (Paulo Inácio Prado)
+]
+.date[
+### 09 Jan 2023
+]
+
+---
+
+
+
+
+
+
+## Who we are (in order of appearance)
+### A bunch of biologists ...
+&lt;center&gt;
+.pull-left[
+&lt;img src="figs/PI.jpg" width="42%" /&gt;
+
+**PI**, a.k.a Paulo Inácio Prado (he/him)
+
+]
+
+.pull-right[
+&lt;img src="figs/andrea.jpg" width="50%" /&gt;
+
+**Andrea**, a.k.a Andrea Sánchez-Tapia (she/her)
+]
+&lt;/center&gt;
+
+???
+
+test note
+
+---
+## Who we are (in order of appearance)
+### ... trying to help you to learn statistical modelling faster and easier than we did 
+&lt;center&gt;
+.pull-left[
+
+&lt;img src="figs/diogo.jpg" width="50%" /&gt;
+
+**Diogro**, a.k.a, Diogo Melo (he/him)
+]
+
+.pull-right[
+&lt;img src="figs/paulinha.jpg" width="50%" /&gt;
+
+**Paulinha**, a.k.a Paula Lemos da Costa (she/her)
+]
+&lt;/center&gt;
+
+
+---
+## What we want
+
+ - To help you to be good users of statistical models in ecological research;
+ - To make you learn this faster and easier than we did;
+ - In doing that, to improve our own knowledge on statistical models.
+
+
+
+&lt;center&gt;
+.left-column[
+&lt;img src="figs/Painel.Paulo.Freire_cropped.JPG" width="100%" /&gt;
+]
+&lt;/center&gt;
+
+.right-column[
+&gt; "Ninguém educa ninguém, ninguém educa a si mesmo, os homens se educam entre si, mediatizados pelo mundo"
+&gt;
+&gt; Paulo Freire
+]
+
+
+---
+
+## What is a statistical model?
+.bg-washed-blue.b--navy.ba.bw2.br3.shadow-5.ph4.mt1[
+A description of how **your data** should behave according to some theory. 
+
+Thus, statisticals models are hypotheses about how a given **data set** was generated.
+]
+
+--
+
+## Why is this different from a mathematical model?
+.bg-washed-blue.b--navy.ba.bw2.br3.shadow-5.ph4.mt1[Mathematical
+models describe the behavior of **theoretical quantities**.
+
+Statistical models describe the behavior of **measurements** used to express 
+theoretical quantities.]
+
+---
+class:middle
+
+## Between theoretical quantities and the data lies the observer
+
+
+.pull-left[
+
+* `\(N(t)\)` is theoretical: population size at any time `\(t\)`
+* Examples of data used to express `\(N(t)\)`:
+  * Number of earthworms counted in samples of soil taken weekly
+  * Grass coverage measured yearly in permanent plots
+]
+
+.pull-right[
+&lt;img src="figs/logistic_growth_sketch.png" width="75%" /&gt;
+]
+
+---
+
+## An example: Georgy Gause's experiments
+
+Does intraspecific competition imply logistic population growth?
+
+&lt;center&gt;
+
+.pull-left[
+
+![](https://i.makeagif.com/media/10-19-2015/_yEVAH.gif)
+
+*Paramecium caudatum*,
+
+https://makeagif.com/gif/paramecium-_yEVAH
+]
+
+.pull-right[
+
+&lt;iframe src="https://archive.org/embed/struggleforexist00gauz" width="560" height="420" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen&gt;&lt;/iframe&gt;
+]
+
+&lt;/center&gt;
+---
+
+## Gause set experiments to approximate theoretical assumptions of logistic growth
+
+
+.pull-left[
+
+**Single-celled organisms in test-tube cultures under controlled lab
+conditions:**
+ * Steady and homogeneous environment
+ * Well-mixed population
+ * Asexual reproduction
+ * Age-structure irrelevant
+
+**Data:**
+
+Daily counts of cells in 3 samples of the liquid culture medium (0.5 cm&lt;sup&gt;3&lt;/sup&gt;)
+ 
+]
+
+.pull-right[
+.center[
+&lt;img src="figs/gause_fig8.png" width="45%" /&gt;
+&lt;img src="figs/gause_fig19.png" width="60%" /&gt;
+]]
+
+---
+
+
+
+## What we expect from theory
+     
+.center[
+![](slides_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+## What the data shows
+
+.center[
+![](slides_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+]
+
+.right[[Data from Gause(1934) Appendix, Table 3](https://archive.org/details/struggleforexist00gauz/page/144/mode/2up?ref=ol) ]
+
+---
+class:middle
+
+## Empirical data, a.k.a. random variables
+
+.bg-washed-blue.b--navy.ba.bw2.br3.shadow-5.ph4.mt1[
+* We can never control all sources of variation that affect our measurements or counts.
+* Thus, any measurement or count done in a scientific research has some degree of uncertaintity.
+* In other words, any quantitative data of scientific interest is a **random variable** 
+]
+
+---
+
+## From the mathematical to the statistical model
+
+.pull-left[
+- We can not assure the exact value of a random variable but we can
+   think on how likely would be each possible value.
+- A simple hypothesis: large departures from the theoretical
+   expectation are less likely than small ones.
+- In this approach data is partitioned into **expected values** and 
+  **unexplained variation** (a.k.a. *"residual"*, *"error"* or *"noise"*).
+]
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+]]
+
+---
+## The normal or Gaussian probability distribution
+
+.pull-left[
+* Ascribes a probability to each value a measurement can assume;
+* It is a model for the sum of many sources of sources of variation;
+* Small deviations from the expected value are more likely than large deviations;
+* The probabilities of the deviations are symmetrical around the expected value.
+]
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+]]
+	
+---
+## The normal distribution is a statistical model
+
+.pull-left[
+$$\mathcal{N}(\mu, \sigma) = \frac{1}{\sigma \sqrt{2\pi}}\;e^{-\frac{1}{2}\left(\frac{Y-\mu}{\sigma}\right)^2} $$
+
+**Where:**
+* `\(Y\)`: the value of a measurement 
+* `\(\mu\)`: the expected value
+* `\(\sigma\)`: the standard deviation
+
+** Notation**:
+
+* `\(Y \sim \mathcal{N}(\mu, \sigma)\)` means *" `\(Y\)` is a random variable that follows a normal distribution."*
+
+]
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+## A syntax for statistical models
+
+
+.pull-left[
+
+**Our model:**
+
+$$ 
+`\begin{aligned}
+Y(t) &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
+\mu &amp; =  \frac{K}{1 + \frac{K-N_0}{N_0} \, e^{-rt}} \\[1em]
+\sigma &amp; = C
+\end{aligned}`
+$$
+
+**Which reads:** "The count of cells at each time `\(Y(t)\)` follows a normal distribution with expected value `\(\mu\)` that is a logistic function of time `\(t\)`, and with a standard deviation `\(\sigma\)` of constant value `\(C\)`."
+
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+## What's next?
+
+.pull-left[
+
+**Model fitting:** 
+use the data to find the best guesses for the free parameters of the model ( `\(K\)`, `\(r\)`, `\(C\)` );
+
+**Inference**: 
+Use the guessed parameters and the fitted model to learn about the study system and to make predictions;
+
+**Model selection**: fit alternative models and compare them.
+
+
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+## Linear regression: a model to rule them all
+
+
+* All statistical model has a  mathematical expression that
+  describes the expected behavior of a **response** or **dependent
+  variable**;
+  
+--
+
+* The simplest mathematical behavior is a linear relationship: the
+response is proportional to other measurements (known as a **predictor**
+or **independent variables**);
+
+--
+
+* **Linear regression** is the statistical model that describe proportionalities;
+
+--
+
+* Linear regression is a foundational statistical model, from which a
+  lot of other models were developed. 
+  
+--
+
+* Thus, it is general a good idea to deduce linear relationships from
+  your theoretical models and then fit a linear regression. Next we
+  will show an example with the logistic equation.
+
+---
+
+## Linear regression for logistic growth?
+
+
+$$
+`\begin{aligned}
+\frac{dN}{dt} &amp; = rN \left( 1-\frac{N}{K} \right)
+\end{aligned}`
+$$
+
+---
+
+## Linear regression for logistic growth?
+
+$$
+`\begin{aligned}
+\frac{dN}{dt} &amp; = rN \left( 1-\frac{N}{K} \right) \\[1em]
+&amp;= rN - \frac{r}{K}N^2
+\end{aligned}`
+$$
+
+---
+
+## Linear regression for logistic growth?
+
+$$
+`\begin{aligned}
+\frac{dN}{dt} &amp; = rN \left( 1-\frac{N}{K} \right) \\[1em]
+&amp;= rN - \frac{r}{K}N^2\\[1em]
+&amp;= rN - \alpha N^2 \\[2em]
+&amp; \textrm{where: } \alpha = r/K
+\end{aligned}`
+$$
+
+---
+
+## Linear regression for logistic growth?
+
+.center[
+.bg-washed-blue.b--navy.ba.bw2.br3.shadow-5.ph4.mt1[
+$$
+\frac{dN}{dt} = rN - \alpha N^2 \;\; \implies \; \; \underbrace{\frac{dN}{dt}\frac{1}{N}}_{\text{Per-capita} \atop\text{growth rate}} = r - \alpha N
+$$
+]]
+
+---
+
+## What we expect from theory
+
+.pull-left[
+
+`$$\frac{dN}{dt}\frac{1}{N} = r - \alpha N$$`
+
+
+*Per capita* growth rate is a linear function of N in the logistic model.
+]
+
+.center[
+.pull-right[
+&lt;img src="figs/logistica2.png" width="100%" /&gt;
+]]
+
+---
+
+## Which data do we need?
+
+The rate increase in the number of cells in the interval between
+samples ( `\(\Delta t\)` ), divided by the number of cells at the
+beggining of the interval:
+
+
+$$ Y = \frac{ \text{N cells}_{t+1}  \, -  \, \text{N cells}_t}{\Delta t}  \cdot \frac{1}{\text{N cells}_t} $$
+
+---
+
+## The linear regression model
+
+**Our model:**
+
+.pull-left[
+
+$$ 
+`\begin{aligned}
+Y(t) &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
+\mu &amp; =  r - \alpha N \\[1em]
+\sigma &amp; = C
+\end{aligned}`
+$$
+
+
+**Which reads:** "The per capita variation in the number of cells
+between sampling intervals `\(Y(t)\)` follows a normal distribution with
+expected value `\(\mu\)` that is a linear function of the number of cells at
+the beggining of the interval, and with a standard deviation `\(\sigma\)`
+of constant value `\(C\)`."
+
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+## What the fit shows
+
+.pull-left[
+
+```r
+lm( pcg ~ N, data = aurelia.m2)
+```
+
+```
+## 
+## Call:
+## lm(formula = pcg ~ N, data = aurelia.m2)
+## 
+## Coefficients:
+## (Intercept)            N  
+##    0.796239    -0.001441
+```
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+## Inference with the estimated parameters
+
+.pull-left[
+.center[
+![](slides_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+]]
+
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+]]
+
+
+---
+
+
+## Where are we and what's ahead
+
+ 1. Overview (this lecture)
+ 2. Probability distributions
+ 3. Linear regression
+ 4. Maximum likelihood fitting
+ 5. Bayesian fitting
+ 6. Causal thinking with statistical models
+ 7. Generalized linear models
+ 8. Mixed-effects and hierarchichal linear models
+ 9. Statistical models ecological dynamics
+
+---
+
+## Teaching strategies
+
+ - Lectures and computer labs on each topic;
+ - Labs: tutorials in R language;
+ - At least two instructors present in all lectures and labs;
+ - Office hours if possible (and if interest you);
+ - All resources at https://statistical-inference.netlify.app ;
+ - Learning resources will be available as we progress;
+ 
+ 
+---
+
+## Further reading
+
+* **Quantitative Reasoning in Ecology**: Chapter 1 in Schneider,
+    D. 2009. Quantitative Ecology: Measurement, Models, and
+    Scaling. New York, Academic Press, 2nd Ed.
+* **Alternative views of scientific method and of modelling**:
+    Chapter 2 in Hilborn, R &amp; Mangel, M. 1997. The Ecological
+    Detective - Confronting Models with Data. Princeton, Princeton
+    University Press. 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

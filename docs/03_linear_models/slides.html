@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introduction to regression and linear models</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Andrea Sánchez-Tapia" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introduction to regression and linear models
+]
+.subtitle[
+## Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology - 2023
+]
+.author[
+### Andrea Sánchez-Tapia
+]
+.date[
+### January 12th-13th 2023
+]
+
+---
+
+
+
+
+
+
+
+
+## In statistical models
+
++ We deal with __predictor__ and __response__ variables. 
+
+--
+
++ In experimental settings this distinction is clear, we __manipulate__ the predictor variables and __measure/observe__ the response variables.
+
+--
+
++ In observational settings ("natural experiments"), we do not manipulate the predictor variables but sample the response variable accross them. 
+
+--
+
++ We hypothesize the __causation relationship__ and build the model accordingly.
+
+
+
+---
+## Linear model
+
++ The simplest possible model is one that describes a single variable `\(X\)` having a direct effect on the response variable `\(Y\)`. `\(X \rightarrow Y\)`
+
+--
+
++ The __response variable__ has a distribution, linear regression assumes it has a __normal distribution__. 
+
+--
+
++ The relationship between `\(X\)` and `\(Y\)` can be described by the equation of a line where `\(\beta_0\)` is the __intercept__ and `\(\beta_1\)` is the __slope__
+
+--
+
+$$
+Y_i \sim \mathcal{N}(\mu_i, \sigma) \\
+$$
+
+$$
+\mu_i = \beta_0 + \beta_1 X_i 
+$$
+
+---
+
+## Assumptions of linear regression
+
++ The relationship is linear 
+
+--
+
++ The residuals are normally distributed
+
+--
+
++ Variance is constant for all `\(X\)` values: __homoscedasticity__
+
+---
+
+## How do we estimate the intercept and slope?
+
+.pull-left[
+
+
+&lt;img src="slides_files/figure-html/dataset-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
++ The simplest approach to do this: __Ordinary Least Squares__
+
+
+]
+
+
+
+
+---
+## How do we estimate the intercept and slope?
+
+.pull-left[
+
+
+&lt;img src="slides_files/figure-html/ols2-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
++ The simplest approach to do this: __Ordinary Least Squares__
+
++ For _any_ line, the observed values of `\(Y\)` will be different from the predicted values `\(\hat{Y}\)`
+
+
+]
+
+---
+## The residual sum of squares RSS
+
+.pull-left[
+
+&lt;img src="slides_files/figure-html/residuals-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-left[
+
++ __Residuals__ are the difference between `\(Y_i\)` and `\(\hat{Y_i}\)`. 
+
++ The magnitude of the deviations is more important than their sign, so we square them `\((Y_i -\hat{Y_i})^2\)`
+
+ 
+]
+
+---
+## The residual sum of squares RSS
+
+.pull-left[
+
+&lt;img src="slides_files/figure-html/residuals2-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-left[
+
+
+$$RSS = \sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2 $$
+
+- __Ordinal Least Squares__ minimizes the Residual Sum of Squares to find the best fit for the regression line
+
+ &lt;!-- to obtain the smallest average difference --&gt; 
+
+ 
+]
+
+---
+## The values that minimize RSS
+
+
+`$$\hat{\beta_1}=\frac{\sum_{i=1}^{n}(X_i-\bar{X})(Y_i-\bar{Y})}{\sum_{i=1}^{n}(X_i-\bar{X})^2}$$`
+
+$$
+\hat{\beta_0} = \bar{Y} - \hat{\beta_1}\bar{X} 
+$$
+
+
++ These values are __estimates__ ( `\(\hat{\beta_0}\)`, `\(\hat{\beta_1}\)`, `\(\hat{\sigma^2}\)`) of the values of the parameter in the whole population. 
+
+--
+
++ With different samples, other estimates would be obtained: __the regression line for the sample is not necessarily the same as the regression line for the population__
+
+
+
+---
+## Variation partition in a linear model
+
++ The expression `\({\sum_{i=1}^{n}(X_i-\bar{X})^2}\)` in the denominator of `\(\hat{\beta_1}\)` is the __Sum of Squares__ of variable `\(X\)`, a measure of the total variation around its mean
+
+--
+
++ Likewise, `\(SS_Y = {\sum_{i=1}^{n}(Y_i-\bar{Y})^2}\)` measures the variation of `\(Y\)` around its mean
+
+--
+
++ `\(SS_Y\)` is in part caused by the regression. The variation that was left unaccounted for by the model is RSS.
+
+`$$SS_Y = SS_{Reg} + RSS$$`
+--
+
++ __How much of the variation is caused by the regression and how much is due to unaccounted (random) variation?__
+
+---
+## Sum of squares (total variation) vs RSS (random variation)
+
+.pull-left[
+
+
+![](slides_files/figure-html/varpart-1.png)&lt;!-- --&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="slides_files/figure-html/rss2-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+## Coefficient of determination
+
+
+`$$r^2 = \frac{SS_{reg}}{SS_Y} = \frac{SS_{reg}}{SS_{reg}-RSS}$$`
+
++ The proportion of variation in `\(Y\)` that can be attributed to variation in `\(X\)` (e.g. to the regression). 
+
+--
+
++ `\(r^2\)` lies between 0 (all variation is random) and 1 (all variation is due to the regression and the points are on the regression line) 
+
+--
+
++ `\(r^2\)` measures how close to the regression line the points are
+
+--
+
++ `\(r^2\)` does not confirm causality by itself! __Goodness of fit__
+
+---
+class: inverse, center, middle
+
+## (This variation partition is key to understanding the summaries of linear models)
+
+---
+## Variation partition summary
+
+&lt;small&gt;
+
+|  Source|  df|  SS sum of squares| MS Mean square | Expected MS | F-ratio | p-value
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|  Regression | `\(1\)` | `\(SS_{reg} = \sum_{i=1}^{n}(\hat{Y}_i-\overline{Y})^2\)` | `\(\frac{SS_{reg}}{1}\)` | `\(\sigma^2+\beta_1^2\sum_{i=1}^{n}X^2\)` | `\(\frac{SS_{reg}/1}{RSS/(n-2)}\)` |F-distribution with `\(n-2\)` df| 
+|  Residual |  `\(n-2\)` |  `\(RSS = \sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2\)` | `\(\frac{RSS}{(n-2)}\)` | `\(\sigma^2\)`| |
+|  Total | `\(n-1\)` |  `\(SS_Y = \sum_{i=1}^{n}(Y_i-\overline{Y})^2\)` | `\(\sigma_Y^2\)` |
+
+---
+
+
+&lt;!--Report slope, intercept and `\(r^2\)`
+F-ratio the variance accounted for by the regression un the numerator, the residual variance in the denominator. Larger means more explanation by the regression. P-value low, the chances that this would happen if `\(H_0\)` were true are minimal
+--&gt;
+
+&lt;small&gt;
+
+```r
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.4855 -2.4053  0.5989  1.7229  3.7023 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)   1.4594     2.7122   0.538   0.6072   
+x1            3.8456     0.8304   4.631   0.0024 **
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.216 on 7 degrees of freedom
+Multiple R-squared:  0.7539
+Adjusted R-squared:  0.7187 
+F-statistic: 21.44 on 1 and 7 DF,  p-value: 0.002396
+```
+
+---
+## Our example dataset
+
+
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; X &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Y &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.350265 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.822522 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.873434 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.737942 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.606854 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.517826 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.356260 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.310566 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.389620 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## Our example dataset
+
+The example dataset in the current slidedeck was created by simulating data according to the specification of a linear model
+
+$$
+Y_i \sim \mathcal{N}(\mu_i, \sigma) \\
+$$
+
+$$
+\mu_i = \beta_0 + \beta_1 X_i 
+$$
+With `\(\beta_0 = 1.2\)` and `\(\beta_1 = 3.5\)` and arbitrary x values between 1 and 5:
+
+
+```r
+set.seed(4)
+x1 &lt;- seq(1, 5, by = 0.5)
+mu &lt;- 1.2 + 3.5 * x1
+y1 &lt;- rnorm(n = 9, mean = mu, sd = 3)
+xy &lt;- data.frame(x1, mu, y1, res = y1 - mu)
+```
+
+
+
+---
+
+## Further reading
+
++ How Do You Write Your Model Definitions? https://www.sumsar.net/blog/2013/10/how-do-you-write-your-model-definitions/
+
+---
+
+## References
+
++ Gotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.
+
++ James, G., Witten, D., Hastie, T., Tibshirani, R., 2013. An Introduction to Statistical Learning: with Applications in R, 1st ed. 2013. Corr. 4th printing 2014 edition. ed. Springer, New York, NY.
+
++ McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
+
++ Mortara &amp; Sánchez-Tapia (2022, July 14). Scientific Programming: Statistical modeling in R (part 1). Retrieved from https://scientific-computing.netlify.app/07_statistical_modeling_1.html
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
