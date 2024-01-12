@@ -1,5 +1,5 @@
 ---
-title: "Bayesian Statistcs - I"
+title: "Bayesian Statistics - I"
 description: |
   Bayesian fitting method, priors, how to interpret/report results.
 author:
