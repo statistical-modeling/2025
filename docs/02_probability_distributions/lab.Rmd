@@ -3,7 +3,7 @@ title: "Probability distribution functions Lab"
 author:
  - "Andrea Sánchez-Tapia"
  - "Paulo Inácio Prado"
-date: "2023-01-11"
+date: "2024-01-18"
 output:
     distill::distill_article:
       toc: true
@@ -110,8 +110,8 @@ just think on its behavior.
 ### Parameters
 
 You can think in parameters of a function as radio buttons that you
-turn right or left to changes some aspect of the function. The normal,
-or Gaussian, function is always bell-shaped. Is has two parameters,
+turn right or left to change some aspect of the function. The normal,
+or Gaussian, function is always bell-shaped. It has two parameters,
 usually referred by the Greek letters $\mu$ and $\sigma$.
 
 The parameter $\mu$ defines the position of the bell-shaped curve
@@ -152,7 +152,7 @@ for (i in 2:length(vals))
 ### Getting probabilities from a normal curve
 
 It is important to distinguish the *probability density function* of a
-continuous variable and the probability of that variable.
+continuous variable and the probability of a given measurement.
 
 The bell-shaped curve of the normal is a density function. As it is
 not a probability, it can reach values greater than one
@@ -196,8 +196,9 @@ area (or $p=0.5$) run this command in R:
 qnorm(p = 0.5, mean = 0, sd = 1)
 ```
 
-Finally, to get the probability of an interval, you can take the difference between the
-accumulated probabilities for the upper limit and for the lower limit of the interval:
+Finally, to get the probability of an interval, you can take the
+difference between the accumulated probabilities for the upper limit
+and for the lower limit of the interval:
 
 ```{r, echo=FALSE, eval=TRUE, out.width=600}
 knitr::include_graphics("figs/dif_normal.png")
@@ -206,8 +207,9 @@ knitr::include_graphics("figs/dif_normal.png")
 Take, for example, [the length in centimeters of baby girls at
 birth](https://cdn.who.int/media/docs/default-source/child-growth/child-growth-standards/indicators/length-height-for-age/lfa-girls-0-2-percentiles.pdf?sfvrsn=d5f0d7c1_5),
 which follows a normal distribution with $\mu = 49.1$ and $\sigma
-=1.86$. This distribution predicts that the probability of a girl born
-with length between $40$ and $50$ cm is:
+=1.86$. This distribution is a statistical model, that is, **a model
+that assigns probabilities to measurements**.  It predicts that the
+probability of a girl born with length between $40$ and $50$ cm is:
 
 
 ```{r }
@@ -227,7 +229,7 @@ pnorm(50 + 0.05, mean = 49.1, sd = 1.86) - pnorm(50 - 0.05, mean = 49.1, sd = 1.
 
 The R function *rnorm* generates random numbers from a normal
 distribution. Let's simulate a sample of 30 lengths of newborn girls
-from the normal distribution defined above and the get mean length in this sample:
+from the normal distribution defined above and then get mean length in this sample:
 
 
 ```{r , eval=FALSE}
@@ -255,7 +257,7 @@ abline(v = 49.1, lty = 2, col ="blue") # mu
 The blue line is the value of $\mu$. There are more sample means close
 to $\mu$ than sample means that deviate much from $\mu$. The
 distribution looks pretty symmetric around $\mu$ too, showing that a
-given under or overestimation of $\mu$ by the sample are equally
+under or overestimation of $\mu$ by the sample are equally
 likely.
 
 If you agree with these interpretations, you probably agree that the
@@ -264,10 +266,10 @@ is, sample means on average hit the parametric mean of the population
 from which the sample was drawn.
 
 In fact, we have a mathematical deduction that proves this result that
-we have approximated with simulated samples. The **Law of Large Numbers** says that the expected value
-of the distribution of sample means tends to the value of the
-parametric mean of the sampled distribution (which in this case is
-$\mu$).
+we have approximated with simulated samples. The **Law of Large
+Numbers** says that the expected value of the distribution of sample
+means tends to the value of the parametric mean of the sampled
+distribution (which in this case is $\mu$).
 
 On the other hand, the __Central Limit Theorem__ states that the
 distribution of sample means tends to a Gaussian with parameter
@@ -306,9 +308,13 @@ sd(my.samples)
 
 # The Law of Large numbers
 
-The __Law of large numbers__ states that the means of samples of increasing size will converge towards the mean of the population, $\mu$.
+The __Law of large numbers__ states that the means of samples of
+increasing size will converge towards the mean of the population,
+$\mu$.
 
-We can observe that with samples from a normal random variable up to size n = 5000, with $\mu = 0.2$ and $\sigma = 1$. Look how when increasing sample size, the sample means converge towards $\mu$.
+We can check that simulating samples from a normal random variable up to
+size n = 5000, with $\mu = 0.2$ and $\sigma = 1$. See how when
+increasing sample size, the sample means converge towards $\mu$.
 
 ```{r}
 population <- rnorm(n = 5000, mean = 0.2)
@@ -322,7 +328,10 @@ abline(h = mean(population), col = "red", lwd = 2)
 
 ```
 
-__Challenge:__ Adapt the previous code to a Poisson distribution with $\lambda = 0.7$, with a population size of $n = 500$. Then create different samples with increasing sizes, from 50 to 500 points in 10 intervals. 
+__Challenge:__ Adapt the previous code to a Poisson distribution with
+$\lambda = 0.7$, with a population size of $n = 500$. Then create
+different samples with increasing sizes, from 50 to 500 points in 10
+intervals.
 
 A solution for this can be seen in the following chunk of code (click Show code when you're done).
 
@@ -340,9 +349,11 @@ abline(h = mean(population), col = "red", lwd = 2)
 
 # The Central Limit Theorem
 
-The __Central Limit Theorem__ states that the arithmetic means of large samples of random variables conform to normal distributions _even if the underlying random variables are not normal_.
+The __Central Limit Theorem__ states that the arithmetic means of
+large samples of random variables conform to normal distributions
+_even if the underlying random variables are not normal_.
 
-Let's see this starting with a uniform random variable in the [0, 100] interval, for example:
+Let's check this starting with a uniform random variable in the [0, 100] interval, for example:
 
 ```{r}
 pop <-  runif(n = 1000, min = 0, max = 100)
@@ -352,8 +363,10 @@ hist(pop, main = "Histogram of measurements from a uniform \n random variable")
 As can be seen in the histogram, the probability distribution of this population is not normal.
 
 
-Since the Central Limit Theorem applies to samples that are large enough, let's make different tests with increasing sample sizes from this population.
-The function `sample()` executes this sampling from vector `pop`. First, let's make a single sample of size 5.
+Since the Central Limit Theorem applies to samples that are large
+enough, let's make different tests with increasing sample sizes from
+this population.  The function `sample()` executes this sampling from
+vector `pop`. First, let's make a single sample of size 5.
 
 ```{r}
 # One sample
@@ -364,7 +377,7 @@ sample
 
 
 
-To repeat this sampling, we will create a loop and save each mean in an empty vector.
+To repeat this sampling, we will create a loop and save each sample mean in an empty vector.
 
 ```{r}
 # We create the empty vector
@@ -385,7 +398,13 @@ Compare these results when you increase the sample size from 5 to 30.
 
 ## Large enough sample size and skewness
 
-The CLT assumes that the sample size is large, but sometimes it is difficult to understand what size is enough. This can be especially true in the case of distributions that are more skewed. For skewed disttributions, a larger sample size may be needed to obtain normal distribuitions from the sample means than for symmetrical distributions. Let's compare this effect in the case of Poisson distributions for different sample sizes and $\lambda$ values.
+The CLT assumes that the sample size is large, but sometimes it is
+difficult to understand what size is enough. This can be especially
+true in the case of distributions that are more skewed. For skewed
+disttributions, a larger sample size may be needed to obtain normal
+distribuitions from the sample means than for symmetrical
+distributions. Let's compare this effect in the case of Poisson
+distributions for different sample sizes and $\lambda$ values.
 
 
 ```{r, poisson lambda0.5}
@@ -406,8 +425,10 @@ hist(sample_means, freq = F, main = "")
 curve(dnorm(x, mean = mean(sample_means), sd = sd(sample_means)), from = 0 , to = 1.5, col = "red", add = T)
 ```
 
-In this case, the sample means are not distributed according to a normal random variable. Repeat these calculations for larger sample sizes, like 20 or 30. What can you observe
-about the effect of the sample size on the distribution of the sample means?
+In this case, the sample means are not distributed according to a
+normal random variable. Repeat these calculations for larger sample
+sizes, like 20 or 30. What can you observe about the effect of the
+sample size on the distribution of the sample means?
 
 
 ```{r, code_folding = T}
@@ -425,7 +446,10 @@ hist(sample_means, freq = F, main = "")
 curve(dnorm(x, mean = mean(sample_means), sd = sd(sample_means)), from = 0 , to = 1.5, col = "red", add = T)
 ```
 
-Do the same comparison with a more symmetric Poisson random variable (that is, with a higher Lambda value). The sample size needed to obtain a normal distribution from the sample means is lower than in the case of more skewed distributions.
+Do the same comparison with a more symmetric Poisson random variable
+(that is, with a higher Lambda value). The sample size needed to
+obtain a normal distribution from the sample means is lower than in
+the case of more skewed distributions.
 
 See an example with $\lambda = 3$ and sample size = 5: 
 
@@ -464,7 +488,8 @@ Y <- sample(x = c(1,-1), size = 100, replace = TRUE)
 
 Let's imagine that this random sequence represents a walk where the
 value 1 means a step forward, and a value -1 represent a step
-backwards. The plot below draws this random walk, starting at position zero:
+backwards. The plot below draws this random walk, starting at position
+zero:
 
 
 ```{r}
@@ -529,7 +554,9 @@ sd(my.walks)
 ```
 
 And you can add the Normal distribution deduced from the Central Limit
-Theorem to the bar plots of the simulated values ^[The argument `freq=FALSE` used below makes a histogram in density scale, to allow superimposing the theoretical probability density function]:
+Theorem to the bar plots of the simulated values ^[The argument
+`freq=FALSE` used below makes a histogram in density scale, to allow
+superimposing the theoretical probability density function]:
 
 
 ```{r }

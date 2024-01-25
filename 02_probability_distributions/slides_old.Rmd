@@ -1,6 +1,6 @@
 ---
 title: "Random variables and probability distributions"
-subtitle: "Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology"  
+subtitle: "Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology - 2023"  
 author: 
   - "PI (Paulo Inácio Prado)"
 date: '29 January 2024'
@@ -239,16 +239,13 @@ dthor.m %>%
 
 ---
 
-## The density scale
+## Random variables
 
 .pull-left[
 
-* Let's rescale the y-axis of this histogram, to make the total area of the histogram equal to one.
-* That is, we express the original frequencies (or counts) in a new
-  scale, such that the sum of the area of the bars is equal to one. We cal this scale **density**
-* This is a linear (a.k.a proportional) rescaling, so the shape of the
-  histogram does not change.
-
+* Real data always show variation, whatever your control
+* Some values are more likely than others
+* There is a central tendency (or average value)
 ]
 
 .pull-right[
@@ -260,7 +257,6 @@ p1 <-
     dthor.m %>%
     ggplot(aes(th.mean)) +
     geom_histogram(aes(y=after_stat(density)), bins = 11, alpha =0.5) +
-    geom_rug(col = "blue", size =1.1) +
     xlim(0.97, 1.1) +
     xlab("Mean thorax length (mm)")+
     ylab("Density") +
@@ -273,14 +269,12 @@ p1
 
 ---
 
-## The density function
+## Density function
 
 .pull-left[
 
-* Now let's imagine how to "smooth" the distribution of densities, using a continous function.
-* Think on this function as a continuous counterpart (or a continuous
-  limit) of the histogram. This is the **density function**
-* The area under the curve of a density function is one.
+* A continuous counterpart of an histogram. 
+* As for the histogram, the area under the curve of a density function is one.
 
 ]
 
@@ -299,15 +293,12 @@ p1  + geom_density(color = "blue", size = 1.5)
 ---
 
 
-## Density function: some definitions
+## Density function
 
 .pull-left[
 
-* The density function is a continuous mathematical function $f(x)$ that returns a density
+* A continuous mathematical function $f(x)$ that returns a density
   value for any value of the measurement $x$.
-* We call the **sample space** ( $ \Omega $ ) the set of all values that a
-  random variable can assume.
-
 
 ]
 
@@ -346,88 +337,23 @@ p2  +
 
 ---
 
-## Density function and probabilities
-
-.pull-left[
-
-
-* The integral of $f(x)$ over the sample space is one.
-
-* This is a mathematical way to say that the area under $f(x)$ is one.
-
-]
-
-.pull-right[
-.center[
-```{r}
-p2 +
-    geom_ribbon(aes(x=x, ymin=0, ymax =y),
-                data = tmp,
-                fill = "blue", alpha =.5) +
-    geom_segment(aes(x=1.05, xend=1.065, y= 13, yend = 15), arrow = arrow()) +
-    annotate("label", x = 1.087, y = 15, label = TeX(r"($\int_{\Omega} f(x) \, dx = 1)", output = "character"),
-             parse = TRUE, size = 7)
-
-```
-]]
-
----
-
-## Density function and probabilities
-
-.pull-left[
-
-
-* The area under $f(x)$ for any interval $L \leq x \leq U$ is a
-  fraction of the total area under $f(x)$.
-
-* This area is a mathematical expression of the **probability assigned
-  to a measurement interval**. It is also an integral of the density
-  function:
-
-$$ P(L \leq x \leq U) ~ = ~ \int_L^U f(x) \, dx $$
-
-]
-
-.pull-right[
-.center[
-```{r}
-p2 +
-    geom_ribbon(aes(x=x, ymin=0, ymax =y),
-                data = filter(tmp, x>1.04&x<1.08),
-                fill = "blue", alpha =.5) +
-    geom_segment(aes(x=1.05, xend=1.07, y= 13, yend = 15), arrow = arrow()) +
-    annotate("label", x = 1.087, y = 15, label = TeX(r"($\int_{1.04}^{1.08} f(x) \, dx)", output = "character"),
-             parse = TRUE, size = 7)
-
-```
-]]
-
----
-
 
 ## Probability distributions as models
 
 
-* The density function that we have defined is used to express probabilities of random variables, or a  **probability distribution**.
+* The density function that we have defined is a **probability distribution**
 
 --
 
-* It is a model that attributes probabilities to data, that is, to values of a random variable.
+* It is a model that attributes probabilities to data
 
 --
 
-* In our example, the random variable is the mean thorax length that
-  we got from samples of 30 flies from sites in Australia.
+* With this kind of model we can ask many interesting questions like ...
 
---
-
-* With this kind of model we can ask many interesting questions about
-  these sample means, like:
 
 
 ---
-
 class: center, middle
 
 ### What's the probability of a mean thorax length of up 1.04 mm?
@@ -440,42 +366,10 @@ p2 +
                 fill = "blue", alpha =.5)
 ```
 
----
-
-class: center, middle
-
-### What's the confidence interval for the mean thorax length?
-
-```{r}
-
-p2 +
-    geom_ribbon(aes(x=x, ymin=0, ymax =y),
-                data = filter(tmp, x>0.995&x<1.07),
-                fill = "blue", alpha =.5) +
-    geom_vline(xintercept = 0.995, col = "red", linetype = "dashed", size = 1.1) +
-    geom_vline(xintercept = 1.07, col = "red", linetype = "dashed", size = 1.1) +
-    geom_segment(aes(x=0.995, xend = 1.07, y = 26.5, yend = 26.5),
-                 arrow = arrow(ends = "both"),
-                 col = "red") +
-    annotate("label", x = 1.035, y = 26.5, label = "95% CI", size = 7) 
-```
 
 
 ---
 
-class: center, middle
-
-### What's the theoretical expected value for this distribution?
-
-
-```{r}
-th.m <- mean(dthor.m$th.mean)
-p2 +
-    geom_vline(xintercept = th.m, col = "red", linetype = "dashed", size = 1.1) +
-    geom_segment(aes(x = th.m + 0.002, xend=1.068, y= 12.5, yend = 15), arrow = arrow()) +
-    annotate("label", x = 1.087, y = 15, label = TeX(r"($\int x \cdot f(x) \;  dx)", output = "character"),
-             parse = TRUE, size = 7)
-```
 
 
 
