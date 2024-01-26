@@ -23,7 +23,10 @@ knitr::opts_chunk$set(eval = TRUE, echo = FALSE, warning = FALSE, message = FALS
 library(ggplot2)
 library(ggthemes)
 library(dplyr)
+library(tidyr)
 library(latex2exp)
+library(ggridges)
+library(viridis)
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -86,74 +89,9 @@ theme_publication <- function(base_size=14, base_family="helvetica") {
     
 }
 
-## Function to shade under normal curve
-## From https://www.r-bloggers.com/2011/04/how-to-shade-under-a-normal-density-in-r/
-shadenorm <- function(below = NULL,
-                      above = NULL,
-                      pcts = c(0.025, 0.975),
-                      mu = 0,
-                      sig = 1,
-                      numpts = 500,
-                      color = "gray",
-                      dens = 40,
-                      justabove = FALSE,
-                      justbelow = FALSE,
-                      lines = FALSE,
-                      between = NULL,
-                      outside = NULL) {
-  if (is.null(between)) {
-      below = ifelse(is.null(below), qnorm(pcts[1], mu, sig), below)
-      above = ifelse(is.null(above), qnorm(pcts[2], mu, sig), above)
-  }
-  if (is.null(outside) == FALSE) {
-    below = min(outside)
-    above = max(outside)
-  }
-  lowlim = mu - 4 * sig
-  uplim  = mu + 4 * sig
-  x.grid = seq(lowlim, uplim, length = numpts)
-  dens.all = dnorm(x.grid, mean = mu, sd = sig)
-  if (lines == FALSE) {
-    plot(x.grid,
-         dens.all,
-         type = "l",
-         xlab = "X",
-         ylab = "Density")
-  }
-  if (lines == TRUE) {
-    lines(x.grid, dens.all)
-  }
-  if (justabove == FALSE) {
-    x.below    = x.grid[x.grid < below]
-    dens.below = dens.all[x.grid < below]
-    polygon(c(x.below, rev(x.below)),
-            c(rep(0, length(x.below)), rev(dens.below)),
-            col = color,
-            density = dens)
-  }
-  if (justbelow == FALSE) {
-    x.above    = x.grid[x.grid > above]
-    dens.above = dens.all[x.grid > above]
-    polygon(c(x.above, rev(x.above)),
-            c(rep(0, length(x.above)), rev(dens.above)),
-            col = color,
-            density = dens)
-  }
-  if (is.null(between) == FALSE) {
-    from = min(between)
-    to   = max(between)
-    x.between    = x.grid[x.grid > from & x.grid < to]
-    dens.between = dens.all[x.grid > from & x.grid < to]
-    polygon(c(x.between, rev(x.between)),
-            c(rep(0, length(x.between)), rev(dens.between)),
-            col = color,
-            density = dens)
-  }
-}
-
 ```
 
-## Today's key concepts
+## Key concepts
 
 + Random variables
 + 
@@ -305,7 +243,7 @@ p1  + geom_density(color = "blue", size = 1.5)
 
 * The density function is a continuous mathematical function $f(x)$ that returns a density
   value for any value of the measurement $x$.
-* We call the **sample space** ( $ \Omega $ ) the set of all values that a
+* We call the **sample space** ( $\Omega$ ) the set of all values that a
   random variable can assume.
 
 
@@ -365,7 +303,7 @@ p2 +
                 data = tmp,
                 fill = "blue", alpha =.5) +
     geom_segment(aes(x=1.05, xend=1.065, y= 13, yend = 15), arrow = arrow()) +
-    annotate("label", x = 1.087, y = 15, label = TeX(r"($\int_{\Omega} f(x) \, dx = 1)", output = "character"),
+    annotate("label", x = 1.087, y = 15, label = TeX(r"($\int_{\Omega} f(x) \, dx = 1$)", output = "character"),
              parse = TRUE, size = 7)
 
 ```
@@ -396,7 +334,7 @@ p2 +
     geom_ribbon(aes(x=x, ymin=0, ymax =y),
                 data = filter(tmp, x>1.04&x<1.08),
                 fill = "blue", alpha =.5) +
-    geom_segment(aes(x=1.05, xend=1.07, y= 13, yend = 15), arrow = arrow()) +
+    geom_segment(aes(x=1.05, xend=1.067, y= 13, yend = 15), arrow = arrow()) +
     annotate("label", x = 1.087, y = 15, label = TeX(r"($\int_{1.04}^{1.08} f(x) \, dx)", output = "character"),
              parse = TRUE, size = 7)
 
@@ -477,13 +415,168 @@ p2 +
              parse = TRUE, size = 7)
 ```
 
+---
 
+## Which probability distribution ?
+
+
+* Now we know that probability distributions are a nice choice to
+  model random variates. But how to build such a model?
+
+--
+
+* There are recipes to do that, but many probability distributions
+  have been already proposed, for a huge variety of data types.
+
+--
+
+* In our example, our random variable are sample means. The **Central
+  Limit Theorem** states that sample means will follow a Normal
+  distribution, as the size of the samples increase.
+  
+--
+
+* This is one of the most important results in probability theory. We
+  have very good reasons to chosse a Normal distribution as our
+  statistical model.
+
+---
+
+## The Normal Distribution
+
+.pull-left[
+
+* Created to describe distribution of additive measurement errors.
+* TCL tell us that this is good model for any random variable which is
+a sum of many other random variables.
+* It's a symmetric distribution, always bell-shaped.
+* It has two parameters, that correspond to the mean and standard
+  deviation of the distribution.
+* Its mean and standard deviation  are independent.
+]
+
+.pull-right[
+.center[
+
+```{r normal-curve}
+
+ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+    stat_function(fun = dnorm, col = "blue", size = 1.5) +
+    annotate("label", x = 2.6, y = 0.35,
+             label = TeX(r"($f(x) \, = \, \frac{1}{\sigma \sqrt{2\pi}} \; e^{- \frac{1}{2} \left( \frac{x-\,\mu}{\sigma} \right)^2} $)",
+                         output = "character"),
+             parse = TRUE, size = 6) +
+    xlab("x") +
+    ylab("Density") +
+    ggtitle("Normal Probability Density Function") +
+    theme_publication(18)
+```
+
+]]
+
+---
+
+
+## Location parameter of the Normal Distribution
+
+
+.pull-left[
+
+* The Normal has a **location parameter**, that we'll call $\mu$.
+* This parameter corresponds to the mean of the Normal distribution.
+* By changing $\mu$ we change the position of the Normal distribution
+along the x axis, without changing the standard deviation.
+]
+
+.pull-right[
+.center[
+	```{r normal-location}
+    
+    df1 <- data.frame(
+        case_number = factor(1:5),
+        caseMean = c(-4, -2, 0, 2, 4),
+        caseSD = 1
+    )
+    
+    n <- 100
+    df3 <-
+        df1 %>%
+        mutate(low  = caseMean - 3 * caseSD, high = caseMean + 3 * caseSD) %>%
+        uncount(n, .id = "row") %>%
+        dplyr::mutate(x    = (1 - row/n) * low + row/n * high, 
+                      norm = dnorm(x, caseMean, caseSD))
+    
+    ggplot(df3, aes(x, factor(case_number), height = norm, color = case_number)) +
+        geom_ridgeline(scale = 3, aes(fill = case_number), alpha =0.5, linetype = 0) +
+        xlim(-9,7) + 
+        theme_publication(18) +
+        theme(legend.position = "none",
+              axis.line.y = element_blank(),
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.title.y = element_blank()
+              ) +
+        annotate("text", x = rep(-8.5,5),
+                 y = 1:5 + 0.05,
+                 label = c(TeX(r"($\mu = - 4$)"), TeX(r"($\mu = - 2$)"), TeX(r"($\mu = 0$)"),
+                           TeX(r"($\mu = 2$)"), TeX(r"($\mu = 4$)")),
+                 size = 6)
+	```
+]
+]
+
+---
+
+## Scale parameter of the Normal Distribution
+
+.pull-left[
+
+* The Normal has a **scale parameter**, that we'll call $\sigma$.
+* This parameter corresponds to the standard deviation of the Normal distribution.
+* By changing $\sigma$ we change the spread of the Normal distribution
+around the mean, without changing the mean.
+]
+
+```{r normal-scale}
+
+df1 <- data.frame(
+    case_number = factor(1:5),
+    caseMean = 0,
+    caseSD = rev(seq(0.5, 2.5,  by =0.5))
+    )
+
+n <- 100
+df3 <-
+    df1 %>%
+    mutate(low  = caseMean - 3 * caseSD, high = caseMean + 3 * caseSD) %>%
+    uncount(n, .id = "row") %>%
+    dplyr::mutate(x    = (1 - row/n) * low + row/n * high, 
+           norm = dnorm(x, caseMean, caseSD))
+
+ggplot(df3, aes(x, factor(case_number), height = norm, color = case_number)) +
+    geom_ridgeline(scale = 3, aes(fill = case_number), alpha =0.5, linetype = 0) +
+    xlim(-9,7) + 
+    theme_publication(18) +
+    theme(legend.position = "none",
+          axis.line.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.title.y = element_blank()
+          ) +
+    annotate("text", x = rep(-8.5,5),
+             y = 1:5 + 0.05,
+             label = c(TeX(r"($\sigma = 2.5$)"), TeX(r"($\sigma = 2$)"), TeX(r"($\sigma = 1.5$)"),
+                       TeX(r"($\sigma = 1$)"), TeX(r"($\sigma = 0.5$)")),
+             size = 6)
+```
+
+
+---
 
 ## References
 
-+ Gotelli, N.J., Ellison, A.M., Ellison, S.E. and
-  S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer
-  Associates Publishers.
++ Gotelli, N.J., Ellison, A.M., Ellison, S.E., 2004. A Primer of
+  Ecological Statistics. Sinauer Associates Publishers.
 
 + McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with
   Examples in R and Stan, 2nd ed. CRC Press.

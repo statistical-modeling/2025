@@ -46,7 +46,7 @@ class: center, middle, inverse, title-slide
 
 
 
-## Today's key concepts
+## Key concepts
 
 + Random variables
 + 
@@ -150,7 +150,7 @@ class: center, middle, inverse, title-slide
 
 * The density function is a continuous mathematical function `\(f(x)\)` that returns a density
   value for any value of the measurement `\(x\)`.
-* We call the **sample space** ( $ \Omega $ ) the set of all values that a
+* We call the **sample space** ( `\(\Omega\)` ) the set of all values that a
   random variable can assume.
 
 
@@ -213,7 +213,7 @@ $$ P(L \leq x \leq U) ~ = ~ \int_L^U f(x) \, dx $$
 ## Probability distributions as models
 
 
-* The density function that we have defined is a **probability distribution**
+* The density function that we have defined is used to express probabilities of random variables, or a  **probability distribution**.
 
 --
 
@@ -256,13 +256,94 @@ class: center, middle
 
 ![](slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
+---
 
+## Which probability distribution ?
+
+
+* Now we know that probability distributions are a nice choice to
+  model random variates. But how to build such a model?
+
+--
+
+* There are recipes to do that, but many probability distributions
+  have been already proposed, for a huge variety of data types.
+
+--
+
+* In our example, our random variable are sample means. The **Central
+  Limit Theorem** states that sample means will follow a Normal
+  distribution, as the size of the samples increase.
+  
+--
+
+* This is one of the most important results in probability theory. We
+  have very good reasons to chosse a Normal distribution as our
+  statistical model.
+
+---
+
+## The Normal Distribution
+
+.pull-left[
+
+* Created to describe distribution of additive measurement errors.
+* TCL tell us that this is good model for any random variable which is
+a sum of many other random variables.
+* It's a symmetric distribution, always bell-shaped.
+* It has two parameters, that correspond to the mean and standard
+  deviation of the distribution.
+* Its mean and standard deviation  are independent.
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/normal-curve-1.png)&lt;!-- --&gt;
+
+]]
+
+---
+
+
+## Location parameter of the Normal Distribution
+
+
+.pull-left[
+
+* The Normal has a **location parameter**, that we'll call `\(\mu\)`.
+* This parameter corresponds to the mean of the Normal distribution.
+* By changing `\(\mu\)` we change the position of the Normal distribution
+along the x axis, without changing the standard deviation.
+]
+
+.pull-right[
+.center[
+	![](slides_files/figure-html/normal-location-1.png)&lt;!-- --&gt;
+]
+]
+
+---
+
+## Scale parameter of the Normal Distribution
+
+.pull-left[
+
+* The Normal has a **scale parameter**, that we'll call `\(\sigma\)`.
+* This parameter corresponds to the standard deviation of the Normal distribution.
+* By changing `\(\sigma\)` we change the spread of the Normal distribution
+around the mean, without changing the mean.
+]
+
+![](slides_files/figure-html/normal-scale-1.png)&lt;!-- --&gt;
+
+
+---
 
 ## References
 
-+ Gotelli, N.J., Ellison, A.M., Ellison, S.E. and
-  S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer
-  Associates Publishers.
++ Gotelli, N.J., Ellison, A.M., Ellison, S.E., 2004. A Primer of
+  Ecological Statistics. Sinauer Associates Publishers.
 
 + McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with
   Examples in R and Stan, 2nd ed. CRC Press.
