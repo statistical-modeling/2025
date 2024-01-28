@@ -49,7 +49,11 @@ class: center, middle, inverse, title-slide
 ## Key concepts
 
 + Random variables
-+ 
++ Probability density function
++ Probability distributions as statistical models
++ Fitting statistical model to data
++ The normal probability distribution
++ Other probability distributions
 
 ---
 
@@ -63,7 +67,7 @@ class: center, middle, inverse, title-slide
 * Samples of *Drophilla * from 18 sites in Autralia
 * blab
 * blaa
-* Mean of thoras length of 30 flies from each line
+* Mean of thorax length of 30 flies from each line
 
 ]
 
@@ -82,9 +86,9 @@ class: center, middle, inverse, title-slide
 
 .pull-left[
 
-* Real data always show variation, whatever your control
-* Some values are more likely than others
-* There is a central tendency (or average value)
+* Measurements always vary, even if taken exactly in the same way. 
+* Still, some values are more likely than others.
+* In may cases, there is also a central tendency (or average value)
 ]
 
 
@@ -173,9 +177,9 @@ class: center, middle, inverse, title-slide
 .pull-left[
 
 
-* The integral of `\(f(x)\)` over the sample space is one.
+* The integral of `\(f(x)\)` over the sample space equals one.
 
-* This is a mathematical way to say that the area under `\(f(x)\)` is one.
+* This is a mathematical way to say that the area under `\(f(x)\)` equals one.
 
 ]
 
@@ -213,16 +217,19 @@ $$ P(L \leq x \leq U) ~ = ~ \int_L^U f(x) \, dx $$
 ## Probability distributions as models
 
 
-* The density function that we have defined is used to express probabilities of random variables, or a  **probability distribution**.
+* The density function that we have defined is used to express
+  probabilities of random variables, or a **probability
+  distribution**.
 
 --
 
-* It is a model that attributes probabilities to data, that is, to values of a random variable.
+* It is a model that attributes probabilities to data, that is, to
+  values of a random variable.
 
 --
 
 * In our example, the random variable is the mean thorax length that
-  we got from samples of 30 flies from sites in Australia.
+  we got from samples of 30 flies.
 
 --
 
@@ -278,7 +285,7 @@ class: center, middle
 --
 
 * This is one of the most important results in probability theory. We
-  have very good reasons to chosse a Normal distribution as our
+  have very good reasons to choose a Normal distribution as our
   statistical model.
 
 ---
@@ -288,9 +295,9 @@ class: center, middle
 .pull-left[
 
 * Created to describe distribution of additive measurement errors.
-* TCL tell us that this is good model for any random variable which is
+* CLT tells us that this is good model for any random variable which is
 a sum of many other random variables.
-* It's a symmetric distribution, always bell-shaped.
+* It is a symmetric distribution, always bell-shaped.
 * It has two parameters, that correspond to the mean and standard
   deviation of the distribution.
 * Its mean and standard deviation  are independent.
@@ -311,7 +318,7 @@ a sum of many other random variables.
 
 .pull-left[
 
-* The Normal has a **location parameter**, that we'll call `\(\mu\)`.
+* The Normal has a **location parameter**, that we will call `\(\mu\)`.
 * This parameter corresponds to the mean of the Normal distribution.
 * By changing `\(\mu\)` we change the position of the Normal distribution
 along the x axis, without changing the standard deviation.
@@ -329,16 +336,103 @@ along the x axis, without changing the standard deviation.
 
 .pull-left[
 
-* The Normal has a **scale parameter**, that we'll call `\(\sigma\)`.
+* The Normal has a **scale parameter**, that we will call `\(\sigma\)`.
 * This parameter corresponds to the standard deviation of the Normal distribution.
 * By changing `\(\sigma\)` we change the spread of the Normal distribution
 around the mean, without changing the mean.
 ]
 
+
+.pull-right[
+.center[
+
 ![](slides_files/figure-html/normal-scale-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+## Model fitting
+
+.pull-left[
+
+* We have chosen a statistical model for our data
+
+* This model has two free parameters, `\(\mu\)` and `\(\sigma\)`
+
+* Which value should we choose for these two parameters?
+
+* Finding good values for parameters of a statistical model means
+  **fitting a model to the data**.
+]
+
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/fitting-normal-1.png)&lt;!-- --&gt;
+
+]
+]
+
+
+
+## Model fitting
+
+.pull-left[
+
+* We fit statistical models by **estimating** the value of parameters,
+  given the data observed.
+
+* There are many ways to do that. For one of the fitting methods we will
+  use in this course, the estimates for fitting a normal distribution are:
+  
+  * The sample mean as an estimate for `\(\mu\)`
+  * The sample standard deviation as an estimate for `\(\sigma\)`
+
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/fitting-normal_right_one-1.png)&lt;!-- --&gt;
+
+]
+]
 
 
 ---
+
+## Some notation
+
+
+* Our model: mean thorax length `\(x\)` follows a normal distribution:
+
+$$ x \, \sim \, \text{Normal}(\mu, \sigma)$$
+
+--
+
+* The estimate of the parameter `\(\mu\)` is the mean of the values of `\(x\)` in the sample:
+
+$$ \widehat{\mu} \, = \, \bar{x} \, = \, \frac{1}{N} \, \sum_{i=1}^N x_i $$
+
+
+---
+
+
+## Some notation
+
+
+
+* The estimate of the parameter `\(\sigma\)` is the root square of the variance of the values of `\(x\)` in the sample:
+
+$$ \widehat{\sigma} \, = \, \sqrt{s^2} $$
+
+* Where the variance is the mean of the squared deviation from the sample mean:
+
+$$ s^2 \, = \, \frac{1}{N} \, \sum_{i=1}^N (x_i - \bar{x})^2 $$ 
+
+---
+
 
 ## References
 
