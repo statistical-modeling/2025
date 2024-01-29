@@ -1,5 +1,5 @@
 ---
-title: "Bayesian Statistcs - II"
+title: "Bayesian Statistics - II"
 description: |
   Comparisons between bayes and ML.
 author:
