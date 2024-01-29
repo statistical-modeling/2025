@@ -3,18 +3,23 @@
   <head>
     <title>Random variables and probability distributions</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Andrea Sánchez-Tapia" />
+    <meta name="author" content="PI (Paulo Inácio Prado)" />
+    <meta name="date" content="2024-01-29" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <script src="libs/clipboard/clipboard.min.js"></script>
     <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
     <script src="libs/shareon/shareon.min.js"></script>
     <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
     <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <script src="libs/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
     <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
     <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
     <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
-    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
-    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -25,13 +30,13 @@ class: center, middle, inverse, title-slide
 # Random variables and probability distributions
 ]
 .subtitle[
-## Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology - 2023
+## Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology
 ]
 .author[
-### Andrea Sánchez-Tapia
+### PI (Paulo Inácio Prado)
 ]
 .date[
-### January 10th-11th 2023
+### 29 January 2024
 ]
 
 ---
@@ -41,431 +46,401 @@ class: center, middle, inverse, title-slide
 
 
 
- 
-
-## Today's key concepts
+## Key concepts
 
 + Random variables
-+ Discrete random variables: Bernoulli, Binomial, Poisson.
-+ Continuous random variables
-    + Probability density functions, PDFs
-    + Cumulative density functions, CDFs
-+ Expected value, variance
-+ Gaussian distribution and its key properties
-+ Central limit theorem and the Law of large Numbers
++ Probability density function
++ Probability distributions as statistical models
++ Fitting statistical model to data
++ The normal probability distribution
++ Other probability distributions
 
 ---
 
 ## Empirical data
 
-+ Assuming __random__ and __independent__ sampling 
 
---
 
-+ We study variables for which __the specific outcome of a single trial or measurement is unknown__ even if we understand the set of all possible outcomes (the sample space)
 
---
+.pull-left[
 
-+ Given enough experiments/trials, we can hypothesize/estimate how often the possible outcomes will happen: their __probability distribution__ 
+* Samples of *Drophilla * from 18 sites in Autralia
+* blab
+* blaa
+* Mean of thorax length of 30 flies from each line
 
---
-    + A coin toss/the presence of a species
---
-    + The number of individuals in a given sample
---
-    + The length of a body part
+]
+
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/drosophila pops histogram-1.png)&lt;!-- --&gt;
+
+]
+]
 
 ---
+
 ## Random variables
 
-+ __Random variables__ are mathematical formalizations of these several types of data
+.pull-left[
 
---
+* Measurements always vary, even if taken exactly in the same way. 
+* Still, some values are more likely than others.
+* In may cases, there is also a central tendency (or average value)
+]
 
-+ Some experiment outcomes are __discrete__, countable and some are not, they can take any value inside __continuous__ intervals.
 
---
+.pull-right[
+.center[
 
-+ __Probability distributions__: they represent __theoretical__ distribution of a random variable of a certain kind. (How probable are each of the outcomes)
 
---
+![](slides_files/figure-html/drosophila-mean-hist-1.png)&lt;!-- --&gt;
 
-+ Random variables can be described by their __parameters__: key properties that allow us to reconstruct their probability distributions
-
-???
-somebody talked yesterday about "probabilistic models"
-
----
-class: inverse, middle, center 
-
-# Discrete random variables
+]]
 
 ---
-## Bernoulli distribution
 
-+ The simplest experiment has only two outcomes. A coin flip. 
+## The density scale
 
---
+.pull-left[
 
-+ The probability `\(p\)` and `\(q\)` of the two outcomes sums 1. `\(p + q = 1\)`   
+* Let's rescale the y-axis of this histogram, to make the total area of the histogram equal to one.
+* That is, we express the original frequencies (or counts) in a new
+  scale, such that the sum of the area of the bars is equal to one. We cal this scale **density**
+* This is a linear (a.k.a proportional) rescaling, so the shape of the
+  histogram does not change.
 
---
+]
 
-+ If equiprobable, then `\(p = q = 0.5\)` 
-`$$X \thicksim  Bernoulli(p)$$`
---
+.pull-right[
+.center[
 
-+ Repeated Bernoulli trials form a __Binomial Random Variable__. The parameter `\(n\)` = number of trials is key to understanding Binomial Random Variables
+
+![](slides_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+]]
+
+---
+
+## The density function
+
+.pull-left[
+
+* Now let's imagine how to "smooth" the distribution of densities, using a continous function.
+* Think on this function as a continuous counterpart (or a continuous
+  limit) of the histogram. This is the **density function**
+* The area under the curve of a density function is one.
+
+]
+
+
+.pull-right[
+.center[
+
+
+![](slides_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+]]
 
 
 ---
-## Binomial distribution 
-
-`$$X \thicksim  Bin(n,p)$$`
-
---
-
-+ The number of successes `\(X\)` in `\(n\)` independent Bernoulli trials with `\(P(success) = p\)`
-
---
-
-+ The probability of `\(X\)` successes: `\(p^X\)`
-
---
-
-+ The probability of `\(n-X\)` failures: `\((1-p)^{(n-X)}\)`
-
---
-
-+ The number of __combinations__ of X successes in n trials: `$$\binom{n}{X}$$`
-
----
-class: inverse 
-
-What is the probability of 11 successes in 25 trials when `\(p = 0.5\)`?
 
 
-```r
-n &lt;- 25
-p &lt;- 0.5
-X &lt;- 11
-P_success &lt;- p^X
-P_failure &lt;- (1 - p)^(n - X)
-combinations &lt;- choose(n, X)
-P_success * P_failure * combinations
-```
+## Density function: some definitions
 
-```
-## [1] 0.1328409
-```
+.pull-left[
 
-```r
-dbinom(X, size = n, prob = p)
-```
-
-```
-## [1] 0.1328409
-```
-
----
-### We can calculate P(X) for every X in 0:25
+* The density function is a continuous mathematical function `\(f(x)\)` that returns a density
+  value for any value of the measurement `\(x\)`.
+* We call the **sample space** ( `\(\Omega\)` ) the set of all values that a
+  random variable can assume.
 
 
-```r
-P_X &lt;- dbinom(1:25, size = n, prob = p)
+]
 
-plot(P_X, xlab = "X")
-title(
-  "Probability distribution of X ~ Binomial(25, 0.5)")
-abline(v = X ,col = "red")
-abline(h = dbinom(X, size = n, prob = p) ,col = "red")
-```
 
----
-### We can calculate P(X) for every X in 0:25
+.pull-right[
+.center[
+
 
 ![](slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
-
-&lt;!--
-```
-dbinom(x, size, prob)
-pbinom(x, size, prob)
-qbinom(p, size, prob)
-rbinom(n, size, prob)
-```
-
-+ `size` is `\(n\)`, the number of trials 
-+ `prob` is `\(p\)`, the probability of a success in a single Bernoulli trial
-+ `dbinom` gives the probability density for the values in `x`
-+ `pbinom` gives the cumulative density of the distribution (e.g. for values equal or lesser than `x`)
-+ `qbinom` gives the value in x that correspond to the cumulative probability p
-+ `rbinom` samples n values from the distribution defined by `\(n\)` (`size`) and `\(p\)` (`prob`)
---&gt;
+]]
 
 
 ---
 
-## Poisson random variables
+## Density function and probabilities
 
- &lt;!-- + n large, p small, ex. rare plants, animals, unobserved trials --&gt; 
-
-+ The number of events (__counts__) in samples of fixed area, or during a fixed interval of time
-
---
-
-+ Each sample independent from the other
-
---
-
-+ The starting point of such a distribution is zero, a count. 
-
---
+.pull-left[
 
 
-+ A single parameter: `\(\lambda\)`, a _rate_ parameter: the __average number of events per sample__. 
+* The integral of `\(f(x)\)` over the sample space equals one.
 
---
+* This is a mathematical way to say that the area under `\(f(x)\)` equals one.
 
-`$$X \sim Poisson(\lambda)$$`
+]
 
----
-## Poisson random variables
-
-+ The probability of any observation is: 
-
-$$P(X) = \frac{\lambda^X}{X!} e^{-\lambda} $$  
-
---
-
-+ When the event is not very frequent, a reverse-J-shaped curve with a long right tail 
-
---
-
-+ When the event becomes more frequent, the most frequent value increases too and the curve becomes more symmetrical.
-
---
-
-+ With large lambda values, the distribution approaches the shape of a normal curve (but remember it is discrete!)
-
-
- &lt;!-- Relationship between binomial, Poisson and normal distributions
- A binomial can be approached to a Poisson when n is large compared to p
- When \lambda increases, the Poisson distribution becomes more symmetrical and approaches a normal distribution. 
- Binomial between 0 and n (number of trials)
- Poisson is not bounded, long left tail --&gt; 
-
----
-class: inverse
-
-
-```r
-p_poisson &lt;- function(x, lambda) {
-  (lambda ^ x / factorial(x)) * exp(-lambda)
-}
-P_x &lt;- p_poisson(0:5, lambda = 1)
-#P_x &lt;- dpois(0:5, lambda = 1)
-P_x
-```
-
-```
-## [1] 0.367879441 0.367879441 0.183939721 0.061313240 0.015328310 0.003065662
-```
-
-```r
-#plot(P_x, xlab = X)
-```
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]]
 
 ---
 
-## Expected value of discrete variables
+## Density function and probabilities
 
-+ __Weighted average__, where each value is given the importance according to its probability 
+.pull-left[
 
---
 
-$$ E(X) = \sum_{1=1}^{n}{a_ip_i}$$
+* The area under `\(f(x)\)` for any interval `\(L \leq x \leq U\)` is a
+  fraction of the total area under `\(f(x)\)`.
 
---
+* This area is a mathematical expression of the **probability assigned
+  to a measurement interval**. It is also an integral of the density
+  function:
 
-+ Bernoulli: `\(p\)`
-+ Binomial: `\(np\)`
-+ Poisson: `\(\lambda\)`
+$$ P(L \leq x \leq U) ~ = ~ \int_L^U f(x) \, dx $$
 
---
+]
 
-Important: This expectation just marks the tendency and may be outside of the range of possible values of `\(X\)`. 
-
----
-## Variance of a discrete random variable
-
-`$$\sigma^2(X) = E[X-E(X)]^2$$`
---
-
-+ Bernoulli: `\(p(1-p)\)`
-+ binomial: `\(np(1-p)\)`
-+ Poisson: `\(\lambda\)`
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+]]
 
 ---
-class: inverse, center, middle
 
-# Continuous random variables
+
+## Probability distributions as models
+
+
+* The density function that we have defined is used to express
+  probabilities of random variables, or a **probability
+  distribution**.
+
+--
+
+* It is a model that attributes probabilities to data, that is, to
+  values of a random variable.
+
+--
+
+* In our example, the random variable is the mean thorax length that
+  we got from samples of 30 flies.
+
+--
+
+* With this kind of model we can ask many interesting questions about
+  these sample means, like:
 
 
 ---
 
-## Continuous random variables
+class: center, middle
 
-+ Measurements (length, biomass, weight) in a continuous scale, imposible to count or to define the specific set of outcomes
+### What's the probability of a mean thorax length of up 1.04 mm?
 
---
-
-+ Precision depends on measurement
-
---
-
-+ The random variable is represented by a __probability density function__, a continuous curve depicting "relative" probabilities
-
----
-## Probability density function (PDF)
-
-
-+ Total area under the PDF curve equals 1
-
---
-
-+ The specific probability of a single value is zero. Asking this does not make sense because there are infinite possible values
-    
---
-
-+ Instead, We define the probability of `\(X\)` belonging to an interval.
-
---
-
-+ The probability is __the area under the curve__ within the interval: the __integral__
+![](slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 ---
 
-## Cumulative distribution function (CDF)
+class: center, middle
 
-+ The probability of `\(X\)` being lower than `\(Y\)`
-`\(F(Y) = P(X &lt; Y)\)` is the area under the PDF curve in the interval where `\(X &lt; Y\)`
+### What's the confidence interval for the mean thorax length?
 
-+ The CDF sums the areas below Y and therefore is an ever-increasing (monotonic) curve from 0 to 1
-
-
----
-## Uniform random variable
-
-`\(X \thicksim {Uniform[a,b]}\)`
-
-+ Defined for an interval `\([a, b]\)`
-
---
-
-+ The probability of sub-intervals of the same width is the same `\([a, b]\)`
-
---
-
-+ The Distribution Probability Function is `\(1/b-a\)` for all the `\([a, b]\)` interval. (The area under the curve is "divided" by the width of this interval)
-
-
-&lt;!-- `\(E(X) = \frac{b + a}{2}\)`
-`\(\sigma^2(X) = \frac{(b - a)^2}{12}\)`--&gt;
-
+![](slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 
 ---
 
-## Expected value 
+class: center, middle
 
-+ For any particular observation, 0
-+ Subintervals `\(\Delta x\)`
+### What's the theoretical expected value for this distribution?
 
-`$$\sum_{i=1}^{n}{x_if(x_i)\Delta x}$$`
-`$$E(X) = \int{xf(x)dx}$$`
 
----
-## Normal random variables
-
-+ "Gaussian" or normal distribution
-
---
-
-+ The basis for linear regression and analysis of variance
-
---
-
-+ Fits many empirical datasets
-
---
-
-+ Measurements, symmetric around some average value, with some variation around this value
-
---
-
-`$$X \thicksim{\mathcal{N}(\mu, \sigma})$$`
---
-
-+ `\(E(X) = \mu\)`, Variance: `\(\sigma^2(X) = \sigma^2\)`
-
---
-
-$$\mathcal{N}(\mu, \sigma) = \frac{1}{\sigma \sqrt{2\pi}}\;e^{-\frac{1}{2}\left(\frac{Y-\mu}{\sigma}\right)^2} $$
+![](slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ---
-## Normal random variables
 
-+ Standard normal random variable: `\(Z\)` `\(\mu = 0\)` and `\(\sigma = 1\)`
+## Which probability distribution ?
 
---
 
-+  Standardizing: substract the mean and divide by the standard deviation
-
---
-
-+ Any random variable can be standardized that way.
-
----
-## Other continuous random variables
-
-+ __Log-normal__ 
-    + `\(X\)` such that `\(ln(X)\)` is a normal random variable. 
-    + Skewed, long tail to the right 
-    
-    `$$E(X) = e^ {\frac{2\mu + \sigma^2}{2}}$$`
-
-+ __Exponential__
-    + Related to Poisson. Rare events in a continuous space. 
-+ Others... Student-t, `\(\chi^2\)`, F, gamma, inverse gamma, beta.
-
----
-## The Central Limit Theorem
-
-+ Several _independent_ random variables with the same expected value and variance, any distribution 
+* Now we know that probability distributions are a nice choice to
+  model random variates. But how to build such a model?
 
 --
 
-- Their sum or average can be standardized to a standard normal random variable ( `\(Z\)` ) _provided the sample size is large enough_.
+* There are recipes to do that, but many probability distributions
+  have been already proposed, for a huge variety of data types.
 
 --
 
-- "Arithmetic means of large samples or random variables conform to normal distribution even if the underlying distribution does not"
+* In our example, our random variable are sample means. The **Central
+  Limit Theorem** states that sample means will follow a Normal
+  distribution, as the size of the samples increase.
+  
+--
 
-
-### This allows using statistical tests that assume/require normal distributions. 
+* This is one of the most important results in probability theory. We
+  have very good reasons to choose a Normal distribution as our
+  statistical model.
 
 ---
-## Law of Large Numbers 
 
-Given increasing sampling size, the means of samples will converge towards the means of the population, `\(\mu\)`. 
+## The Normal Distribution
+
+.pull-left[
+
+* Created to describe distribution of additive measurement errors.
+* CLT tells us that this is good model for any random variable which is
+a sum of many other random variables.
+* It is a symmetric distribution, always bell-shaped.
+* It has two parameters, that correspond to the mean and standard
+  deviation of the distribution.
+* Its mean and standard deviation  are independent.
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/normal-curve-1.png)&lt;!-- --&gt;
+
+]]
 
 ---
+
+
+## Location parameter of the Normal Distribution
+
+
+.pull-left[
+
+* The Normal has a **location parameter**, that we will call `\(\mu\)`.
+* This parameter corresponds to the mean of the Normal distribution.
+* By changing `\(\mu\)` we change the position of the Normal distribution
+along the x axis, without changing the standard deviation.
+]
+
+.pull-right[
+.center[
+	![](slides_files/figure-html/normal-location-1.png)&lt;!-- --&gt;
+]
+]
+
+---
+
+## Scale parameter of the Normal Distribution
+
+.pull-left[
+
+* The Normal has a **scale parameter**, that we will call `\(\sigma\)`.
+* This parameter corresponds to the standard deviation of the Normal distribution.
+* By changing `\(\sigma\)` we change the spread of the Normal distribution
+around the mean, without changing the mean.
+]
+
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/normal-scale-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+## Model fitting
+
+.pull-left[
+
+* We have chosen a statistical model for our data
+
+* This model has two free parameters, `\(\mu\)` and `\(\sigma\)`
+
+* Which value should we choose for these two parameters?
+
+* Finding good values for parameters of a statistical model means
+  **fitting a model to the data**.
+]
+
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/fitting-normal-1.png)&lt;!-- --&gt;
+
+]
+]
+
+
+
+## Model fitting
+
+.pull-left[
+
+* We fit statistical models by **estimating** the value of parameters,
+  given the data observed.
+
+* There are many ways to do that. For one of the fitting methods we will
+  use in this course, the estimates for fitting a normal distribution are:
+  
+  * The sample mean as an estimate for `\(\mu\)`
+  * The sample standard deviation as an estimate for `\(\sigma\)`
+
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/fitting-normal_right_one-1.png)&lt;!-- --&gt;
+
+]
+]
+
+
+---
+
+## Some notation
+
+
+* Our model: mean thorax length `\(x\)` follows a normal distribution:
+
+$$ x \, \sim \, \text{Normal}(\mu, \sigma)$$
+
+--
+
+* The estimate of the parameter `\(\mu\)` is the mean of the values of `\(x\)` in the sample:
+
+$$ \widehat{\mu} \, = \, \bar{x} \, = \, \frac{1}{N} \, \sum_{i=1}^N x_i $$
+
+
+---
+
+
+## Some notation
+
+
+
+* The estimate of the parameter `\(\sigma\)` is the root square of the variance of the values of `\(x\)` in the sample:
+
+$$ \widehat{\sigma} \, = \, \sqrt{s^2} $$
+
+* Where the variance is the mean of the squared deviation from the sample mean:
+
+$$ s^2 \, = \, \frac{1}{N} \, \sum_{i=1}^N (x_i - \bar{x})^2 $$ 
+
+---
+
+
 ## References
 
-+ Gotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.
++ Gotelli, N.J., Ellison, A.M., Ellison, S.E., 2004. A Primer of
+  Ecological Statistics. Sinauer Associates Publishers.
 
-+ McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
++ McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with
+  Examples in R and Stan, 2nd ed. CRC Press.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
