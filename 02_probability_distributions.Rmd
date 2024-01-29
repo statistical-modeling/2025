@@ -1,8 +1,8 @@
 ---
 title: "Probability distributions"
-description: |
+description: Our first statistical models
 author:
-  - name: Paulo Inácio K. L. Prado
+  - name: Paulo Inácio Prado
 date: "2024-01-29"
 output: 
     distill::distill_article
@@ -17,14 +17,34 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-#xaringanExtra::embed_xaringan("02_probability_distributions/slides.html")
+xaringanExtra::embed_xaringan("02_probability_distributions/slides.html")
 ```
 
 # Lab
 
 [Lab]()
 
-# References
+
+# More learning resources
+
+ - [Probability distribution
+  viewer](https://github.com/ksmzn/ProbabilityDistributionsViewer), a
+  interactive app and web page to play with the parameters of
+  probability distributions. Check also [this
+  video in Portuguese](https://youtu.be/MYwJNCYJAg0) about this resource.
+
+ - Video lectures with more details on
+ probability distributions, from a [more extensive Course on
+ Statistical Models](http://insilvaarbores.com.br/BIE5781/)
+ of the Graduate Program of Ecology at USP (in Portuguese):
+   - [Introduction to probability distributions](https://youtu.be/5U72x-u-dvE)
+   - [Discrete probability distributions](https://youtu.be/j9nCwfDWqkw)
+   - [Introduction to continuous distributions](https://youtu.be/j9nCwfDWqkw)
+   - [Continuous distributions for time](https://youtu.be/XsXjyPtTlk8)
+   - [Normal, log-normal and uniform distributions](https://youtu.be/bO2e-y9E5mg)
+ 
+ - [Python notebooks](https://mybinder.org/v2/gh/piLaboratory/bie5782/master?filepath=jupyter%2F) with mathematical deductions of some simple MLEs (in portuguese).
+
 
 
 
