@@ -30,7 +30,7 @@ class: center, middle, inverse, title-slide
 # Random variables and probability distributions
 ]
 .subtitle[
-## Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology
+## Quantitative Ecology Training Program - Serrapilheira
 ]
 .author[
 ### PI (Paulo Inácio Prado)
@@ -49,11 +49,46 @@ class: center, middle, inverse, title-slide
 ## Key concepts
 
 + Random variables
-+ Probability density function
+
++ Probability density functions
+
 + Probability distributions as statistical models
-+ Fitting statistical model to data
+
 + The normal probability distribution
+
++ Fitting statistical models to data
+
 + Other probability distributions
+
+---
+
+## Empirical data
+
+
+.pull-left[
+
+* Collection of *Drosophila melanogaster* populations 18 sites in Australia.
+* Isofemale lines : progeny of single collected females allowed
+  to interbreed 10 generations in the lab.
+* 50 larvae from lines from each population kept at
+  18°C, 25°C, and 29°C to develop (3 replicates).
+* Controlled lab conditions: vials, culture medium, light cycle,
+  temperature, fly density, etc.
+* Measurement of adult flies reared from the vials.
+
+]
+
+.pull-right[
+.center[
+
+![](drosophila_culture.png)
+]
+
+.right[
+
+Van Heerwaarden &amp; Sgrò, *Evolution* (2011).]
+
+]
 
 ---
 
@@ -64,11 +99,11 @@ class: center, middle, inverse, title-slide
 
 .pull-left[
 
-* Samples of *Drophilla * from 18 sites in Autralia
-* blab
-* blaa
-* Mean of thorax length of 30 flies from each line
-
+* 30 adults picked at random among flies reared at
+  each temperature.
+* The histograms show frequencies of flies in classes of thorax length
+for each population, only for females reared at 25°C.
+* Blue lines are thorax length means from each sample.
 ]
 
 
@@ -76,21 +111,19 @@ class: center, middle, inverse, title-slide
 .center[
 
 ![](slides_files/figure-html/drosophila pops histogram-1.png)&lt;!-- --&gt;
-
 ]
 ]
 
 ---
 
-## Random variables
+## Distribution of sample means
 
 .pull-left[
+.center[
 
-* Measurements always vary, even if taken exactly in the same way. 
-* Still, some values are more likely than others.
-* In may cases, there is also a central tendency (or average value)
+![](slides_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
 ]
-
+]
 
 .pull-right[
 .center[
@@ -100,16 +133,48 @@ class: center, middle, inverse, title-slide
 
 ]]
 
+
 ---
 
-## The density scale
+
+## Random variables
 
 .pull-left[
 
-* Let's rescale the y-axis of this histogram, to make the total area of the histogram equal to one.
+* Many values are possible, even for averages of measurements taken
+  exactly in the same way, and under strongly controlled conditions.
+
+* Scientific measurements are **random variables**: quantities that
+  are inevitably affected by random events.
+
+* How to deal with that? With models that tell us what's the chance of
+observing each possible value of the measurement.
+
+* In other words, by building **probability distributions**.
+
+]
+
+.pull-right[
+.center[
+
+
+![](slides_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+]]
+
+---
+
+## 1st step: the density scale
+
+.pull-left[
+
+
+* Let's re-scale the y-axis of this histogram, to make the total area
+  of the histogram equal to one.
 * That is, we express the original frequencies (or counts) in a new
-  scale, such that the sum of the area of the bars is equal to one. We cal this scale **density**
-* This is a linear (a.k.a proportional) rescaling, so the shape of the
+  scale, such that the sum of the area of the bars is equal to one. We
+  cal this scale **density**
+* This is a linear (a.k.a. proportional) re-scaling, so the shape of the
   histogram does not change.
 
 ]
@@ -118,17 +183,18 @@ class: center, middle, inverse, title-slide
 .center[
 
 
-![](slides_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 ]]
 
 ---
 
-## The density function
+## 2nd step: the density function
 
 .pull-left[
 
-* Now let's imagine how to "smooth" the distribution of densities, using a continous function.
+* Now let's imagine how to "smooth" the distribution of densities,
+  using a continuous function.
 * Think on this function as a continuous counterpart (or a continuous
   limit) of the histogram. This is the **density function**
 * The area under the curve of a density function is one.
@@ -140,7 +206,7 @@ class: center, middle, inverse, title-slide
 .center[
 
 
-![](slides_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 
 ]]
 
@@ -165,7 +231,7 @@ class: center, middle, inverse, title-slide
 .center[
 
 
-![](slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 ]]
 
@@ -185,7 +251,7 @@ class: center, middle, inverse, title-slide
 
 .pull-right[
 .center[
-![](slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 ]]
 
 ---
@@ -208,7 +274,7 @@ $$ P(L \leq x \leq U) ~ = ~ \int_L^U f(x) \, dx $$
 
 .pull-right[
 .center[
-![](slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 ]]
 
 ---
@@ -243,7 +309,7 @@ class: center, middle
 
 ### What's the probability of a mean thorax length of up 1.04 mm?
 
-![](slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -251,7 +317,7 @@ class: center, middle
 
 ### What's the confidence interval for the mean thorax length?
 
-![](slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -261,7 +327,7 @@ class: center, middle
 ### What's the theoretical expected value for this distribution?
 
 
-![](slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -269,7 +335,7 @@ class: center, middle
 
 
 * Now we know that probability distributions are a nice choice to
-  model random variates. But how to build such a model?
+  model random variables. But how to build such a model?
 
 --
 
@@ -423,7 +489,7 @@ $$ \widehat{\mu} \, = \, \bar{x} \, = \, \frac{1}{N} \, \sum_{i=1}^N x_i $$
 
 
 
-* The estimate of the parameter `\(\sigma\)` is the root square of the variance of the values of `\(x\)` in the sample:
+* The estimate of the parameter `\(\sigma\)` is the square root of the variance of the values of `\(x\)` in the sample:
 
 $$ \widehat{\sigma} \, = \, \sqrt{s^2} $$
 
@@ -433,14 +499,161 @@ $$ s^2 \, = \, \frac{1}{N} \, \sum_{i=1}^N (x_i - \bar{x})^2 $$
 
 ---
 
+## Other probability distributions
+
+.pull-left[
+ 
+* The normal distribution is widely used, but other distributions
+   suit different random variables better. There are many models to choose.
+* Choosing a probability distribution to describe a given dataset means
+   **making a hypothesis on how your data is generated**.
+* For instance, take the number of kids assigned to male gender in 
+   families of 12 children in Saxony in the XIX century (Geissller, 1889 *apud* Lindsey, 1995, Introductory Statistics).
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/saxony-data-1.png)&lt;!-- --&gt;
+]
+
+
+]
+
+---
+
+## A simple model for this data
+
+.pull-left[
+
+1. Each family is an '*essay*' or an '*experiment*' with 12 '*trials*'; 
+2. Each trial (a birth) has only two possible outcomes: male or female gender attributed to the newborn;
+3. Trials are independent: the gender of one newborn does not affect the gender for the next births in the family;
+4. The probability of each outcome at each trial is constant.
+5. These assumptions holds for the **binomial probability distribution**
+
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+]
+]
+
+---
+
+## The binomial probability distribution
+
+.pull-left[
+
+* Assigns a probability for discrete values (real numbers, like counts):
+`$$f(x) = {N\choose x} p^x (1 - p)^{N - x}$$`
+  * `\(N\)` : number of trials in each experiment
+  * `\(p\)` : probability of 'success' in each trial
+* `\(N\)` is usually known. To fit a binomial distribution we need only to estimate `\(p\)`
+]
+
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+]]
+
+---
+
+## Fitting a binomial distribution to data
+
+.pull-left[
+
+* A good estimator of `\(p\)` is the observed proportion of successes
+  among all trials. 
+* In our example there was 38100 
+  children assigned to male gender among a total of 73380 births, 
+  or an observed proportion of 0.519 males.
+* Red dots show the probabilities assigned by the binomial with this
+  estimate, which suggests a gender bias towards males.
+
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+]
+]
+
+---
+
+## Some other distributions
+
+### Discrete
+
+* **Poisson**: count data of independent events at a constant rate (e.g. number of captures of animals in traps)
+* **Negative binomial**: the same, for aggregated events (e.g. number of trees of a given species in forest plots)
+* **Geometric**: number of trials before an event with constant rate happens (e.g. number of years of life)
+
+
+---
+
+## Some other distributions
+
+### Continuous
+
+* **Log-normal**: multiplication of many random variables (e.g. population sizes in birth-death dynamics)
+* **Exponential**: continuous time up to an event at constant rate (e.g. failure times of machines, life-spans)
+* **Gamma**, **Weibull** : same as exponential, but event rate as a function of time (e.g. life spans with aging)
+* **Uniform**: equiprobable values (useful as a null model or to generate other distributions)
+
+---
+
+
+## Many distributions are related
+
+.center[
+
+&lt;img src="distrib_relationships.png" width="70%" /&gt;
+]
+
+.right[
+Bolker,2008
+See also (http://www.johndcook.com/distribution_chart.html)
+]
+
+---
+
+## Take-home messages
+
+1. Probability distributions assign
+   probabilities to each possible value of a measurement.
+
+--
+
+2. As such, probability distributions can be conceived as models of
+   the process that generates the data at hand.
+
+--
+
+3. We fit a statistical model by finding sensible values for the
+   parameters of probability distributions.
+
+---
 
 ## References
+
++ Bolker, B.M. 2008 Ecological Models and Data in R. Princeton:
+    Princeton University Press.
 
 + Gotelli, N.J., Ellison, A.M., Ellison, S.E., 2004. A Primer of
   Ecological Statistics. Sinauer Associates Publishers.
 
 + McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with
   Examples in R and Stan, 2nd ed. CRC Press.
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
