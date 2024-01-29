@@ -3,7 +3,7 @@ title: "Probability distribution functions Lab"
 author:
  - "Andrea Sánchez-Tapia"
  - "Paulo Inácio Prado"
-date: "2023-01-11"
+date: "2024-01-30"
 output:
     distill::distill_article:
       toc: true
@@ -12,7 +12,13 @@ output:
 
 
 ```{r setup, echo=FALSE}
+
 library(rmarkdown)
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(tidyr)
+library(ggridges)
 knitr::opts_chunk$set(eval = FALSE)
 # clipboard
 htmltools::tagList(
@@ -90,10 +96,42 @@ shadenorm <- function(below = NULL,
             density = dens)
   }
 }
+
+## ggplot theme
+theme_publication <- function(base_size=14, base_family="helvetica") {
+    (theme_foundation(base_size=base_size, base_family=base_family)
+        + theme(plot.title = element_text(face = "bold",
+                                          size = rel(1.2), hjust = 0.5),
+                text = element_text(),
+                panel.background = element_rect(colour = NA),
+                plot.background = element_rect(colour = NA),
+                panel.border = element_rect(colour = NA),
+                axis.title = element_text(face = "bold",size = rel(1)),
+                axis.title.y = element_text(angle=90,vjust =2),
+                axis.title.x = element_text(vjust = -0.2),
+                axis.text = element_text(), 
+                axis.line = element_line(colour="black"),
+                axis.ticks = element_line(),
+                panel.grid.major = element_line(colour="#f0f0f0"),
+                panel.grid.minor = element_blank(),
+                legend.key = element_rect(colour = NA),
+                legend.position = "bottom",
+                legend.direction = "horizontal",
+                legend.key.size= unit(0.2, "cm"),
+                ##legend.margin = unit(0, "cm"),
+                legend.spacing = unit(0.2, "cm"),
+                legend.title = element_text(face="italic"),
+                plot.margin=unit(c(10,5,5,5),"mm"),
+                strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
+                strip.text = element_text(face="bold")
+                ))
+    
+}
+
 ```
 
 
-# Some important things about the normal distribution
+# Some important things about the Normal distribution
 
 The normal or Gaussian distribution is by far the most used
 probability distribution in statistical modeling and also in
@@ -175,7 +213,9 @@ $\mu=0$ and $\sigma=1$ in R type:
 ```{r }
 pnorm(q = 0, mean = 0, sd = 1)
 ```
+
 Which is the area under this normal curve up to the value $x = 0$:
+
 
 ```{r , echo =FALSE, eval=TRUE}
 shadenorm(below = 0, justbelow = TRUE)
@@ -223,11 +263,11 @@ recording this measurement from a baby girl picked at random.
 pnorm(50 + 0.05, mean = 49.1, sd = 1.86) - pnorm(50 - 0.05, mean = 49.1, sd = 1.86)
 ```
 
-## Simulating samples from a normal
+## Simulating samples from a Normal distribution
 
 The R function *rnorm* generates random numbers from a normal
 distribution. Let's simulate a sample of 30 lengths of newborn girls
-from the normal distribution defined above and the get mean length in this sample:
+from the normal distribution defined above and then get mean length in this sample:
 
 
 ```{r , eval=FALSE}
@@ -236,7 +276,7 @@ mean(sample1)
 ```
 
 Is the sample mean equal to $\mu$ ? How do you explain this result?
-Would you say that the sample mean is a good guess of the parametric
+Would you say that the sample mean is a good guess of the theoretical
 mean (or expected value) of the sampled distribution? The answer
 depends on what you call 'a good guess'.
 
@@ -264,13 +304,14 @@ is, sample means on average hit the parametric mean of the population
 from which the sample was drawn.
 
 In fact, we have a mathematical deduction that proves this result that
-we have approximated with simulated samples. The **Law of Large Numbers** says that the expected value
-of the distribution of sample means tends to the value of the
-parametric mean of the sampled distribution (which in this case is
-$\mu$).
+we have approximated with simulated samples. The **Law of Large
+Numbers** says that the expected value of the distribution of sample
+means tends to the value of the expected value (or theoretical mean)
+of the sampled distribution (which for the Normal distribution
+corresponds to the paremter $\mu$).
 
 On the other hand, the __Central Limit Theorem__ states that the
-distribution of sample means tends to a Gaussian with parameter
+distribution of sample means tends to a Normal distribution with parameter 
 $\sigma$ equal to the parametric standard deviation of the sampled
 distribution divided by the square root of the size of the samples. 
 In statistical syntax:
@@ -306,152 +347,62 @@ sd(my.samples)
 
 # The Law of Large numbers
 
-The __Law of large numbers__ states that the means of samples of increasing size will converge towards the mean of the population, $\mu$.
+The __Law of large numbers__ states that the means of samples of
+increasing size will converge towards the mean of the population,
+$\mu$.
 
-We can observe that with samples from a normal random variable up to size n = 5000, with $\mu = 0.2$ and $\sigma = 1$. Look how when increasing sample size, the sample means converge towards $\mu$.
+We can observe that with samples from a normal random variable up to
+size n = 5000, with $\mu = 0.2$ and $\sigma = 1$. Look how when
+increasing sample size, the sample means converge towards $\mu$.
 
 ```{r}
-population <- rnorm(n = 5000, mean = 0.2)
-plot(x = 5000, y = 0 , xlim = c(0, 5000), ylim = c(0, 0.4), cex = 0, xlab = "Sample size", ylab = "Sample mean")
-
-for (size in seq(50, 5000, 100)) {
-  media <- mean(sample(population, size = size))
-  points(x = size, y = media, col = "blue", pch = 15, cex = 0.8)
+## Vector with sample sizes
+ssize <- seq(50, 5000, 50)
+## Epty vector for the sample means
+smeans <- c()
+## Loop over all sample sizes, take samples and calculate sample means
+for (i in 1:length(ssize)) {
+    amostra <- rnorm(n = ssize[i], mean = 0.2)
+    smeans[i] <- mean(amostra)
 }
-abline(h = mean(population), col = "red", lwd = 2)
-
+plot(x= ssize, y = smeans,
+     xlab = "Sample size",
+     ylab = "Sample mean")
+abline(h = 0.2, col = "red", lwd = 2)
 ```
 
-__Challenge:__ Adapt the previous code to a Poisson distribution with $\lambda = 0.7$, with a population size of $n = 500$. Then create different samples with increasing sizes, from 50 to 500 points in 10 intervals. 
+__Challenge:__ Adapt the previous code to a Binomial distribution with
+parameter $N =10$ and $p = 0.25$ (and thus expected value $Np = 2.5$).
+Then create different samples with
+increasing sizes, from 50 to 500 points in 10 intervals.
 
 A solution for this can be seen in the following chunk of code (click Show code when you're done).
 
 ```{r, code_folding = T}
-population <- rpois(n = 500, lambda = 0.7)
-plot(x = 500, y = 0 , xlim = c(0, 500), ylim = c(0, 1), cex = 0, xlab = "Sample size", ylab = "Sample mean")
-
-for (size in seq(50, 500, 10)) {
-  media <- mean(sample(population, size = size))
-  points(x = size, y = media, col = "blue", pch = 15, cex = 0.8)
+## Vector with sample sizes
+ssize <- seq(50, 5000, 50)
+## Epty vector for the sample means
+smeans <- c()
+## Loop over all sample sizes, take samples and calculate sample means
+for (i in 1:length(ssize)) {
+    amostra <- rbinom(n = ssize[i], size = 10, p =0.25)
+    smeans[i] <- mean(amostra)
 }
-abline(h = mean(population), col = "red", lwd = 2)
-
+plot(x= ssize, y = smeans,
+     xlab = "Sample size",
+     ylab = "Sample mean")
+abline(h = 5, col = "red", lwd = 2)
 ```
 
 # The Central Limit Theorem
 
-The __Central Limit Theorem__ states that the arithmetic means of large samples of random variables conform to normal distributions _even if the underlying random variables are not normal_.
+The __Central Limit Theorem__ (CLT) states that the arithmetic means of
+large samples of random variables conform to normal distributions
+_even if the underlying random variables are not normal_.
 
-Let's see this starting with a uniform random variable in the [0, 100] interval, for example:
-
-```{r}
-pop <-  runif(n = 1000, min = 0, max = 100)
-hist(pop, main = "Histogram of measurements from a uniform \n random variable")
-```
-
-As can be seen in the histogram, the probability distribution of this population is not normal.
-
-
-Since the Central Limit Theorem applies to samples that are large enough, let's make different tests with increasing sample sizes from this population.
-The function `sample()` executes this sampling from vector `pop`. First, let's make a single sample of size 5.
-
-```{r}
-# One sample
-n <- 5
-sample <- sample(x = pop, size = n)
-sample
-```
-
-
-
-To repeat this sampling, we will create a loop and save each mean in an empty vector.
-
-```{r}
-# We create the empty vector
-means_vector <- vector()
-s_size <- 5
-# We create a loop
-for (i in 1:500) {
-  means_vector[i] <- mean(sample(x = pop, size = s_size))
-}
-
-
-hist(means_vector, breaks = 50, freq = F)
-curve(dnorm(x, mean = mean(means_vector), sd = sd(means_vector)), from = 0 , to = 100, col = "red", add = T)
-```
-
-
-Compare these results when you increase the sample size from 5 to 30. 
-
-## Large enough sample size and skewness
-
-The CLT assumes that the sample size is large, but sometimes it is difficult to understand what size is enough. This can be especially true in the case of distributions that are more skewed. For skewed disttributions, a larger sample size may be needed to obtain normal distribuitions from the sample means than for symmetrical distributions. Let's compare this effect in the case of Poisson distributions for different sample sizes and $\lambda$ values.
-
-
-```{r, poisson lambda0.5}
-pop <-  rpois(n = 1000, lambda = 0.5)
-# Less skewed with larger lambda values
-hist(pop, main = "")
-# Create empty vector
-sample_means <- c()
-# Define sample size
-sample_size <- 5
-# Calculate the means of 1000 samples
-for (i in 1:1000) {
-  sample_means[i] <- mean(sample(pop, size = sample_size))
-}
-# Plot the distribution
-hist(sample_means, freq = F, main = "")
-# Add a normal curve with mean and standard deviation from the sample
-curve(dnorm(x, mean = mean(sample_means), sd = sd(sample_means)), from = 0 , to = 1.5, col = "red", add = T)
-```
-
-In this case, the sample means are not distributed according to a normal random variable. Repeat these calculations for larger sample sizes, like 20 or 30. What can you observe
-about the effect of the sample size on the distribution of the sample means?
-
-
-```{r, code_folding = T}
-# Create empty vector
-sample_means <- c()
-# Define sample size
-sample_size <- 30
-# Calculate the means of 1000 samples
-for (i in 1:1000) {
-  sample_means[i] <- mean(sample(pop, size = sample_size))
-}
-# Plot the distribution
-hist(sample_means, freq = F, main = "")
-# Add a normal curve with mean and standard deviation from the sample
-curve(dnorm(x, mean = mean(sample_means), sd = sd(sample_means)), from = 0 , to = 1.5, col = "red", add = T)
-```
-
-Do the same comparison with a more symmetric Poisson random variable (that is, with a higher Lambda value). The sample size needed to obtain a normal distribution from the sample means is lower than in the case of more skewed distributions.
-
-See an example with $\lambda = 3$ and sample size = 5: 
-
-```{r, poisson lambda30, code_folding = T}
-pop <-  rpois(n = 1000, lambda = 3)
-# Less skewed with larger lambda values
-hist(pop, main = "")
-# Create empty vector
-sample_means <- c()
-# Define sample size
-sample_size <- 5
-# Calculate the means of 1000 samples
-for (i in 1:1000) {
-  sample_means[i] <- mean(sample(pop, size = sample_size))
-}
-# Plot the distribution
-hist(sample_means, freq = F, main = "")
-# Add a normal curve with mean and standard deviation from the sample
-curve(dnorm(x, mean = mean(sample_means), sd = sd(sample_means)), from = 0 , to = 5, col = "red", add = T)
-```
-
-# More on the Central Limit Theorem
-
-The Central Limit Theorem applies to the distribution of sums of any
-random variable^[It applies to the distribution of means because means
-are summations too]. To show this, we will simulate a sum of a very
+Actually, CLT  applies to the distribution of sums of any
+random variable. It applies to the distribution of means because means
+are summations too. To show this, we will simulate a sum of a very
 simple random variate, that assumes values $1$ and $-1$ with equal
 probability. We can simulate a sample of 100 values of this random
 variate with
@@ -487,7 +438,7 @@ final positions:
 
 ```{r }
 my.walks <- c()
-for(i in 1:1e6)
+for(i in 1:1e4)
     my.walks[i] <- sum(sample(x = c(1,-1), size = 100, replace = TRUE))
 hist(my.walks, breaks = 50)
 ```
@@ -514,9 +465,9 @@ random variable that was sampled, divided by the square root of the
 sample size.
 
 To check this, we first calculate the theoretical standard deviation
-of the original random variate^[Because the final position is a sum and not a mean, its theoretical
-standard deviation should be multiplied by the sample size.
-]:
+of the original random variate^[Because the final position is a sum
+and not a mean, its theoretical standard deviation should be
+multiplied by the sample size.]:
 
 $$S[Y] = N \sqrt{\sum(y - E[Y])^2 p(y) } = 100 \sqrt{(-1 -0)^2 \times 0.5 \; + \; (1 - 0)^2 \times 0.5} = 100$$
 
@@ -529,7 +480,9 @@ sd(my.walks)
 ```
 
 And you can add the Normal distribution deduced from the Central Limit
-Theorem to the bar plots of the simulated values ^[The argument `freq=FALSE` used below makes a histogram in density scale, to allow superimposing the theoretical probability density function]:
+Theorem to the bar plots of the simulated values ^[The argument
+`freq=FALSE` used below makes a histogram in density scale, to allow
+superimposing the theoretical probability density function]:
 
 
 ```{r }
@@ -538,7 +491,92 @@ curve(dnorm(x, 0, sd = 100/sqrt(100)),
       add=TRUE, col = "red", lwd =2)
 ```
 
-**CODA:**  A device called 'Galton Board' was used to run this simulation well before computers. Check this out in this [nice video by Atila
+
+## Large enough sample size and skewness
+
+The CLT assumes that the sample size is large, but sometimes it is
+difficult to understand what size is enough. This can be especially
+true in the case of distributions that are more skewed. For skewed
+distributions, a larger sample size may be needed to obtain normal
+distribuitions from the sample means than for symmetrical
+distributions. Let's compare this effect in the case of samples from
+an asymmetric and a symetric distribution, for different sample sizes.
+
+### Samples from a binomial
+
+Any binomial distribution with parameter $p = 0.5$ is symmetric around
+is mean. The closer zero or one the parameter $p$, the more asymmetric
+is this distribution:
+
+
+```{r symmetry binomial, echo = FALSE}
+bin.ex <-
+    data.frame(
+        x = rep(0:12, 5),
+        grupo = factor(rep(c("p = 0.1","p = 0.3","p = 0.5","p = 0.7","p = 0.9"), each =13)),
+        y = c(dbinom(0:12, size = 12, prob = 0.10),
+              dbinom(0:12, size = 12, prob = 0.30),
+              dbinom(0:12, size = 12, prob = 0.50),
+              dbinom(0:12, size = 12, prob = 0.70),
+              dbinom(0:12, size = 12, prob = 0.90))
+        )
+
+ggplot( bin.ex, aes(x, y, label = grupo)) +
+    geom_col(aes(fill=grupo)) +
+    geom_text(x=13.4, y=0.15, size = 6) +
+    scale_x_continuous(breaks = 0:12, limits =c(0,13.5)) +
+    facet_grid(grupo~.) +
+    xlab("Number of sucesses") +
+    ggtitle("Binomial distribution, N = 12") +
+    theme_publication() +
+    theme(strip.background = element_blank(), strip.text.y = element_blank(), 
+          strip.placement = "outside", panel.spacing.y = unit(0, "cm")) +
+    theme(legend.position = "none",
+              axis.line.y = element_blank(),
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.title.y = element_blank()
+              )
+
+```
+
+
+```{r, asym binomial}
+bin.s1 <-  c()
+for(i in 1:1000){
+    amostra <- rbinom( n = 10, size = 12, prob = 0.025 )
+    bin.s1[i] <- mean(amostra)
+}
+
+hist(bin.s1)
+```
+
+In this case, the sample means are not distributed according to a
+normal random variable. Repeat these calculations for larger sample
+sizes, like 100. What can you observe about the effect of the
+sample size on the distribution of the sample means?
+
+
+```{r, code_folding = T}
+bin.s2 <-  c()
+for(i in 1:1000){
+    amostra <- rbinom( n = 100, size = 12, prob = 0.025 )
+    bin.s2[i] <- mean(amostra)
+}
+
+hist(bin.s2)
+```
+
+Do the same comparison with a more symmetric Binomial random variable
+(that is, with a value of parameter $p$ equal or close to $0.5$). The
+sample size needed to obtain a normal distribution from the sample
+means is lower than in the case of more skewed distributions.
+
+# CODA
+
+A device called 'Galton Board' was used to run the simulation of the
+Central Limit Theorem with random walks, well before computers. Check
+this out in this [nice video by Atila
 Iamarino](https://www.youtube.com/watch?v=YINTTVjBrY4).
 
 
