@@ -3,7 +3,7 @@ title: "Multiple regression and model comparison"
 description: |
   Multiple regression and  model selection
 author:
-  - name: Paulo Inácio K. L. Prado (PI)
+  - name: Paulo Inácio Prado (PI)
     url: 
     affiliation: 
     affiliation_url:
@@ -21,6 +21,10 @@ knitr::opts_chunk$set(echo = FALSE)
 #| eval: true
 #xaringanExtra::embed_xaringan("06_multiple_regression/slides.html")
 ```
+
+# Lab
+
+[Multiple linear regression Lab]()
 
 
 # Further reading

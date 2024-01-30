@@ -26,8 +26,6 @@ knitr::opts_chunk$set(echo = FALSE)
 
 [Simple linear regression Lab]()
 
-[Multiple linear regression Lab]()
-
 
 
 ## References
