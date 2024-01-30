@@ -34,4 +34,10 @@ xaringanExtra::embed_xaringan("01_presentation/slides.html")
     epistemological review and highlights the key distinction between
     models and hypothesis. It also brings a typology of models, and
     the concept of model complexity.)*
+ 3. The statistician Galit Schmuéli researches the important
+    distinction between [prediction and
+    explanation](http://www.galitshmueli.com/content/explain-or-predict)
+    in statistics and in different disciplines of science. Also, see
+    the author's [article](https://arxiv.org/pdf/1101.0891.pdf) on the
+    subject.
 
