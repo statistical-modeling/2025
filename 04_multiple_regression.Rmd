@@ -1,7 +1,7 @@
 ---
 title: "Multiple regression and model comparison"
 description: |
-  Multiple regression, model selection, AIC, overfitting.
+  Multiple regression and  model selection
 author:
   - name: Paulo Inácio K. L. Prado (PI)
     url: 
