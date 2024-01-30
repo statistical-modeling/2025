@@ -22,7 +22,7 @@ xaringanExtra::embed_xaringan("02_probability_distributions/slides.html")
 
 # Lab
 
-[Lab](02_probability_distributions/lab.html)
+[Lab on Probability Distributions](02_probability_distributions/lab.html)
 
 
 # More learning resources
