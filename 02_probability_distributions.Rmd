@@ -22,7 +22,7 @@ xaringanExtra::embed_xaringan("02_probability_distributions/slides.html")
 
 # Lab
 
-[Lab]()
+[Lab](02_probability_distributions/lab.html)
 
 
 # More learning resources
@@ -43,8 +43,6 @@ xaringanExtra::embed_xaringan("02_probability_distributions/slides.html")
    - [Continuous distributions for time](https://youtu.be/XsXjyPtTlk8)
    - [Normal, log-normal and uniform distributions](https://youtu.be/bO2e-y9E5mg)
  
- - [Python notebooks](https://mybinder.org/v2/gh/piLaboratory/bie5782/master?filepath=jupyter%2F) with mathematical deductions of some simple MLEs (in portuguese).
-
 
 
 

@@ -160,7 +160,7 @@ $\sigma=1$, but values of $\mu$ ranging from -2 to 2. The function
 *dnorm* returns the value of the normal function. We use the function
 *curve* to calculate and plot the value of the normal function over
 the x-axis:
-
+ 
 ```{r}
 vals <- seq(from = -2, to = 2, by = 0.5)
 cores <- rainbow(n = length(vals))
@@ -263,7 +263,7 @@ recording this measurement from a baby girl picked at random.
 pnorm(50 + 0.05, mean = 49.1, sd = 1.86) - pnorm(50 - 0.05, mean = 49.1, sd = 1.86)
 ```
 
-## Simulating samples from a Normal distribution
+### Simulating samples from a Normal distribution
 
 The R function *rnorm* generates random numbers from a normal
 distribution. Let's simulate a sample of 30 lengths of newborn girls
@@ -308,7 +308,7 @@ we have approximated with simulated samples. The **Law of Large
 Numbers** says that the expected value of the distribution of sample
 means tends to the value of the expected value (or theoretical mean)
 of the sampled distribution (which for the Normal distribution
-corresponds to the paremter $\mu$).
+corresponds to the parameter $\mu$).
 
 On the other hand, the __Central Limit Theorem__ states that the
 distribution of sample means tends to a Normal distribution with parameter 
@@ -498,18 +498,19 @@ The CLT assumes that the sample size is large, but sometimes it is
 difficult to understand what size is enough. This can be especially
 true in the case of distributions that are more skewed. For skewed
 distributions, a larger sample size may be needed to obtain normal
-distribuitions from the sample means than for symmetrical
+distributions from the sample means than for symmetrical
 distributions. Let's compare this effect in the case of samples from
-an asymmetric and a symetric distribution, for different sample sizes.
+an asymmetric and a symmetric distribution, for different sample sizes.
 
 ### Samples from a binomial
 
 Any binomial distribution with parameter $p = 0.5$ is symmetric around
-is mean. The closer zero or one the parameter $p$, the more asymmetric
+is mean. The closer to zero or one the parameter $p$, the more asymmetric
 is this distribution:
 
 
-```{r symmetry binomial, echo = FALSE}
+```{r symmetry_binomial,  eval = TRUE, echo = FALSE, out.height="120%"}
+
 bin.ex <-
     data.frame(
         x = rep(0:12, 5),
@@ -523,7 +524,7 @@ bin.ex <-
 
 ggplot( bin.ex, aes(x, y, label = grupo)) +
     geom_col(aes(fill=grupo)) +
-    geom_text(x=13.4, y=0.15, size = 6) +
+    geom_text(x=13.4, y=0.15, size = 4) +
     scale_x_continuous(breaks = 0:12, limits =c(0,13.5)) +
     facet_grid(grupo~.) +
     xlab("Number of sucesses") +
@@ -540,37 +541,134 @@ ggplot( bin.ex, aes(x, y, label = grupo)) +
 
 ```
 
+In R, the function `rbinom` simulate samples from a binomial
+distribution. The commands below take 1000 samples of ten values from
+a binomial distribution with parameter $N =12$ (the
+argument `size` of the `rbinom` function), and a very low value
+for parameter $p$. The means from each sample are then calculated and
+plotted in a histogram:
 
 ```{r, asym binomial}
+## Empty vector to store sample means
 bin.s1 <-  c()
+## A loop of 1000 repetitions of a sample from binomial
+## and calculation of the sample means
 for(i in 1:1000){
     amostra <- rbinom( n = 10, size = 12, prob = 0.025 )
     bin.s1[i] <- mean(amostra)
 }
-
-hist(bin.s1)
+## Histogram of sample means
+hist(bin.s1, freq = FALSE)
 ```
 
 In this case, the sample means are not distributed according to a
-normal random variable. Repeat these calculations for larger sample
+Normal random variable. Repeat these calculations for larger sample
 sizes, like 100. What can you observe about the effect of the
 sample size on the distribution of the sample means?
 
+#### Challenges
 
-```{r, code_folding = T}
-bin.s2 <-  c()
-for(i in 1:1000){
-    amostra <- rbinom( n = 100, size = 12, prob = 0.025 )
-    bin.s2[i] <- mean(amostra)
-}
+1. Repeat the simulation of 1000 sample means above, but for samples
+of size 100 from the same binomial distribution. What's the effect of
+increasing the sample size from which each mean is calculated?
+2. Modify the code above to investigate the effect of sampling from a
+   more symmetric binomial distribution.
 
-hist(bin.s2)
+
+# Fitting a Poisson distribution
+
+Poisson distribution describes the probability of counts of a given
+type of event within a defined unit of space or time, such as sightings of birds per hour, or the number of
+trees in forest plots. In this model, the events are considered to be independent of each other and
+occur at a constant rate.
+
+A grim example is the number of V1-bomb strikes per area over London
+during the II World War. An actuary named R. D. Clarke divided the map
+of south London in 576 quadrats of 0.25 $km^2$ and tallied the number
+of strikes reported for each quadrat. Run the commands below to store the
+frequency of quadrats with zero to six bombs (Clarke 1946), and to
+plot a frequency histogram with this data:
+
+```{r london-bombs}
+## Data frame with Clarke (1946) data
+bombs <-  data.frame(
+    drops = 0:6,
+    frequency = c(229, 211, 93, 35, 7, 1, 0),
+    proportion = c(229, 211, 93, 35, 7, 1, 0)/sum(c(229, 211, 93, 35, 7, 1, 0))
+)
+
+library(ggplot2) # for plots
+
+## Plot the histogram of frequencies
+ggplot(bombs, aes( x = drops, y = frequency)) +
+    geom_col() +
+    xlab("Number of bomb drops")+
+    ylab("Frequency (# of quadrats)") +
+    theme_classic()
 ```
 
-Do the same comparison with a more symmetric Binomial random variable
-(that is, with a value of parameter $p$ equal or close to $0.5$). The
-sample size needed to obtain a normal distribution from the sample
-means is lower than in the case of more skewed distributions.
+
+British military intelligence appointed the actuary to discern
+patterns within the data, particularly focusing on potential
+clustering in specific targets. Clarke then started with the simple
+alternative hypothesis of random distribution of bombs. If so, a Poisson
+distribution would be a good model for predicting probabilities of a
+quadrat receiving any number of bombs.
+
+How to fit a  Poisson distribution to this data? The Poisson
+distribution has a single parameter, which is the event rate per unit
+of area or time. This is also the mean and the variance of this
+distribution, and is usually referred with Greek letter lambda. 
+
+For many criteria, a good estimate of $\lambda$ to fit a Poisson is
+the sample mean. With a total of 535 bombs dropped over 576 quadrats,
+the striking rate corresponds to the average number of bombs per
+quadrat:
+
+$$\widehat{\lambda} \, = \, \bar{x}~=\frac{~535 ~\textrm{bombs}}{576 ~\textrm{quadrats}} ~  \simeq ~ 0.929/ \textrm{quadrat.}$$
+
+The code below plots a histogram with the proportion of quadrats with
+each strike count, and also the probabilities assigned each count by a
+Poisson distribution with $\lambda$ equal to the sample mean :
+
+```{r poisson-fit}
+## Sample mean
+bomb.rate <- sum(bombs$drops*bombs$frequency)/576
+## Adds to the dataframe probabilities assigned by the fitted Poisson
+## dpois is the probability density function for Poisson
+bombs$prob <- dpois(x = bombs$drops, lambda = bomb.rate)
+## Histogram of proportions of quadrats in each class
+ggplot(bombs, aes( x = drops)) +
+    ## adds bars for observed proportions
+    geom_col(aes(y = proportion)) + 
+    ## add points for predicted probabilities
+    geom_point(aes(y = prob), col = "blue", size = 5) +
+    xlab("Number of bomb drops")+
+    ylab("Proportion of quadrats") +
+    theme_classic()
+```
+
+You can also add to the data the expected number of quadrats hit by
+zero to six bombs with:
+
+
+```{r bombs-expected}
+bombs$pred <- bombs$prob * sum(bombs$frequency)
+## Show observed and predicted frequencies
+bombs[, c("drops", "frequency", "pred")]
+```
+
+Clarke concluded that the Nazi Army was dropping bombs at random all over 
+London, but this history has some plot twists that you can check in Shaw & Shaw (2019).
+
+
+# References
+
+Clarke, R. D. (1946) An application of the Poisson distribution. [Journal of the Institute of Actuaries, 72, 481](https://www.cambridge.org/core/journals/journal-of-the-institute-of-actuaries/article/abs/an-application-of-the-poisson-distribution/F75111847FDA534103BD4941BD96A78).
+
+Shaw, L. P., & Shaw, L. F. (2019). The flying bomb and the actuary. [Significance, 16, 12-17](https://rss.onlinelibrary.wiley.com/doi/full/10.1111/j.1740-9713.2019.01315.x).
+
+
 
 # CODA
 
