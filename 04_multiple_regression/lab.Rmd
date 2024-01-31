@@ -48,7 +48,7 @@ $\beta_i$ :
 
 $$
 \begin{align}
-y_i &\sim \mathcal{N}(\mu_i, \sigma) \\
+y_i &\sim Normal(\mu_i, \sigma) \\
 \mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij} \\
 \sigma & = C
 \end{align}
@@ -203,7 +203,7 @@ the linear regression model we have been writting as:
 
 $$
 \begin{align}
-y_i & \sim \mathcal{N}(\mu_i, \sigma) \\
+y_i & \sim Normal(\mu_i, \sigma) \\
 \mu_i & = \sum_{j=0}^{J} \beta_{j} x_{ij} \\
 \sigma & = C
 \end{align}
@@ -214,7 +214,7 @@ Can be also written as:
 $$
 \begin{align}
 y_i & = \sum \beta_j x_ij + \epsilon \\
-\epsilon & \sim \mathcal{N}(\mu, \sigma) \\
+\epsilon & \sim Normal(\mu, \sigma) \\
 \mu & = 0 \\
 \sigma & = C
 \end{align}
@@ -285,7 +285,7 @@ The model with interaction has the following notation:
 
 $$
 \begin{align}
-y_i & \sim \mathcal{N}(\mu_i, \sigma) \\
+y_i & \sim Normal(\mu_i, \sigma) \\
 \mu_i & = \beta_0 \, + \, \beta_1 x_{i1} \, + \, \beta_2 x_{i2} \, + \,  \beta_3 x_{i1}  x_{i2}\\
 \sigma & =  C
 \end{align}
@@ -442,12 +442,21 @@ __Extra:__
 
 $$
 \begin{align}
-y_i & \sim \mathcal{N}(\mu_i, \sigma) \\
+y_i & \sim Normal(\mu_i, \sigma) \\
 \mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2}\\
 \sigma & =  C
 \end{align}
 $$ 
 
++ Fit the model after scalling the predictors so they are centered at zero:
+
+```{r}
+tulips_centered = within(tulips,{
+  water = water - mean(water)
+  shade = shade - mean(shade)})
+```
+
+What happens with the coefficients? What happens with the predicted values?
 
 # References
 

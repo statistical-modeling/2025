@@ -30,7 +30,7 @@ htmltools::tagList(
 
 Linear regressions in R assume a linear relationship between one or more predictor variables $X_i$ and a response variable $Y$. 
 
-$$y_i \sim \mathcal{N}(\mu_i, \sigma) \\
+$$y_i \sim Normal(\mu_i, \sigma) \\
 \mu_i = \beta_0 + \beta_1 x_i$$
 
 The first element of this model describes how the response variable $Y$ can be modeled as a normal random variable with mean and standard deviation. 
@@ -64,7 +64,7 @@ As you can see, plotting the data suggests a linear relationship between these t
 
 ## Regression coefficients
 
-Let's calculate the coefficients for the regression line according to the Ordinal Least Squares method: 
+Let's calculate the coefficients for the regression line according to the Ordinary Least Squares method: 
 
 $$\widehat{\beta_1}=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2}$$
 
@@ -80,6 +80,9 @@ x <- x_i
 y <- y_i
 beta1_hat <- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x)) ^ 2)
 beta1_hat
+
+# This is just the ratio of the covariance between x and y and the variance of x
+cov(x, y) / var(x)
 
 # Since mu = beta0 + beta1(X): 
 beta0_hat <- mean(y) - beta1_hat * mean(x)
@@ -123,7 +126,7 @@ abline(a = 1.2, b = 3.5, col = "blue")
 
 ## Fitting a linear model in R
 
-Function `lm()` fits regression models using Ordinal Least Squares. 
+Function `lm()` fits regression models using Ordinary Least Squares. 
 The values of the coefficients can be found using function `coef()`.
 
 ```{r model_coefs}
