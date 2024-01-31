@@ -101,25 +101,25 @@ grazing by rabbits and protect from grazing by fenced cages.
 .pull-left[
 
 ```
-##   diameter fruit.w treatment
-## 1    6.225   59.77    Fenced
-## 2    6.487   60.98    Fenced
-## 3    4.919   14.73    Fenced
-## 4    5.130   19.28    Fenced
-## 5    5.417   34.25    Fenced
-## 6    5.359   35.53    Fenced
+##   fruit.w treatment diameter
+## 1   59.77    Fenced    6.225
+## 2   60.98    Fenced    6.487
+## 3   14.73    Fenced    4.919
+## 4   19.28    Fenced    5.130
+## 5   34.25    Fenced    5.417
+## 6   35.53    Fenced    5.359
 ```
 ...
 
 
 ```
-##    diameter fruit.w treatment
-## 35    9.351   98.47   Control
-## 36    7.066   40.15   Control
-## 37    8.158   52.26   Control
-## 38    7.382   46.64   Control
-## 39    8.515   71.01   Control
-## 40    8.530   83.03   Control
+##    fruit.w treatment diameter
+## 35   98.47   Control    9.351
+## 36   40.15   Control    7.066
+## 37   52.26   Control    8.158
+## 38   46.64   Control    7.382
+## 39   71.01   Control    8.515
+## 40   83.03   Control    8.530
 ```
 ]
 
@@ -214,18 +214,40 @@ summary( ipo_m1 )
 
 ## Plot with observed and predicted values
 
+.pull-left[
+
+* The expected value of fruit biomass increases with plant size
+
+* For any plant size, caging increased fruit yield in 36 mg, on average.  
+
+* Because this is the result from an experiment, we can say that the
+**effect** of caging is to increase fruit yield.
+
+* This is an **additive effect**, beacause it adds up to the other
+effects. Additive effects are independent, meaning that the effect is
+the same for all values of the other effects.
+
+]
+
+.pull-right[
 .center[
 
 ![](slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
-]
+]]
 
 ---
 
 ## The linear predictor
 
-The expression for the predicted value in multiple linear regression can be written in the compact form:
+The expression for the predicted value in multiple linear regression 
 
-`$$\mu_i = \sum_{j=0}^{J} \beta_{j} x_{ij} \, = \, \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij}$$` 
+`$$\mu_i \, = \, \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij}$$` 
+
+--
+
+can be written in the compact form:
+
+`$$\mu_i = \sum_{j=0}^{J} \beta_{j} x_{ij}$$` 
 
 Where `\(J\)` is the number of predictor variables. This is called the **linear predictor**.
 
@@ -238,7 +260,7 @@ function of parameters, given an observed value of the predictor variables.
 
 --
 
-Is the predictor `\(\mu_i = \beta_0 + \beta_1 x_{i}^2\)` linear in the parameters?
+Is the predictor `\(\mu_i = \beta_0 + \beta_1 x_i^2\)` linear in the parameters?
 
 --
 
@@ -258,7 +280,7 @@ predictor terms. The weights are the linear coefficients.
 
 --
 
-Each term (or predictor) is any mathematical function of predictor
+Each term in this weighted sum can be any mathematical function of predictor
 variables, provided this function does not include the coefficients of
 the models. Some examples:
 
@@ -280,12 +302,19 @@ non-linear functions of one of more parameters, given the observation of the pre
 
 --
 
-For example, the power function `\(\mu_i = \beta_0 x_{i}^{\beta_1}\)` is a non-linear predictor.
+For example, the power function `\(\mu_i = \beta_0 x_i^{\beta_1}\)` is a non-linear predictor.
 
 --
 
-To see that, take some value for `\(x_{i1}\)`, say `\(x_{i1}=2\)`. The power function will be 
-`\(\mu_i = \beta_0 \times 2^{\beta_1}\)`, which is not a linear function of the parameters.
+To see that, take some value for `\(x_i\)`, say `\(x_i=2\)`. 
+
+--
+
+The function for the predictor for this model will be 
+
+`$$\mu_i = \beta_0 \times 2^{\beta_1}$$` 
+
+which is not a linear function of the parameters.
 
 ---
 
@@ -293,17 +322,18 @@ To see that, take some value for `\(x_{i1}\)`, say `\(x_{i1}=2\)`. The power fun
 
 We have seen that the linear predictor can include products of predictor variables, like:
 
-`$$\begin{align}
-y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \\
-\mu_i &amp; = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} +  \beta_3 x_{i1} x_{i2}\\
-\sigma &amp; = C
-\end{align}$$`
+`$$\mu_i  = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} +  \beta_3 x_{i1} x_{i2}$$`
 
-These products, as the term `\(x_{i1} x_{i2}\)` are called **interactions**.
 
-When two predictor variables interact, their effects are no longer additive.
+Such products, as the term `\(x_{i1} x_{i2}\)` are called **interactions**.
 
-Rather, the effect of one interacting variable depends on the value of
+--
+
+####  Important
+
+* When two predictor variables interact, their effects are no longer additive.
+
+* Rather, the effect of one interacting variable depends on the value of
 the other interacting variable (think about the interaction between two drugs).
 
 ---
