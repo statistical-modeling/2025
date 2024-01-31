@@ -3,18 +3,21 @@
   <head>
     <title>Introduction to regression and linear models</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Andrea Sánchez-Tapia" />
+    <meta name="author" content="Sara Mortara" />
+    <meta name="date" content="2024-01-31" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <script src="libs/clipboard/clipboard.min.js"></script>
     <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
     <script src="libs/shareon/shareon.min.js"></script>
     <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
     <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <script src="libs/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
     <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
     <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
     <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
-    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
-    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -25,13 +28,13 @@ class: center, middle, inverse, title-slide
 # Introduction to regression and linear models
 ]
 .subtitle[
-## Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology - 2023
+## Training Program in Quantitative Ecology - 2024
 ]
 .author[
-### Andrea Sánchez-Tapia
+### Sara Mortara
 ]
 .date[
-### January 12th-13th 2023
+### 31 Jan 2024
 ]
 
 ---
@@ -43,21 +46,85 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
+## Use a model to simplify
+
+
+&lt;img src="figs/isaias_sales.jpeg" width="60%" style="display: block; margin: auto;" /&gt;
+
+Ibã Huni Kuin, Nai Basa Masheri, 2014
+
+---
+
+## Flow of the modeling process
+
+&lt;img src="figs/bolker.png" width="37%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
 ## In statistical models
 
-+ We deal with __predictor__ and __response__ variables. 
++ We deal with __predictor__ and __response__ variables
 
 --
 
-+ In experimental settings this distinction is clear, we __manipulate__ the predictor variables and __measure/observe__ the response variables.
+
++ In experimental settings this distinction is clear, we __manipulate__ the predictor variables and __measure/observe__ the response variables
 
 --
 
-+ In observational settings ("natural experiments"), we do not manipulate the predictor variables but sample the response variable accross them. 
++ In observational settings ("natural experiments"), we do not manipulate the predictor variables but sample the response variable across them
 
 --
 
-+ We hypothesize the __causation relationship__ and build the model accordingly.
++ We hypothesize the __causation relationship__ and build the model accordingly
+
+---
+## The theory: tannins in plant–herbivore interactions
+
+.pull-left[
++ tannin are the most abundant secondary metabolites in plants
+
++ **defense mechanism**: defend leaves against herbivores by deterrence or toxicity
+
++ tannins oxidize in insects `\(\rightarrow\)` oxidative stress
+]
+
+
+.pull-right[
+
+&lt;img src="figs/tannin.jpg" width="70%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+## What do we expect from theory?
+
++ **response variable**: caterpillar growth
+
+--
+
+
++ **predictor variable**: quantity of tannin in the caterpillar diet
+
+--
+
+
+&lt;img src="figs/expect0.png" width="35%" style="display: block; margin: auto;" /&gt;
+
+---
+## What do we expect from theory?
+
++ **response variable**: caterpillar growth
+
++ **predictor variable**: quantity of tannin in the caterpillar diet
+
+
+&lt;img src="figs/expect.png" width="35%" style="display: block; margin: auto;" /&gt;
+
+
 
 
 
@@ -76,47 +143,40 @@ class: center, middle, inverse, title-slide
 
 --
 
+our *probability distribution centric* convention
+
 $$
 Y_i \sim \mathcal{N}(\mu_i, \sigma) \\
 $$
+
+
+--
 
 $$
 \mu_i = \beta_0 + \beta_1 X_i 
 $$
 
+
+
 ---
 
 ## Assumptions of linear regression
 
-+ The relationship is linear 
+1. The **linear** model correctly describes the functional relationship between `\(X\)` and `\(Y\)`
 
 --
 
-+ The residuals are normally distributed
+2. The variable `\(X\)` is measured without error `\(\rightarrow\)` error as random variation of `\(Y\)`
 
 --
 
-+ Variance is constant for all `\(X\)` values: __homoscedasticity__
+3. `\(Y\)` values are **independent** with normally distributed errors
 
----
+--
 
-## How do we estimate the intercept and slope?
+4. Variances are constant along the regression line 
 
-.pull-left[
-
-
-&lt;img src="slides_files/figure-html/dataset-1.png" style="display: block; margin: auto;" /&gt;
-
-]
-
-.pull-right[
-
-+ The simplest approach to do this: __Ordinary Least Squares__
-
-
-]
-
-
+--
 
 
 ---
@@ -125,7 +185,7 @@ $$
 .pull-left[
 
 
-&lt;img src="slides_files/figure-html/ols2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/ols-1.png" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -220,13 +280,13 @@ $$
 .pull-left[
 
 
-![](slides_files/figure-html/varpart-1.png)&lt;!-- --&gt;
+&lt;img src="slides_files/figure-html/varpart-1.png" width="90%" /&gt;
 
 ]
 
 .pull-right[
 
-&lt;img src="slides_files/figure-html/rss2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="slides_files/figure-html/rss2-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -266,90 +326,64 @@ class: inverse, center, middle
 |  Residual |  `\(n-2\)` |  `\(RSS = \sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2\)` | `\(\frac{RSS}{(n-2)}\)` | `\(\sigma^2\)`| |
 |  Total | `\(n-1\)` |  `\(SS_Y = \sum_{i=1}^{n}(Y_i-\overline{Y})^2\)` | `\(\sigma_Y^2\)` |
 
----
-
-
-&lt;!--Report slope, intercept and `\(r^2\)`
-F-ratio the variance accounted for by the regression un the numerator, the residual variance in the denominator. Larger means more explanation by the regression. P-value low, the chances that this would happen if `\(H_0\)` were true are minimal
---&gt;
-
-&lt;small&gt;
-
-```r
-Residuals:
-    Min      1Q  Median      3Q     Max 
--5.4855 -2.4053  0.5989  1.7229  3.7023 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)   
-(Intercept)   1.4594     2.7122   0.538   0.6072   
-x1            3.8456     0.8304   4.631   0.0024 **
----
-Signif. codes:  
-0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 3.216 on 7 degrees of freedom
-Multiple R-squared:  0.7539
-Adjusted R-squared:  0.7187 
-F-statistic: 21.44 on 1 and 7 DF,  p-value: 0.002396
-```
 
 ---
-## Our example dataset
+## Our case: growth of caterpillars and tannin
 
+Do leaf chemical compounds affect negatively the growth of caterpillars? 
 
 
 &lt;table&gt;
  &lt;thead&gt;
   &lt;tr&gt;
-   &lt;th style="text-align:right;"&gt; X &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Y &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; growth &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; tannin &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 5.350265 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1.5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.822522 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 2.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 10.873434 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 2.5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 11.737942 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 3.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 16.606854 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 3.5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 15.517826 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 4.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 11.356260 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 4.5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 16.310566 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 5.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 24.389620 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
 ---
-## Our example dataset
+## Our case: growth of caterpillars and tannin
 
-The example dataset in the current slidedeck was created by simulating data according to the specification of a linear model
+&lt;center&gt; 
 
 $$
 Y_i \sim \mathcal{N}(\mu_i, \sigma) \\
@@ -358,16 +392,201 @@ $$
 $$
 \mu_i = \beta_0 + \beta_1 X_i 
 $$
-With `\(\beta_0 = 1.2\)` and `\(\beta_1 = 3.5\)` and arbitrary x values between 1 and 5:
+
+
+**Which reads:**
+
+--
+
+Caterpillar growth under different tannin intake `\(Y_i\)` follows a normal
+distribution with expected value `\(\mu\)` that is linear function of tannin intake `\(X_i\)`, 
+with a standard deviation `\(\sigma\)` of constant value
+
+
+---
+
+## Fitting the linear model
 
 
 ```r
-set.seed(4)
-x1 &lt;- seq(1, 5, by = 0.5)
-mu &lt;- 1.2 + 3.5 * x1
-y1 &lt;- rnorm(n = 9, mean = mu, sd = 3)
-xy &lt;- data.frame(x1, mu, y1, res = y1 - mu)
+mod &lt;- lm(growth ~ tannin, data = tannin)
+mod
 ```
+
+```
+## 
+## Call:
+## lm(formula = growth ~ tannin, data = tannin)
+## 
+## Coefficients:
+## (Intercept)       tannin  
+##      11.756       -1.217
+```
+
+```r
+pred &lt;- predict(mod)
+pred
+```
+
+```
+##         1         2         3         4         5         6         7         8 
+## 11.755556 10.538889  9.322222  8.105556  6.888889  5.672222  4.455556  3.238889 
+##         9 
+##  2.022222
+```
+
+---
+## Fitting the linear model
+
+
+```r
+plot(growth ~ tannin, data = tannin)
+abline(a = 11.756, b = -1.217, col = "red")
+```
+
+&lt;img src="slides_files/figure-html/unnamed-chunk-2-1.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Variation partitioning
+
+&lt;small&gt;
+
+`$$SS_{reg} = \sum_{i=1}^{n}(\hat{Y}_i-\bar{Y}_i)^2$$` 
+
+
+`$$RSS = \sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2$$` 
+
+
+```r
+# SSreg
+SSreg &lt;- sum((pred - mean(tannin$growth)) ^ 2)
+SSreg
+```
+
+```
+## [1] 88.81667
+```
+
+```r
+# RSS
+RSS &lt;- sum((tannin$growth - pred) ^ 2) 
+RSS
+```
+
+```
+## [1] 20.07222
+```
+
+---
+## Variation partitioning
+
+&lt;small&gt;
+
+
+
+`$$SSY = \sum_{i=1}^n(Y_i - \bar{Y})^2$$` 
+
+
+
+```r
+#SSY
+SSY &lt;- sum((tannin$growth - mean(tannin$growth)) ^ 2) 
+SSY
+```
+
+```
+## [1] 108.8889
+```
+
+```r
+SSreg / SSY # r2
+```
+
+```
+## [1] 0.8156633
+```
+
+```r
+# F ratio
+SSreg / (RSS / (nrow(tannin) - 2))
+```
+
+```
+## [1] 30.97398
+```
+
+
+---
+## Anova table
+
+&lt;small&gt;
+
+
+```r
+anova(mod)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: growth
+##           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## tannin     1 88.817  88.817  30.974 0.0008461 ***
+## Residuals  7 20.072   2.867                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+## Variation partition summary
+
+&lt;small&gt;
+
+```r
+summary(mod)
+```
+
+```
+## 
+## Call:
+## lm(formula = growth ~ tannin, data = tannin)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.4556 -0.8889 -0.2389  0.9778  2.8944 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  11.7556     1.0408  11.295 9.54e-06 ***
+## tannin       -1.2167     0.2186  -5.565 0.000846 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.693 on 7 degrees of freedom
+## Multiple R-squared:  0.8157,	Adjusted R-squared:  0.7893 
+## F-statistic: 30.97 on 1 and 7 DF,  p-value: 0.0008461
+```
+
+
+---
+
+&lt;img src="figs/but-wait-theres-0498a1.jpg" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+&gt; The important point is that we always do model-checking; the
+summary table is not the end of the process of regression analysis.
+
+&lt;small&gt;
+Michael J. Crawley. Statistics: an introduction using R
+
+
+
+---
+## Model checking
+
+
+&lt;img src="slides_files/figure-html/check-1.png" width="45%" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -386,8 +605,6 @@ xy &lt;- data.frame(x1, mu, y1, res = y1 - mu)
 + James, G., Witten, D., Hastie, T., Tibshirani, R., 2013. An Introduction to Statistical Learning: with Applications in R, 1st ed. 2013. Corr. 4th printing 2014 edition. ed. Springer, New York, NY.
 
 + McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
-
-+ Mortara &amp; Sánchez-Tapia (2022, July 14). Scientific Programming: Statistical modeling in R (part 1). Retrieved from https://scientific-computing.netlify.app/07_statistical_modeling_1.html
 
 
 
