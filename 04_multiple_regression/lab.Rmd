@@ -78,7 +78,8 @@ ipomopsis <- read.csv("https://raw.githubusercontent.com/lmmx/crawley-r-statisti
 ## More proper names
 names(ipomopsis) <-  c("diameter","fruit.w","treatment")
 ## Convert treatment to a factor variable
-ipomopsis$treatment <- factor(ipomopsis$treatment)
+ipomopsis$treatment <- factor(ipomopsis$treatment,
+                              labels = c("Control", "Fenced"))
 ```
 
 Let's start with a plot of the response variable as function of both
@@ -90,15 +91,15 @@ plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
      ylab = "Fruit dry weight (mg)",
      xlab = "Rootstock diameter (mm)")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "Ungrazed")
+       subset = treatment == "Fenced")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "Grazed", pch=2, col ="red")
-legend("topleft", c("Ungrazed", "Grazed"), pch=c(1,2),
+       subset = treatment == "Control", pch=2, col ="red")
+legend("topleft", c("Control", "Fenced"), pch=c(1,2),
        col =c("black", "red"), bty="n")
 ```
 
 Larger plants tend to produce larger dry biomass of fruits. It also
-seems that if we control for size, ungrazed plants had larger fruit
+seems that if we control for size, non-fenced plants had larger fruit
 yields. We can check this hypothesis by fitting a linear regression
 with the additive effect of both plant size and treatment:
 
@@ -116,20 +117,20 @@ fitting in a object:
 ```
 
 The predictor variable "treatment" is a factor with two levels
-(grazed/ungrazed). The default in R is to create dummy variables for
+(control/fenced). The default in R is to create dummy variables for
 each level of the factor, except the first one in alphabetical
-order. This means that the model has a variable *"treatmentUngrazed"*,
-that has value one for ungrazed plants, and value zero otherwise. So,
-fruit yield predicted ($\widehat{Y}$) by this model for grazed plants is:
+order. This means that the model has a variable *"treatmentFenced"*,
+that has value one for fenced plants, and value zero otherwise. So,
+fruit yield predicted ($\widehat{Y}$) by this model for control plants is:
 
-$$\widehat{Y}_{\text{grazed}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 0$$
+$$\widehat{Y}_{\text{fenced}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 0$$
 
-While for ungrazed plants we have:
+While for fenced plants we have:
 
-$$\widehat{Y}_{\text{ungrazed}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 1$$
+$$\widehat{Y}_{\text{non-fenced}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 1$$
 
 
-To add the line of expected yield for grazed plants we can use the
+To add the line of expected yield for fenced plants we can use the
 function `abline`, that draws a straight line with a given intercept and slope:
 
 ```{r plot2}
@@ -138,18 +139,18 @@ plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
      ylab = "Fruit dry weight (mg)",
      xlab = "Rootstock diameter (mm)")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "Ungrazed")
+       subset = treatment == "control")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "Grazed", pch=2, col ="red")
-legend("topleft", c("Ungrazed", "Grazed"), pch=c(1,2),
+       subset = treatment == "Fenced", pch=2, col ="red")
+legend("topleft", c("Control", "Fenced"), pch=c(1,2),
        col =c("black", "red"), bty="n")
-## Adds the predicted line for grazed plants
+## Adds the predicted line for fenced plants
 ## check the function help to use it
 abline( a = ipo_cf1[1], b = ipo_cf1[2], col = "red")
 ```
 
 **Challenge:** now add to the plot a black line for the expected yield for
-ungrazed plants. Your plot should look like this:
+non-fenced plants. Your plot should look like this:
 
 
 ```{r plot3, echo = FALSE, eval =TRUE}
@@ -158,12 +159,12 @@ plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
      ylab = "Fruit dry weight (mg)",
      xlab = "Rootstock diameter (mm)")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "Ungrazed")
+       subset = treatment == "control")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "Grazed", pch=2, col ="red")
-legend("topleft", c("Ungrazed", "Grazed"), pch=c(1,2),
+       subset = treatment == "fenced", pch=2, col ="red")
+legend("topleft", c("control", "Fenced"), pch=c(1,2),
        col =c("black", "red"), bty="n")
-## Adds the predicted line for grazed plants
+## Adds the predicted line for fenced plants
 ## check the function help to use it
 abline( a = ipo_cf1[1], b = ipo_cf1[2], col = "red")
 abline( a = ipo_cf1[1]+ipo_cf1[3], b = ipo_cf1[2])
@@ -171,8 +172,8 @@ abline( a = ipo_cf1[1]+ipo_cf1[3], b = ipo_cf1[2])
 
 From the plot above, we can see that the difference between the
 yield of plants of the same size is a constant, that corresponds to
-the value of the coefficient of the variable *"treatmentUngrazed"*.
-Thus, the fitted model estimates that ungrazed plants had on average
+the value of the coefficient of the variable *"treatmentNon-Fenced"*.
+Thus, the fitted model estimates that non-fenced plants had on average
 more `r round(ipo_cf1[3])` mg of fruit yield, if we control for plant
 size.
 
@@ -313,6 +314,7 @@ blooms <- tulips$blooms / max(tulips$blooms)
 water <- tulips$water - mean(tulips$water) 
 shade <- tulips$shade - mean(tulips$shade)
 ```
+
 Let's plot the data: 
 
 ```{r plot_tulip}

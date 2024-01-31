@@ -20,14 +20,11 @@ self-contained: true
 options(htmltools.dir.version = FALSE)
 options(servr.daemon = TRUE)#para que no bloquee la sesión
 knitr::opts_chunk$set(eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE)
-library(sads)
-library(dplyr)
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
 library(xaringanthemer)
-library(ggplot2)
-library(ggthemes)
+library(knitr)
 style_duo_accent(
   primary_color = "#03045E",
   secondary_color = "#669bbc",
@@ -45,99 +42,433 @@ xaringanExtra::use_share_again()
 xaringanExtra::use_fit_screen()
 xaringanExtra::use_tachyons()
 xaringanExtra::use_tile_view()
-# clipboard
-htmltools::tagList(
-  xaringanExtra::use_clipboard(
-    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
-    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
-    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
-  ),
-  rmarkdown::html_dependency_font_awesome()
-  )
-## ggplot theme
-theme_Publication <- function(base_size=14, base_family="helvetica") {
-    (theme_foundation(base_size=base_size, base_family=base_family)
-        + theme(plot.title = element_text(face = "bold",
-                                          size = rel(1.2), hjust = 0.5),
-                text = element_text(),
-                panel.background = element_rect(colour = NA),
-                plot.background = element_rect(colour = NA),
-                panel.border = element_rect(colour = NA),
-                axis.title = element_text(face = "bold",size = rel(1)),
-                axis.title.y = element_text(angle=90,vjust =2),
-                axis.title.x = element_text(vjust = -0.2),
-                axis.text = element_text(), 
-                axis.line = element_line(colour="black"),
-                axis.ticks = element_line(),
-                panel.grid.major = element_line(colour="#f0f0f0"),
-                panel.grid.minor = element_blank(),
-                legend.key = element_rect(colour = NA),
-                legend.position = "bottom",
-                legend.direction = "horizontal",
-                legend.key.size= unit(0.2, "cm"),
-                ##legend.margin = unit(0, "cm"),
-                legend.spacing = unit(0.2, "cm"),
-                legend.title = element_text(face="italic"),
-                plot.margin=unit(c(10,5,5,5),"mm"),
-                strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
-                strip.text = element_text(face="bold")
-                ))
-    
-}
-## Aux functions
-f.rib <- function(X, dpad = 5)
-    geom_ribbon(aes(ymin= y - X*dpad, ymax = y + X*dpad), fill = "blue", alpha = 0.01)
 
-make.q <- function(from, to, cfs, normal=TRUE, sig, size=100){
-    if(normal)
-        df <- data.frame(x = seq(from, to, length =size)) %>%
-            mutate(y = cfs[1]+cfs[2]*x,
-                   low.1 =  qnorm(0.05, size, mean = y, sd =sig),
-                   upp.1 =  qnorm(0.95, size, mean = y, sd =sig),
-                   low.2 =  qnorm(0.25, size, mean = y, sd =sig),
-                   upp.2 =  qnorm(0.75, size, mean = y, sd =sig))
-    else
-        df <- data.frame(x = seq(from, to, length =size)) %>%
-            mutate(y = cfs[1]+cfs[2]*x,
-                   low.1 =  qpois(0.05, size, lambda = y),
-                   upp.1 =  qpois(0.95, size, lambda = y),
-                   low.2 =  qpois(0.25, size, lambda = y),
-                   upp.2 =  qpois(0.75, size, lambda = y))
-} 
-
-plot.q <- function(df2, df1){
-    ggplot(df2, aes(x, y)) +
-        geom_line(col="navy") +
-        geom_ribbon(aes(ymin = low.1, ymax = upp.1), fill="blue", alpha =0.25) +
-        geom_ribbon(aes(ymin = low.2, ymax = upp.2), fill="blue", alpha =0.25) +
-        geom_point(data = df1, color ="red", size=1.25, stroke=1.25)  +
-        theme_Publication(18)
-    }
 ```
 
-# Recap
 
-* 
---
+## Key concepts
 
-* 
---
+* Multiple linear regression
 
-* 
+* Linear predictor
 
----
+* Additive predictor
 
-# Today we'll see ...
+* Predictor with interactions
 
-How to use the likelihood function and MLEs of a fitted model to:
+* Over-fitting and under-fitting
 
-1. To compare the support data gives to alternative models;
-2. To make inferences about MLEs
+* AIC (for Gaussian models)
 
+* Model selection
 
 ---
 
-# Inferences about competing models
+## Multiple linear regression (Gaussian)
+
+We can extend the simple linear regression model to accommodate
+multiple predictors. These are the **multiple linear regression**
+models, of which the simple linear regression is just a particular
+case with a single predictor variable:
+
+$$\begin{align}
+y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+\mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij} \\
+\sigma & = C
+\end{align}$$
+
+---
+
+## A quick example to warm up
+
+* **Question**: what's the impact of herbivory on plant fitness?
+* Field experiment: 40 plants of *Ipomopsis agreggata* (Pursh)
+V.E.Grant assigned at random to two treatments: unprotected from
+grazing by rabbits and protect from grazing by fenced cages.
+* **Response variable**: fruit yield of each plant (mg dry mass)
+* **Predictor variables**: 
+  * Treatment:  $0 =$ control (non-fenced), $1 =$ fenced
+  * Basal diameter of each plant (mm)
+* Data from: Crawley (2007) The R Book.
+
+.center[
+
+```{r, out.width = "50%"}
+include_graphics("figs/ipomopsis_and_grazing_cage.png")
+
+```
+
+]
+
+
+---
+
+## The data
+
+.pull-left[
+```{r }
+## Data reading and preparation
+ipomopsis <- read.csv("https://raw.githubusercontent.com/lmmx/crawley-r-statistics-book-notes/master/code/ipomopsis.csv")
+## More proper names
+names(ipomopsis) <-  c("diameter","fruit.w","treatment")
+## Convert treatment to a factor variable
+ipomopsis$treatment <- factor(ipomopsis$treatment,
+                              labels = c("Control", "Fenced"))
+
+head(ipomopsis)
+```
+...
+
+```{r }
+tail(ipomopsis)
+```
+]
+
+.pull-right[
+.center[
+```{r data, eval=TRUE, echo = FALSE}
+par(las=1, mar=c(6,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25)
+plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
+     ylab = "Fruit yield dry weight (mg)",
+     xlab = "Rootstock diameter (mm)")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Control", pch =19, col="blue")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Fenced", pch = 15, col ="red")
+legend("topleft", c("Control", "Fenced"), pch=c(19, 15),
+       col =c("blue", "red"), bty="n", cex = 1.5)
+```
+]]
+
+---
+
+## Fitting multiple regression in R
+
+### The model
+
+$$\begin{align}
+\text{Yield}_i &\sim \text{Normal}(\mu_i, \sigma) \\
+\mu_i & = \beta_0 + \beta_1 \text{diameter}_{i} + \beta_2 \text{treatment}_{i} \\
+\sigma & = C
+\end{align}$$
+
+
+
+### Call in R
+
+```{r, echo=TRUE}
+
+ipo_m1 <- lm(fruit.w ~ diameter + treatment,
+             data = ipomopsis)
+```
+
+
+---
+
+## Coefficients of the fitted model
+
+
+```{r , echo=TRUE}
+summary( ipo_m1 ) 
+```
+
+
+
+
+---
+
+## Coefficients of the fitted model
+
+$$\begin{align}
+\mu_i & = -128 + 24 \times \text{diameter}_{i} + 36 \times \text{treatment}_{i}
+\end{align}$$
+
+### For treatment = 0 (control plants):
+
+$$\begin{align}
+\mu_i & = -128 + 24 \times \text{diameter}_{i} + 36 \times 0 \\
+      & = -128 + 24 \times \text{diameter}_{i}
+\end{align}$$
+
+--
+
+### For treatment = 1 (fenced plants):
+
+$$\begin{align}
+	\mu_i & = -128 + 24 \times \text{diameter}_{i} + 36 \times 1 \\
+	& = (36 -128) + 24 \times \text{diameter}_{i}
+\end{align}$$
+
+---
+
+## Plot with observed and predicted values
+
+.center[
+
+```{r }
+ipo_cf1 <- coef(ipo_m1)
+par(las=1, mar=c(6,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25)
+plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
+     ylab = "Fruit yield dry weight (mg)",
+     xlab = "Rootstock diameter (mm)")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Control", pch =19, col="blue")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Fenced", pch = 15, col ="red")
+legend("topleft", c("Control", "Fenced"), pch=c(19, 15),
+       col =c("blue", "red"), bty="n", cex = 1.5)
+abline( a = ipo_cf1[1], b = ipo_cf1[2], col = "blue")
+abline( a = ipo_cf1[1] + ipo_cf1[3], b = ipo_cf1[2], col = "red")
+```
+]
+
+---
+
+## The linear predictor
+
+The expression for the predicted value in multiple linear regression can be written in the compact form:
+
+$$\mu_i = \sum_{j=0}^{J} \beta_{j} x_{ij} \, = \, \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij}$$ 
+
+Where $J$ is the number of predictor variables. This is called the **linear predictor**.
+
+---
+
+## Linearity in the parameters
+
+For statistical models, a predictor is linear if it is a linear
+function of parameters, given an observed value of the predictor variables.
+
+--
+
+Is the predictor $\mu_i = \beta_0 + \beta_1 x_{i}^2$ linear in the parameters?
+
+--
+
+**Yes**! For a given observed value of the predictor variable $x_{i}$,
+say $x_{i} = 2$, the predictor is 
+
+$$\mu_i = 2 \beta_0 + 4 \beta_1$$
+
+Which is a linear expression.
+
+---
+
+## Some linear predictors
+
+In summary: linear predictors are any weighted sum of
+predictor terms. The weights are the linear coefficients. 
+
+--
+
+Each term (or predictor) is any mathematical function of predictor
+variables, provided this function does not include the coefficients of
+the models. Some examples:
+
+--
+
+$$\begin{align}
+\mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} +  \beta_3 x_{i3} \\
+\mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 \\
+\mu_i & = \beta_0 + \beta_1 \log(x_{i1}) + \beta_2 \sqrt(x_{i2}) \\
+\mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} +  \beta_3 x_{i1}x_{i2}
+\end{align}$$
+
+---
+
+## Non-linear predictors
+
+For statistical models, non-linear predictors result in
+non-linear functions of one of more parameters, given the observation of the predictor variables. 
+
+--
+
+For example, the power function $\mu_i = \beta_0 x_{i}^{\beta_1}$ is a non-linear predictor.
+
+--
+
+To see that, take some value for $x_{i1}$, say $x_{i1}=2$. The power function will be 
+$\mu_i = \beta_0 \times 2^{\beta_1}$, which is not a linear function of the parameters.
+
+---
+
+## Interactions
+
+We have seen that the linear predictor can include products of predictor variables, like:
+
+$$\begin{align}
+y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+\mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} +  \beta_3 x_{i1} x_{i2}\\
+\sigma & = C
+\end{align}$$
+
+These products, as the term $x_{i1} x_{i2}$ are called **interactions**.
+
+When two predictor variables interact, their effects are no longer additive.
+
+Rather, the effect of one interacting variable depends on the value of
+the other interacting variable (think about the interaction between two drugs).
+
+---
+
+## A simple example of interactions
+
+* **Question**: what are the best soil moisture and light availability to grow tulips?
+* Greenhouse experiment: beds of tulips kept in nine combinations of
+  soil moisture and shading. Three replicates for each combination
+  (total of 27 beds).
+* **Response variable**: mean plant height in each bed
+* **Predictor variables**: 
+  * Watering: $1 =$ low, $2 =$ medium, $3 =$ high
+  * Shading: $1 =$ low, $2 =$ medium, $3 =$ high 
+* Data from: Grafen & Hails (2002) Modern Statistics for the Life Sciences.
+
+.center[
+![](figs\tulips.jpg)
+]
+
+---
+
+## The data
+
+.pull-left[
+
+```{r }
+tulips <- read.csv("data/tulips.csv")
+head(tulips)
+```
+
+```{r }
+tail(tulips)
+```
+]
+
+.pull-right[
+.center[
+
+```{r }
+
+color <- c("black", "red", "blue")
+plot(blooms ~ water, 
+     data = tulips, 
+     type = "n",
+     ylab = "Mean height (mm)",
+     xlab = "Water level")
+for (s in 1:3) {
+points(blooms ~ water, 
+       data = tulips,
+       subset = shade == s, pch = s, col = color[s])
+}
+legend("topleft", title = "Shading",
+       c("1", "2", "3"),
+       pch = c(1, 2, 3), 
+       col =c("black", "red", "blue"), bty = "n", cex = 1.2)
+
+```
+
+]]
+
+---
+
+## Fitting a model with interaction in R
+
+### The model
+
+$$\begin{align}
+\text{Mean height}_i &\sim \text{Normal}(\mu_i, \sigma) \\
+\mu_i & = \beta_0 + \beta_1 \text{watering}_{i} + \beta_2 \text{shading}_{i} + \beta_3 \text{shading}_{i} \text{watering}_{i}\\
+\sigma & = C
+\end{align}$$
+
+
+### Fitting in R
+
+```{r , echo = TRUE,}
+tulip_int <- lm(blooms ~ water + shade + water:shade,
+                data = tulips)
+```
+
+
+---
+
+## Coefficients of the fitted model
+
+
+```{r, echo=TRUE }
+summary(tulip_int) 
+```
+
+---
+
+## Coefficients of the fitted model
+
+$$\begin{align}
+\mu_i & = -151 + 181 \times \text{water}_{i} + 64 \times \text{shade}_{i} -53 \times \text{shade}_{i} \times  \text{water}_{i}  \\
+\end{align}$$
+
+--
+
+###  For shade = 1 :
+
+$$\begin{align}
+\mu_i & = -151 + 181 \text{water}_{i} + 64 \times 1 + (-53 \times 1) \text{water}_{i}  \\
+      & = (64 -151)  + (181 - 53) \text{water}_{i}
+\end{align}$$
+
+--
+
+### For shade = 3:
+
+$$\begin{align}
+\mu_i & = -151 + 181 \text{water}_{i} + (64 \times 3) + ( - 53 \times 3) \text{water}_{i}  \\
+      & = (192 -151)  + (181 - 159) \text{water}_{i} 
+\end{align}$$
+
+---
+
+## Plot with observed and predicted values
+
+.center[
+
+```{r }
+
+tul_cf2 <- coef(tulip_int)
+s <- 1:3 #values of shade
+intercepts <- tul_cf2[1] + tul_cf2[3] * s
+slopes <- tul_cf2[2] + tul_cf2[4] * s
+
+
+par(las=1, mar=c(6,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25)
+color <- c("black", "red", "blue")
+plot(blooms ~ water, 
+     data = tulips, 
+     type = "n",
+     ylab = "Mean height (mm)",
+     xlab = "Water level")
+for (s in 1:3) {
+    points(blooms ~ water, 
+           data = tulips,
+           subset = shade == s, pch = s, col = color[s])
+    abline(a = intercepts[s], slopes[s], col = color[s])
+}
+legend("topleft",
+       c("Shade 1", "Shade 2", "Shade 3"),
+       pch = c(1, 2, 3), 
+       col = c("black", "red", "blue"), bty = "n", cex = 1.5)
+```
+
+]
+
+
+---
+
+## Inferences about competing models
 
 ```{r }
 set.seed(4)
@@ -163,19 +494,18 @@ newdata <- data.frame(x = seq(0,1, length=100))
 
 .pull-left[
 
-**The truth:**
+**The data-generating process (a.k.a. true model):**
 
-$$
-\begin{align}
+$$\begin{align}
 y_i &\sim \mathcal{N}(\mu_i, \sigma) \\
 \mu_i & = e^{(x_i - 0.3)^2} -1 \\
-\sigma & = C \\
-\end{align}
-$$
+\sigma & = C
+\end{align}$$
 ]
 
 .pull-right[
 .center[
+
 ```{r }
 par(las=1, mar=c(6,7,4,2)+0.1,
     mgp=c(5,1,0),
@@ -186,15 +516,14 @@ curve(exp((x-0.3)^2) -1, lwd=1.5, add = TRUE, col="blue")
 curve(qnorm(0.025, exp((x-0.3)^2) -1, 0.1), lty=2, add = TRUE, col="blue")
 curve(qnorm(0.975, exp((x-0.3)^2) -1, 0.1), lty=2, add = TRUE, col="blue")
 ```
+
 ]]
 
 ---
 
+## The models
+
 .pull-left[
-
-# The models
-
-.push-left[
 $$
 \begin{align}
 \textbf{M1}: & \mu_i = \beta_0 + \beta_1 x_i \\[1em]
@@ -202,11 +531,10 @@ $$
 \textbf{M3}: & \mu_i = \beta_0 + \beta_1 x_i + \beta_2 {x_i}^2 + \\
 &+ \beta_3 {x_i}^3  + \beta_4 {x_i}^4 + \beta_5 {x_i}^5
 \end{align}
-\\
 $$
 ]
 
-.push-left[
+.pull-right[
 .center[
 ```{r }
 par(las=1, mar=c(6,7,4,2)+0.1,
@@ -224,14 +552,14 @@ legend("topleft", c("Model 1", "Model 2", "Model 3"),
 
 ---
 
-# Overfitting
+## Over-fitting
 
 .pull-left[
 
 ```{r , echo=TRUE}
 M3 <- lm(y1 ~ x + I(x^2) + I(x^3) +
              I(x^4) + I(x^5), data = df1)
-summary(M2)$coefficients[,1:2]
+summary(M3)$coefficients[,1:2]
 ```
 
 > To make inferences about unique features of the data at hand, as if they applied to all (or most all) samples (hence the population).
@@ -257,7 +585,7 @@ curve(exp((x-0.3)^2) -1, lwd=2, add = TRUE, col="blue")
 
 ---
 
-# Underfitting
+## Under-fitting
 
 .pull-left[
 
@@ -265,7 +593,7 @@ curve(exp((x-0.3)^2) -1, lwd=2, add = TRUE, col="blue")
 M1 <- lm(y1 ~ x,
          data = df1)
 
-summary(M2)$coefficients[,1:2]
+summary(M1)$coefficients[,1:2]
 ```
 
 
@@ -293,7 +621,7 @@ curve(exp((x-0.3)^2) -1, lwd=2, add = TRUE, col="blue")
 
 ---
 
-# A good fit
+## A good fit
 
 
 .pull-left[
@@ -323,53 +651,53 @@ curve(exp((x-0.3)^2) -1, lwd=2, add = TRUE, col="blue")
 
 ---
 
-# Akaike information criterion
+
+## Akaike information criterion
 
 .left-column[
 .center[
-![](figs/Akaike.jpg)
+![](../05_maximum_likelihood/figs/Akaike.jpg)
 Hirotugu Akaike (1997-2009)
 ]]
 
 .right-column[
 
-H. Akaike deduced a correction for the estimation bias in likelihoods, later named in his honor:
 
-$$\textrm{AIC} \, = \, -2\, \textbf{L}_y(\widehat{\theta}) + 2\,K$$
+AIC estimates a statistical distance between two probability
+distributions: the true one, which is the reference, and a given model
+fitted to a sample from the true distribution.
 
-Where $\textbf{L}_y(\widehat{\theta})$ is log-likelihood of a model, evaluated at the MLE's (that is, the maximum log-likelihood of a fit); and $K$ is the number of model parameters.
+AIC is an estimate of the information of the true data-generating 
+distribution that is preserved by a model.
 
+More specifically, AIC is an estimate of the Kullback-Leibler
+divergence (or K-L relative entropy) of the model to the reference
+true distribution that generated the data.  
 ]
 
 
 ---
 
-
-# Akaike information criterion
-
-.left-column[
-.center[
-![](figs/Akaike.jpg)
-Hirotugu Akaike (1997-2009)
-]]
-
-.right-column[
-
-$$\textrm{AIC} \, = \, -2\, \textbf{L}_y(\widehat{\theta}) + 2\,K$$
+## AIC for Gaussian models
 
 
-AIC estimates a statistical distance between two probability distributions: the true one, which is the reference, and a given model fitted to a sample from the true distribution.
+$$\textrm{AIC} \, = \, N \log (\widehat{\sigma^2}) + 2\,K$$
 
-AIC is an estimate of the information of the underlying (true) distribution that is preserved by a model. 
+Where $\widehat{\sigma^2}$ is the estimate of the residual variance of
+the model, that is, the mean sum of squares of residuals:
 
-More specifically, AIC is an estimate of the Kullback-Leibler divergence (or K-L relative entropy) of the model to the reference true distribution that generated the data.
-]
+$$ \widehat{\sigma^2} \, = \, \frac{1}{N} \, \sum_{i = 1}^N (Y_i - \widehat{Y_i})^2 $$
+
+And $K$ is the number of parameters of the model.
+
+
 
 
 
 ---
 
-# How to use AIC
+
+## How to use AIC
 
 * AIC expresses distance to the true model, or loss of information by the fitted model;
 
@@ -377,7 +705,7 @@ More specifically, AIC is an estimate of the Kullback-Leibler divergence (or K-L
   competing models is the most plausible one (or best supported by the
   data);
   
-* Canonic rule: models that differ $\leq 2$ in their AIc values are
+* Canonical rule: models that differ $\leq 2$ in their AIC values are
   equally supported by data;
 
 * To ease model selection, we calculate $\Delta \mathrm{AIC}$: 
@@ -387,25 +715,31 @@ $$\Delta_i \, = \, \textrm{AIC}_i - \min (\textrm{AIC})$$
 
 ---
 
-# AICc: correction for small samples
+## AICc: correction for small samples
 
-For  $n/K \, < \,40$, use:
+For  $n/K \, < \,40$, multiply $K$ by the correction term
 
+
+$$ \left(\frac{n}{n-K-1}\right) $$
+
+### AICc for Gaussian models:
 
 $$ \textrm{AICc} \, = \, -2\,\textbf{L}_y(\widehat{\theta}) + 2\,K \left(\frac{n}{n-K-1}\right) $$
 
 
 Where $n$ is the sample size.
 
+
 ---
 
-# Evidence weights 
+## Evidence weights 
 
 $$w_i\,=\, \frac{e^{-1/2 \Delta_i}}{\sum e^{-1/2 \Delta_i}}$$
 
 * Evidence or Akaike weights sum up one;
 
-* Thus, $w_i$ express the relative support of each model in the set of competing models, in a standardized scale;
+* Thus, $w_i$ express the relative support of each model in the set of
+  competing models, in a standardized scale;
 
 * In a frequentist approach, $w_i$ estimates the probability that each
   model will be the best supported one, if you repeat the sample and then the selection many
@@ -414,18 +748,19 @@ $$w_i\,=\, \frac{e^{-1/2 \Delta_i}}{\sum e^{-1/2 \Delta_i}}$$
 
 ---
 
-# Model selection with AIC: example
+## Model selection with AIC: example
 
 .pull-left[
 
 
 ```{r , echo=TRUE}
 library(bbmle)
-M0 <- M1 <- lm(y1 ~ x, data = df1)
-M1 <- lm(y1 ~ x + I(x^2), data = df1)
-M2 <- lm(y1 ~ x + I(x^2) + I(x^3) +
+M1 <- lm(y1 ~ x, data = df1)
+M2 <- lm(y1 ~ x + I(x^2), data = df1)
+M3 <- lm(y1 ~ x + I(x^2) + I(x^3) +
              I(x^4) + I(x^5), data = df1)
-AICctab(M0, M1, M2, logLik=TRUE, base = TRUE,
+
+AICctab(M1, M2, M3, logLik=TRUE, base = TRUE,
         weights = TRUE, nobs = nrow(df1))
 ```
 
@@ -451,7 +786,7 @@ legend("topleft", c("Model 0", "Model 1", "Model 2"),
 
 ---
 
-# Final remarks on AIC
+## Final remarks on AIC
 
    * Ties can and do happen: more than one model with $\Delta_i < 2$
    tell us that the data does not contain enough evidence to spot
@@ -474,7 +809,7 @@ legend("topleft", c("Model 0", "Model 1", "Model 2"),
 
 
 
-# Further reading
+## Further reading
 
 + Burnham, K. P., & Anderson, D. R. (2002). Model Selection and
   Multimodel Inference: A Practical-Theoretic Approach, 2nd ed. New
@@ -482,3 +817,8 @@ legend("topleft", c("Model 0", "Model 1", "Model 2"),
 
 + Bolker, B.M. 2008 Ecological
   Models and Data in R. Princeton: Princeton University Press.
+
++ McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with
+  Examples in R and Stan, 2nd ed. CRC Press.
+  
+  
