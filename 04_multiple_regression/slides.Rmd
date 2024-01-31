@@ -114,7 +114,7 @@ names(ipomopsis) <-  c("diameter","fruit.w","treatment")
 ## Convert treatment to a factor variable
 ipomopsis$treatment <- factor(ipomopsis$treatment,
                               labels = c("Control", "Fenced"))
-
+ipomopsis <- ipomopsis[,c(2,3,1)]
 head(ipomopsis)
 ```
 ...
@@ -205,6 +205,14 @@ $$\begin{align}
 
 ## Plot with observed and predicted values
 
+.pull-left[
+
+* The expected value of fruit biomass increases with plant size
+
+* For any plant size, caging increased fruit yield in 36 mg, on average.
+]
+
+.pull-right[
 .center[
 
 ```{r }
@@ -224,7 +232,7 @@ legend("topleft", c("Control", "Fenced"), pch=c(19, 15),
 abline( a = ipo_cf1[1], b = ipo_cf1[2], col = "blue")
 abline( a = ipo_cf1[1] + ipo_cf1[3], b = ipo_cf1[2], col = "red")
 ```
-]
+]]
 
 ---
 
@@ -265,7 +273,7 @@ predictor terms. The weights are the linear coefficients.
 
 --
 
-Each term (or predictor) is any mathematical function of predictor
+Each term in this weighted sum can be any mathematical function of predictor
 variables, provided this function does not include the coefficients of
 the models. Some examples:
 
@@ -287,12 +295,15 @@ non-linear functions of one of more parameters, given the observation of the pre
 
 --
 
-For example, the power function $\mu_i = \beta_0 x_{i}^{\beta_1}$ is a non-linear predictor.
+For example, the power function $\mu_i = \beta_0 x^_{i}{\beta_1}$ is a non-linear predictor.
 
 --
 
-To see that, take some value for $x_{i1}$, say $x_{i1}=2$. The power function will be 
-$\mu_i = \beta_0 \times 2^{\beta_1}$, which is not a linear function of the parameters.
+To see that, take some value for $x_{i}$, say $x_{i}=2$. The power function will be 
+
+$$\mu_i = \beta_0 \times 2^{\beta_1}$$ 
+
+which is not a linear function of the parameters.
 
 ---
 
