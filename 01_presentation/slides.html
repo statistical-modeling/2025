@@ -142,8 +142,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div id="htmlwidget-c284eabde9c97f2fd30c" style="width:1024px;height:504px;" class="grViz html-widget "></div>
-<script type="application/json" data-for="htmlwidget-c284eabde9c97f2fd30c">{"x":{"diagram":"\ndigraph nicegraph {\n\n  bgcolor = \"#fdf6e3\"\n\n  # graph, node, and edge definitions\n  graph [compound = true, nodesep = .5, ranksep = .25,\n         color = \"#dc322f\"]\n\n  node [fontname = Helvetica, fontcolor = darkslategray,\n        shape = rectangle, fixedsize = false, \n        color = \"#586e75\", fontsize = 30]\n\n  edge [color = grey, arrowhead = none, arrowtail = none]\n\n  # subgraph for fondation\n  subgraph cluster0 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Presentation\" -> \"Probability distributions\" -> \"Bayesian statistics I\" \n  }\n\n  # subgraph for tools\n  subgraph cluster1 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Linear models\" -> \"Multiple regression\" -> \"Generalized linear models\" -> \"Mixed and hierarchical models\" \n  }\n  \n    # subgraph inference\n  subgraph cluster2 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Bayesian statistics II\" -> \"Causal thinking\"\n  }\n\n\n  \"Statistical modeling\"             [width = 5, fontsize = 30, height = 0.75, style = filled, fillcolor = \"#cb4b16\", fontcolor = \"#fdf6e3\"]\n  \"Foundation\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Fitting\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Inference\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.5, height = 0.6]\n\n  \"Statistical modeling\" -> \"Foundation\" \n  \"Statistical modeling\" -> \"Fitting\"\n  \"Statistical modeling\" ->   \"Inference\" \n  \"Foundation\" -> \"Presentation\"            [lhead = cluster0]\n  \"Fitting\" -> \"Linear models\"        [lhead = cluster1]\n  \"Inference\" -> \"Bayesian statistics II\"        [lhead = cluster2]\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-332fdb39362a3d7ea53d" style="width:1024px;height:504px;" class="grViz html-widget "></div>
+<script type="application/json" data-for="htmlwidget-332fdb39362a3d7ea53d">{"x":{"diagram":"\ndigraph nicegraph {\n\n  bgcolor = \"#fdf6e3\"\n\n  # graph, node, and edge definitions\n  graph [compound = true, nodesep = .5, ranksep = .25,\n         color = \"#dc322f\"]\n\n  node [fontname = Helvetica, fontcolor = darkslategray,\n        shape = rectangle, fixedsize = false, \n        color = \"#586e75\", fontsize = 30]\n\n  edge [color = grey, arrowhead = none, arrowtail = none]\n\n  # subgraph for fondation\n  subgraph cluster0 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Presentation\" -> \"Probability distributions\" -> \"Bayesian statistics I\" \n  }\n\n  # subgraph for tools\n  subgraph cluster1 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Linear models\" -> \"Multiple regression\" -> \"Generalized linear models\" -> \"Mixed and hierarchical models\" \n  }\n  \n    # subgraph inference\n  subgraph cluster2 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Bayesian statistics II\" -> \"Causal thinking\"\n  }\n\n\n  \"Statistical modeling\"             [width = 5, fontsize = 30, height = 0.75, style = filled, fillcolor = \"#cb4b16\", fontcolor = \"#fdf6e3\"]\n  \"Foundation\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Fitting\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Inference\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.5, height = 0.6]\n\n  \"Statistical modeling\" -> \"Foundation\" \n  \"Statistical modeling\" -> \"Fitting\"\n  \"Statistical modeling\" ->   \"Inference\" \n  \"Foundation\" -> \"Presentation\"            [lhead = cluster0]\n  \"Fitting\" -> \"Linear models\"        [lhead = cluster1]\n  \"Inference\" -> \"Bayesian statistics II\"        [lhead = cluster2]\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 &lt;/center&gt;
 
@@ -158,6 +158,7 @@ class: center, middle, inverse, title-slide
 - Lectures and computer labs
  
 - Labs: tutorials in R language
+  - Virtual machine: [http://34.139.106.91:8787/]()
  
 - Q&amp;A (in your preferred language)
 
@@ -424,7 +425,7 @@ class: middle
 .pull-left[
 * Ascribes a probability to each value a measurement can assume
 
-* It is a model for the sum of many sources of sources of variation
+* It is a model for the sum of many sources of variation
 
 * Small deviations from the expected value are more likely than large deviations
 

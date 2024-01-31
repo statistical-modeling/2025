@@ -3,7 +3,8 @@ title: "Linear regression Lab"
 author:
  - "Andrea Sánchez-Tapia"
  - "Paulinha Lemos-Costa"
-date: "2023-01-13"
+ - "Sara Mortara"
+date: "2024-02-01"
 output:
     distill::distill_article:
       toc: true
@@ -140,8 +141,63 @@ $$RSS = \sum_{i=1}^{n}(y_i-\hat{y}_i)^2 $$
 
 
 
-$SS_y = {\sum_{i=1}^{n}(y_i-\bar{y})^2}$
+$$SS_y = {\sum_{i=1}^{n}(y_i-\bar{y})^2}$$
 
 
 $$SS_Y = SS_{Reg} + RSS$$
+
+
+**Challenge:** Given that you have already learned that the $R^2$ of a model is the ratio between the sums of squares of the regression and the total sum of squares, calculate it and check the result comparing with the summary of the model. 
+
+```{r, code_folding=TRUE, eval = FALSE}
+pred <- predict(mod)
+RSS <- sum((y - mean(pred)) ^ 2)
+SSY <- sum((y - mean(y)) ^ 2)
+SSreg <- SSY - RSS
+
+SSreg / SSY
+
+summary(mod)
+
+```
+
+
+### Checking model assumption
+
+The assumptions of the linear regression model are:
+
+1. The linear model correctly describes the functional relationship between $X$ and $Y$;
+
+2. The variable $X$ is measured without error, therefore, allowing us to associate the error component entirely to the $Y$ variable;
+
+3. $Y$ values are independent with normally distributed errors;
+
+4. Variances are constant along the regression line. 
+
+The fourth assumption allows us to use a single constant $\sigma$ for the variance. Non-constant variances can be recognizing using diagnostic plots. Let's use them.
+
+```{r, eval=FALSE}
+d <- residuals(mod)
+y_hat <- predict(mod)
+
+plot(d ~ y_hat)
+abline(h = 0)
+```
+
+If the linear model fits the data well, this residual plot should exhibit a scatter of points that approximately follows a normal distribution and are uncorrelated with the fitted values. Values under the dashed line are overestimates of the model, while values over the line, underestimates.
+
+In order to check the assumption of **homoscedasticity**, you should observe if the average size of the residuals increase with the increase in $X$ (i.e., heterocedasticity).
+
+Another visualization for model diagnostic are the plots of the object containing the fitted model. There are four plots, and we will change the graphical window so we can see all of them at the same time. As Michael J. Crawley would say:
+
+> It takes experience to interpret these plots, but what you do not want to see is lots of
+structure or pattern in the plot.
+
+```{r, eval=FALSE}
+par(mfrow = c(2, 2)) # sets a graphical window with 2 rows-2 columns
+plot(mod)
+par(mfrow = c(1, 1)) # setting back to the default 1-1
+```
+
+The first plot, is basically the same as the last plot you created. As we saw in the last plot, it is a problem if the variance in the residuals increase as the fitted values get larger, therefore testing our fourth assumption. The second plot is a normal quantile-quantile plot. This plot should be a straight line if the errors are normally distributed (our third assumption). The third plot is very similar to the first one, but the y-axis is at a different scale - now all values are positive because of the squared root transformation. The last plot indicates influential points, i.e., points that have biggest effect on parameter estimates. What is your overall evaluation of the normality of the residuals?
 

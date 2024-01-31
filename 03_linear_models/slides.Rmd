@@ -1,9 +1,9 @@
 ---
 title: "Introduction to regression and linear models"
-subtitle: "Serrapilheira/ICTP-SAIFR Training Program in Quantitative Biology and Ecology - 2023"  
+subtitle: "Training Program in Quantitative Ecology - 2024"  
 author: 
-  - "Andrea Sánchez-Tapia"
-date: 'January 12th-13th 2023'
+  - "Sara Mortara"
+date: '31 Jan 2024'
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -16,31 +16,35 @@ output:
 self-contained: true
 ---
 
+
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 options(servr.daemon = TRUE)#para que no bloquee la sesión
-knitr::opts_chunk$set(echo = TRUE, message = F, warning = F)
+
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
 library(xaringanthemer)
-style_mono_accent(
-  base_color = "#03045E",
-  
-  colors = c(
-    red = "#A70001",
-    white = "#FFFFFF",
-    black = "#181818"
-  ),
-  text_bold_color = "#03045E",
-  header_font_google = google_font("Roboto Condensed"),
-  text_font_google = google_font("Roboto Condensed", "300", "300i"),
-  code_font_google = google_font("Fira Mono"),
-  text_font_size = "28px",
-  code_font_size = "28px"
-)
-xaringanExtra::use_share_again()
+library(ggplot2)
+library(ggthemes)
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
 
+xaringanExtra::use_share_again()
+xaringanExtra::use_fit_screen()
+xaringanExtra::use_tachyons()
+
+style_solarized_light(
+  title_slide_background_color = "#586e75",# base 3
+  header_color = "#586e75",
+  text_bold_color = "#cb4b16",
+  background_color = "#fdf6e3", # base 3
+  header_font_google = google_font("DM Sans"),
+  text_font_google = google_font("Roboto Condensed", "300", "300i"),
+  code_font_google = google_font("Fira Mono"), text_font_size = "28px"
+)
 # clipboard
 htmltools::tagList(
   xaringanExtra::use_clipboard(
@@ -49,15 +53,48 @@ htmltools::tagList(
     error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
   ),
   rmarkdown::html_dependency_font_awesome()
-)
+  )
+## ggplot theme
+theme_Publication <- function(base_size = 14, base_family = "helvetica") {
+    (theme_foundation(base_size = base_size, base_family = base_family)
+        + theme(plot.title = element_text(face = "bold",
+                                          size = rel(1.2), hjust = 0.5),
+                text = element_text(),
+                panel.border = element_rect(colour = NA),
+                panel.background = element_rect(fill = 'transparent'),
+                plot.background = element_rect(fill = 'transparent', color = NA),
+                axis.title = element_text(face = "bold",size = rel(1)),
+                axis.title.y = element_text(angle=90,vjust =2),
+                axis.title.x = element_text(vjust = -0.2),
+                axis.text = element_text(), 
+                axis.line = element_line(colour="black"),
+                axis.ticks = element_line(),
+                panel.grid.major = element_line(colour=NA),
+                panel.grid.minor = element_blank(),
+                legend.key = element_rect(colour = NA),
+                legend.position = "bottom",
+                legend.direction = "horizontal",
+                legend.key.size= unit(0.2, "cm"),
+                ##legend.margin = unit(0, "cm"),
+                legend.spacing = unit(0.2, "cm"),
+                legend.title = element_text(face="italic"),
+                plot.margin = unit(c(10,5,5,5),"mm"),
+                strip.background = element_rect(colour = NA,fill = "transparent"),
+                strip.text = element_text(face="bold")
+                ))
+    
+}
 
 ```
+
 
 ```{r generate_data, echo = F}
 
 library(wesanderson)
 library(dplyr)
 library(ggplot2)
+
+
 
 cor <- wes_palette("Rushmore1") #("FantasticFox1")
 
@@ -83,23 +120,97 @@ xy$lmres <- residuals(lm(y1~x1))
 
 prev <- xy$lmpred
 
+tannin <- read.csv("crawley_regression.csv")
+
 ```
+
+## Use a model to simplify
+
+
+```{r iba, echo=FALSE, fig.align='center', out.width='60%'}
+include_graphics("figs/isaias_sales.jpeg")
+```
+
+Ibã Huni Kuin, Nai Basa Masheri, 2014
+
+---
+
+## Flow of the modeling process
+
+```{r flow, echo=FALSE, out.width='37%', fig.align='center'}
+include_graphics("figs/bolker.png")
+```
+
+
+---
 
 ## In statistical models
 
-+ We deal with __predictor__ and __response__ variables. 
++ We deal with __predictor__ and __response__ variables
 
 --
 
-+ In experimental settings this distinction is clear, we __manipulate__ the predictor variables and __measure/observe__ the response variables.
+
++ In experimental settings this distinction is clear, we __manipulate__ the predictor variables and __measure/observe__ the response variables
 
 --
 
-+ In observational settings ("natural experiments"), we do not manipulate the predictor variables but sample the response variable accross them. 
++ In observational settings ("natural experiments"), we do not manipulate the predictor variables but sample the response variable across them
 
 --
 
-+ We hypothesize the __causation relationship__ and build the model accordingly.
++ We hypothesize the __causation relationship__ and build the model accordingly
+
+---
+## The theory: tannins in plant–herbivore interactions
+
+.pull-left[
++ tannin are the most abundant secondary metabolites in plants
+
++ **defense mechanism**: defend leaves against herbivores by deterrence or toxicity
+
++ tannins oxidize in insects $\rightarrow$ oxidative stress
+]
+
+
+.pull-right[
+
+```{r question, echo=FALSE, out.width='70%', fig.align='center'}
+include_graphics("figs/tannin.jpg")
+```
+
+]
+
+---
+## What do we expect from theory?
+
++ **response variable**: caterpillar growth
+
+--
+
+
++ **predictor variable**: quantity of tannin in the caterpillar diet
+
+--
+
+
+```{r expect0, echo=FALSE, out.width='35%', fig.align='center'}
+include_graphics("figs/expect0.png")
+```
+
+---
+## What do we expect from theory?
+
++ **response variable**: caterpillar growth
+
++ **predictor variable**: quantity of tannin in the caterpillar diet
+
+
+```{r expect, echo=FALSE, out.width='35%', fig.align='center'}
+include_graphics("figs/expect.png")
+```
+
+
 
 
 
@@ -118,79 +229,40 @@ prev <- xy$lmpred
 
 --
 
+our *probability distribution centric* convention
+
 $$
 Y_i \sim \mathcal{N}(\mu_i, \sigma) \\
 $$
+
+
+--
 
 $$
 \mu_i = \beta_0 + \beta_1 X_i 
 $$
 
+
+
 ---
 
 ## Assumptions of linear regression
 
-+ The relationship is linear 
+1. The **linear** model correctly describes the functional relationship between $X$ and $Y$
 
 --
 
-+ The residuals are normally distributed
+2. The variable $X$ is measured without error $\rightarrow$ error as random variation of $Y$
 
 --
 
-+ Variance is constant for all $X$ values: __homoscedasticity__
+3. $Y$ values are **independent** with normally distributed errors
 
----
+--
 
-## How do we estimate the intercept and slope?
+4. Variances are constant along the regression line 
 
-.pull-left[
-
-
-```{r dataset, echo = FALSE, fig.align='center'}
-plot(y1 ~ x1, las = 1, bty = "l", cex = 3, col = cor[3],
-     #xaxt="n", yaxt="n",
-     xlab = "predictor", ylab = "response",
-     pch = 19, cex.axis = 1.5, cex.lab = 1.5)
-#points(x = mean(x1), y = mean(y1), pch = 19, cex = 1)
-#points(x = mean(x1), y = mean(y1), pch = 1, cex = 2.2)
-#text("fulcrum", x = mean(x1) + .5, y = mean(y1), cex = 1.6)
-abline(a = 16.8 , b = -1, col = "grey50")
-abline(a = 15 , b = -1.5, col = "grey50")
-abline(a = -10 , b = 8.07, col = "grey50")
-abline(a = 12 , b = 4, col = "grey50")
-abline(lm(y1 ~ x1), col = cor[2])
-```
-
-]
-
-.pull-right[
-
-+ The simplest approach to do this: __Ordinary Least Squares__
-
-
-]
-```{r rethinking, echo = F, eval = F}
-library(rethinking)
-data(Howell1)
-d <- Howell1
-d2 <- d[ d$age >= 18 , ]
-plot(d2$height~d2$weight)
-
-# #set.seed(2971)
-# N <- 100
-# a <- rnorm( N , 178 , 20 ) 
-# b <- rnorm( N , 0 , 10 )
-# plot(NULL , xlim = range(d2$weight) , ylim=c(-100,400) , xlab="weight" , ylab="height" )
-# abline( h=0 , lty=2 )
-# abline( h=272 , lty=1 , lwd=0.5 )
-# mtext( "b ~ dnorm(0,10)" )
-# xbar <- mean(d2$weight)
-# for (i in 1:N ) curve( a[i] + b[i]*(x - xbar) ,
-# from=min(d2$weight) , to=max(d2$weight) , add=TRUE , col=col.alpha("black",0.2) )
-
-```
-
+--
 
 
 ---
@@ -199,19 +271,20 @@ plot(d2$height~d2$weight)
 .pull-left[
 
 
-```{r ols2, echo = FALSE, fig.align='center'}
+```{r ols, echo = FALSE, fig.align='center'}
+par(bg = NA)
 plot(y1 ~ x1, las = 1, bty = "l", cex = 3, col = cor[3],
      #xaxt="n", yaxt="n",
      xlab = "predictor", ylab = "response",
      pch = 19, cex.axis = 1.5, cex.lab = 1.5)
-#points(x = mean(x1), y = mean(y1), pch = 19, cex = 1)
-#points(x = mean(x1), y = mean(y1), pch = 1, cex = 2.2)
-#text("fulcrum", x = mean(x1) + .5, y = mean(y1), cex = 1.6)
-abline(a = 16.8 , b = -1, col = "grey50")
-abline(a = 15 , b = -1.5, col = "grey50")
-abline(a = -10 , b = 8.07, col = "grey50")
+points(x = mean(x1), y = mean(y1), pch = 19, cex = 1)
+points(x = mean(x1), y = mean(y1), pch = 1, cex = 2.2)
+abline(a = 16.8 , b = -1.25, col = "grey50")
+abline(a = -11.3 , b = 8.07, col = "grey50")
+abline(a = 15 , b = -1.8, col = "grey50")
 abline(a = 12 , b = 4, col = "grey50")
-abline(lm(y1 ~ x1), col = cor[2])
+abline(lm(y1 ~ x1), col = "grey50")
+text("fulcrum", x = mean(x1) + .5, y = mean(y1), cex = 1.6)
 ```
 
 ]
@@ -231,6 +304,7 @@ abline(lm(y1 ~ x1), col = cor[2])
 .pull-left[
 
 ```{r residuals, echo = FALSE, fig.align='center'}
+par(bg = NA)
 plot(y1 ~ x1, las = 1, bty = "l", cex = 3, col = cor[3],
      #xaxt="n", yaxt="n",
      xlab = "predictor", ylab = "response",
@@ -256,6 +330,7 @@ abline(lm(y1 ~ x1), lwd = 3, col = cor[2], cex = 2)
 .pull-left[
 
 ```{r residuals2, echo = FALSE, fig.align='center'}
+par(bg = NA)
 plot(y1 ~ x1, las = 1, bty = "l", cex = 3, col = cor[3],
      #xaxt="n", yaxt="n",
      xlab = "predictor", ylab = "response",
@@ -321,7 +396,8 @@ $$SS_Y = SS_{Reg} + RSS$$
 .pull-left[
 
 
-```{r varpart, echo = F}
+```{r varpart, echo = F, out.width='90%'}
+par(bg = NA)
 plot(y1 ~ x1, data=xy, las=1, bty="l", cex=3, col=cor[3],
      #xaxt="n", yaxt="n",
      xlab="predictor", ylab="response", pch=19, cex.axis = 1.5, cex.lab = 1.5)
@@ -335,7 +411,8 @@ points(y1 ~ x1, data=xy, las=1, bty="l", cex=.7, pch=19, col=cor[3])
 
 .pull-right[
 
-```{r rss2, echo = FALSE, fig.align='center'}
+```{r rss2, echo = FALSE, fig.align='center', out.width='90%'}
+par(bg = NA)
 plot(y1 ~ x1, las = 1, bty = "l", cex = 3, col = cor[3],
      #xaxt="n", yaxt="n",
      xlab = "predictor", ylab = "response",
@@ -382,50 +459,21 @@ class: inverse, center, middle
 |  Residual |  $n-2$ |  $RSS = \sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2$ | $\frac{RSS}{(n-2)}$ | $\sigma^2$| |
 |  Total | $n-1$ |  $SS_Y = \sum_{i=1}^{n}(Y_i-\overline{Y})^2$ | $\sigma_Y^2$ |
 
----
-```{r, echo = FALSE, include= F}
-mod <- lm(y1 ~ x1)
-summary(mod)
-```
-
-<!--Report slope, intercept and $r^2$
-F-ratio the variance accounted for by the regression un the numerator, the residual variance in the denominator. Larger means more explanation by the regression. P-value low, the chances that this would happen if $H_0$ were true are minimal
--->
-
-<small>
-
-```r
-Residuals:
-    Min      1Q  Median      3Q     Max 
--5.4855 -2.4053  0.5989  1.7229  3.7023 
-
-Coefficients:
-            Estimate Std. Error t value Pr(>|t|)   
-(Intercept)   1.4594     2.7122   0.538   0.6072   
-x1            3.8456     0.8304   4.631   0.0024 **
----
-Signif. codes:  
-0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 3.216 on 7 degrees of freedom
-Multiple R-squared:  0.7539
-Adjusted R-squared:  0.7187 
-F-statistic: 21.44 on 1 and 7 DF,  p-value: 0.002396
-```
 
 ---
-## Our example dataset
+## Our case: growth of caterpillars and tannin
 
+Do leaf chemical compounds affect negatively the growth of caterpillars? 
 
 
 ```{r, echo = F}
-kableExtra::kable(data.frame(X = x1, Y = y1))
+kableExtra::kable(tannin)
 ```
 
 ---
-## Our example dataset
+## Our case: growth of caterpillars and tannin
 
-The example dataset in the current slidedeck was created by simulating data according to the specification of a linear model
+<center> 
 
 $$
 Y_i \sim \mathcal{N}(\mu_i, \sigma) \\
@@ -434,14 +482,122 @@ $$
 $$
 \mu_i = \beta_0 + \beta_1 X_i 
 $$
-With $\beta_0 = 1.2$ and $\beta_1 = 3.5$ and arbitrary x values between 1 and 5:
 
-```{r dataset_creation, collapse = TRUE, eval = F}
-set.seed(4)
-x1 <- seq(1, 5, by = 0.5)
-mu <- 1.2 + 3.5 * x1
-y1 <- rnorm(n = 9, mean = mu, sd = 3)
-xy <- data.frame(x1, mu, y1, res = y1 - mu)
+
+**Which reads:**
+
+--
+
+Caterpillar growth under different tannin intake $Y_i$ follows a normal
+distribution with expected value $\mu$ that is linear function of tannin intake $X_i$, 
+with a standard deviation $\sigma$ of constant value
+
+
+---
+
+## Fitting the linear model
+
+```{r fit}
+
+mod <- lm(growth ~ tannin, data = tannin)
+mod
+
+pred <- predict(mod)
+pred
+```
+
+---
+## Fitting the linear model
+
+```{r, fig.align='center', out.width='40%'}
+plot(growth ~ tannin, data = tannin)
+abline(a = 11.756, b = -1.217, col = "red")
+```
+
+
+---
+## Variation partitioning
+
+<small>
+
+$$SS_{reg} = \sum_{i=1}^{n}(\hat{Y}_i-\bar{Y}_i)^2$$ 
+
+
+$$RSS = \sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2$$ 
+
+```{r rss}
+# SSreg
+SSreg <- sum((pred - mean(tannin$growth)) ^ 2)
+SSreg
+
+# RSS
+RSS <- sum((tannin$growth - pred) ^ 2) 
+RSS
+
+```
+
+---
+## Variation partitioning
+
+<small>
+
+
+
+$$SSY = \sum_{i=1}^n(Y_i - \bar{Y})^2$$ 
+
+
+```{r, r2}
+#SSY
+SSY <- sum((tannin$growth - mean(tannin$growth)) ^ 2) 
+SSY
+
+SSreg / SSY # r2
+
+# F ratio
+SSreg / (RSS / (nrow(tannin) - 2))
+```
+
+
+---
+## Anova table
+
+<small>
+
+```{r}
+anova(mod)
+```
+
+---
+## Variation partition summary
+
+<small>
+```{r}
+summary(mod)
+```
+
+
+---
+
+```{r, echo = FALSE, out.width='50%', fig.align='center'}
+include_graphics("figs/but-wait-theres-0498a1.jpg")
+```
+
+
+> The important point is that we always do model-checking; the
+summary table is not the end of the process of regression analysis.
+
+<small>
+Michael J. Crawley. Statistics: an introduction using R
+
+
+
+---
+## Model checking
+
+
+```{r check, echo = FALSE, fig.align='center', out.width= '45%'}
+par(mfrow = c(2, 2), bg = NA)
+plot(mod)
 ```
 
 
@@ -456,13 +612,13 @@ xy <- data.frame(x1, mu, y1, res = y1 - mu)
 
 ## References
 
++ Crawley. M.J. 2015. Statistics: an introduction using R. John Wiley & Sons Ltd.
+
 + Gotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.
 
 + James, G., Witten, D., Hastie, T., Tibshirani, R., 2013. An Introduction to Statistical Learning: with Applications in R, 1st ed. 2013. Corr. 4th printing 2014 edition. ed. Springer, New York, NY.
 
 + McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
-
-+ Mortara & Sánchez-Tapia (2022, July 14). Scientific Programming: Statistical modeling in R (part 1). Retrieved from https://scientific-computing.netlify.app/07_statistical_modeling_1.html
 
 
 
