@@ -239,9 +239,15 @@ the same for all values of the other effects.
 
 ## The linear predictor
 
-The expression for the predicted value in multiple linear regression can be written in the compact form:
+The expression for the predicted value in multiple linear regression 
 
-`$$\mu_i = \sum_{j=0}^{J} \beta_{j} x_{ij} \, = \, \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij}$$` 
+`$$\mu_i \, = \, \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij}$$` 
+
+--
+
+can be written in the compact form:
+
+`$$\mu_i = \sum_{j=0}^{J} \beta_{j} x_{ij}$$` 
 
 Where `\(J\)` is the number of predictor variables. This is called the **linear predictor**.
 
@@ -254,7 +260,7 @@ function of parameters, given an observed value of the predictor variables.
 
 --
 
-Is the predictor `\(\mu_i = \beta_0 + \beta_1 x_{i}^2\)` linear in the parameters?
+Is the predictor `\(\mu_i = \beta_0 + \beta_1 x_i^2\)` linear in the parameters?
 
 --
 
@@ -296,11 +302,15 @@ non-linear functions of one of more parameters, given the observation of the pre
 
 --
 
-For example, the power function `\(\mu_i = \beta_0 x^_{i}{\beta_1}\)` is a non-linear predictor.
+For example, the power function `\(\mu_i = \beta_0 x_i^{\beta_1}\)` is a non-linear predictor.
 
 --
 
-To see that, take some value for `\(x_{i}\)`, say `\(x_{i}=2\)`. The power function will be 
+To see that, take some value for `\(x_i\)`, say `\(x_i=2\)`. 
+
+--
+
+The function for the predictor for this model will be 
 
 `$$\mu_i = \beta_0 \times 2^{\beta_1}$$` 
 
@@ -312,17 +322,18 @@ which is not a linear function of the parameters.
 
 We have seen that the linear predictor can include products of predictor variables, like:
 
-`$$\begin{align}
-y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \\
-\mu_i &amp; = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} +  \beta_3 x_{i1} x_{i2}\\
-\sigma &amp; = C
-\end{align}$$`
+`$$\mu_i  = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} +  \beta_3 x_{i1} x_{i2}$$`
 
-These products, as the term `\(x_{i1} x_{i2}\)` are called **interactions**.
 
-When two predictor variables interact, their effects are no longer additive.
+Such products, as the term `\(x_{i1} x_{i2}\)` are called **interactions**.
 
-Rather, the effect of one interacting variable depends on the value of
+--
+
+####  Important
+
+* When two predictor variables interact, their effects are no longer additive.
+
+* Rather, the effect of one interacting variable depends on the value of
 the other interacting variable (think about the interaction between two drugs).
 
 ---
