@@ -164,43 +164,63 @@ summary(mod)
 
 ```
 
+## Model diagnostics
 
-### Checking model assumption
+Before making inferences with your fitted model, it is also a good
+practice to make some model diagnostics. For linear regression, the
+most basic diagnostic is to check if the residuals follows a normal
+distribution with zero mean and a constant standard deviation. 
 
-The assumptions of the linear regression model are:
+Because the normal distribution has a parameter that corresponds to
+the expected value, and that is independent of the other parameter,
+the linear regression model we have been writing as:
 
-1. The linear model correctly describes the functional relationship between $X$ and $Y$;
+$$
+\begin{align}
+y_i & \sim Normal(\mu_i, \sigma) \\
+\mu_i & = \sum_{j=0}^{J} \beta_{j} x_{ij} \\
+\sigma & = C
+\end{align}
+$$
 
-2. The variable $X$ is measured without error, therefore, allowing us to associate the error component entirely to the $Y$ variable;
+Can be also written as:
 
-3. $Y$ values are independent with normally distributed errors;
+$$
+\begin{align}
+y_i & = \sum \beta_j x_ij + \epsilon \\
+\epsilon & \sim Normal(\mu, \sigma) \\
+\mu & = 0 \\
+\sigma & = C
+\end{align}
+$$
 
-4. Variances are constant along the regression line. 
+That is, the values of the response $y_i$ are each a weighted sum of the predictor variables
+$x_j$ plus a random Gaussian residual $\epsilon$. To express the
+random variation symmetrically around the expected value, this
+residual has a mean value of zero, and a fixed standard deviation.
 
-The fourth assumption allows us to use a single constant $\sigma$ for the variance. Non-constant variances can be recognizing using diagnostic plots. Let's use them.
+To check if this assumption is true, we plot the residuals of the
+fitted model as a function of the predicted values. This plot should
+show a point cloud of constant width around zero in the Y-axis. You
+can check this assumption applying the function `plot` to the object
+that stored the fitted model:
 
-```{r, eval=FALSE}
-d <- residuals(mod)
-y_hat <- predict(mod)
 
-plot(d ~ y_hat)
-abline(h = 0)
+```{r res}
+plot(mod, which = 1)
 ```
 
-If the linear model fits the data well, this residual plot should exhibit a scatter of points that approximately follows a normal distribution and are uncorrelated with the fitted values. Values under the dashed line are overestimates of the model, while values over the line, underestimates.
+You can also check the normality of the residuals with a
+qq-plot. Normal data should lie in a straight line in this plot:
 
-In order to check the assumption of **homoscedasticity**, you should observe if the average size of the residuals increase with the increase in $X$ (i.e., heterocedasticity).
-
-Another visualization for model diagnostic are the plots of the object containing the fitted model. There are four plots, and we will change the graphical window so we can see all of them at the same time. As Michael J. Crawley would say:
-
-> It takes experience to interpret these plots, but what you do not want to see is lots of
-structure or pattern in the plot.
-
-```{r, eval=FALSE}
-par(mfrow = c(2, 2)) # sets a graphical window with 2 rows-2 columns
-plot(mod)
-par(mfrow = c(1, 1)) # setting back to the default 1-1
+```{r diag2}
+plot(mod, which = 2)
 ```
 
-The first plot, is basically the same as the last plot you created. As we saw in the last plot, it is a problem if the variance in the residuals increase as the fitted values get larger, therefore testing our fourth assumption. The second plot is a normal quantile-quantile plot. This plot should be a straight line if the errors are normally distributed (our third assumption). The third plot is very similar to the first one, but the y-axis is at a different scale - now all values are positive because of the squared root transformation. The last plot indicates influential points, i.e., points that have biggest effect on parameter estimates. What is your overall evaluation of the normality of the residuals?
+What is your overall evaluation of the normality of the residuals?
+
+You can find an excellent explanation of these and other diagnostic
+plots for linear regression
+[here](https://data.library.virginia.edu/diagnostic-plots/)
+
 
