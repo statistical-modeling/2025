@@ -154,7 +154,7 @@ $$SS_Y = SS_{Reg} + RSS$$
 
 ```{r, code_folding=TRUE, eval = FALSE}
 pred <- predict(mod)
-RSS <- sum((y - mean(pred)) ^ 2)
+RSS <- sum((y - pred) ^ 2)
 SSY <- sum((y - mean(y)) ^ 2)
 SSreg <- SSY - RSS
 

@@ -139,14 +139,14 @@ plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
      ylab = "Fruit dry weight (mg)",
      xlab = "Rootstock diameter (mm)")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "control")
+       subset = treatment == "Fenced")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "Fenced", pch=2, col ="red")
-legend("topleft", c("Control", "Fenced"), pch=c(1,2),
+       subset = treatment == "Control", pch=2, col ="red")
+legend("topleft", c("Fenced", "Control"), pch=c(1,2),
        col =c("black", "red"), bty="n")
 ## Adds the predicted line for fenced plants
 ## check the function help to use it
-abline( a = ipo_cf1[1], b = ipo_cf1[2], col = "red")
+abline( a = ipo_cf1[1] + ipo_cf1[3], b = ipo_cf1[2], col = "black")
 ```
 
 **Challenge:** now add to the plot a black line for the expected yield for
@@ -159,10 +159,10 @@ plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
      ylab = "Fruit dry weight (mg)",
      xlab = "Rootstock diameter (mm)")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "control")
+       subset = treatment == "Fenced")
 points(fruit.w ~ diameter, data = ipomopsis,
-       subset = treatment == "fenced", pch=2, col ="red")
-legend("topleft", c("control", "Fenced"), pch=c(1,2),
+       subset = treatment == "Control", pch=2, col ="red")
+legend("topleft", c("Fenced", "Control"), pch=c(1,2),
        col =c("black", "red"), bty="n")
 ## Adds the predicted line for fenced plants
 ## check the function help to use it
