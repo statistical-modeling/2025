@@ -13,53 +13,29 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Installing the rethinking package
-
-We are going to use rethinking, a simpler model fitting package designed for a teaching environment. If you have rethinking installed, jump to the next section.
-
-First we need to install rstan:
-
-```{r, eval = FALSE}
-install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
-
-```
-
-Next, the rethinking package:
-
-```{r, eval = FALSE}
-install.packages(c("coda","mvtnorm","remotes", "loo", "bayesplot"))
-library(remotes)
-remotes::install_github("rmcelreath/rethinking")
-```
-
-cmdstanR is also a great way to have a more stable R environment:
-
-```{r, eval = FALSE}
-# we recommend running this is a fresh R session or restarting your current session
-install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
-```
-
-Next, install cmdstan:
-
-```{r, eval = FALSE}
-install_cmdstan()
-```
-
-Now we should be good to go!
-
 # Defining a very simple posterior
 
 Consider the following model:
 
+Likelihood:
+
+$$
+y_i \sim Normal(\mu, \sigma) 
+$$
+
+Prior:
+
 $$
 \begin{aligned}
-y_i &\sim Normal(\mu, \sigma) \\
 \mu &\sim Normal(0, 1) \\
 \sigma &\sim Exponential(1)
 \end{aligned}
 $$
 
-Can we write this posterior in R? Sure!
+For very simple models, like this one, we can write and evaluate the posterior directly.
+We can then use these calculated values to plot the full posterior.
+
+Lets write this posterior in R:
 
 ```{r}
 set.seed(2)
@@ -72,18 +48,21 @@ logP_theta_y = function(mu, sigma = 1, data = y){
   logprior = dnorm(mu, 0, 1, log = TRUE) + dexp(sigma, 1, log = TRUE)
   logprior + ll # P(theta)P(y|theta)
 }
+```
+
+In this univariate case it's easy to check many possible values of $\mu$ to find the high probability values, but in high dimensions this is not feasible.
+
+```{r}
 x = seq(0, 4, 0.01)
 px = Vectorize(logP_theta_y)(x)
 plot(px ~ x, pch = 19, col = 2, xlab= "mean parameter (mu)", ylab = "proportional to P(mu|y)")
 abline(v = 2)
 ```
 
-In this univariate case it's easy to check many possible values of $\mu$ to find the high probability values, but in high dimensions this is not feasible.
-
 # Defining a model in the rethinking package
 
 The rethinking syntax closely mirrors the mathematical notation we have been using in class.
-For example, a simple linear regression of $y_i$ on $x_i$ can be defined as, using some standard-ish priors:
+For example, a simple linear regression of $y_i$ on $x_i$ using some standard-ish priors can be defined as:
 
 $$
 \begin{aligned} 
@@ -227,3 +206,37 @@ dens(simualated_quantile, col = 2, lwd = 4) # density of simulated 90% percentil
 abline(v = quantile(y, 0.9), lwd = 3)       # observed 90% percentile
 ```
 
+# Installing the rethinking package
+
+If you want to run this tutorial in your own computer (and not the server), you will need to install the rethinking package.
+
+We are going to use rethinking, a simpler model fitting package designed for a teaching environment. If you have rethinking installed, jump to the next section.
+
+First we need to install rstan:
+
+```{r, eval = FALSE}
+install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+```
+
+Next, the rethinking package:
+
+```{r, eval = FALSE}
+install.packages(c("coda","mvtnorm","remotes", "loo", "bayesplot"))
+library(remotes)
+remotes::install_github("rmcelreath/rethinking")
+```
+
+cmdstanR is also a great way to have a more stable R environment:
+
+```{r, eval = FALSE}
+# we recommend running this is a fresh R session or restarting your current session
+install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+```
+
+Next, install cmdstan:
+
+```{r, eval = FALSE}
+install_cmdstan()
+```
+
+Now we should be good to go!
