@@ -123,11 +123,11 @@ order. This means that the model has a variable *"treatmentFenced"*,
 that has value one for fenced plants, and value zero otherwise. So,
 fruit yield predicted ($\widehat{Y}$) by this model for control plants is:
 
-$$\widehat{Y}_{\text{fenced}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 0$$
+$$\widehat{Y}_{\text{non-fenced}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 0$$
 
 While for fenced plants we have:
 
-$$\widehat{Y}_{\text{non-fenced}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 1$$
+$$\widehat{Y}_{\text{fenced}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 1$$
 
 
 To add the line of expected yield for fenced plants we can use the
