@@ -94,7 +94,7 @@ points(fruit.w ~ diameter, data = ipomopsis,
        subset = treatment == "Fenced")
 points(fruit.w ~ diameter, data = ipomopsis,
        subset = treatment == "Control", pch=2, col ="red")
-legend("topleft", c("Control", "Fenced"), pch=c(1,2),
+legend("topleft", c("Fenced", "Control"), pch=c(1,2),
        col =c("black", "red"), bty="n")
 ```
 
