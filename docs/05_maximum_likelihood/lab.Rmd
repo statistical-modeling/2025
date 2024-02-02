@@ -2,7 +2,7 @@
 title: "Maximum likelihood fitting Lab"
 author:
  - "Paulo Inácio Prado"
-date: "2023-01-18"
+date: "2023-02-02"
 output:
     distill::distill_article:
       toc: true
@@ -30,8 +30,8 @@ recorded in vegetation patches of different sizes in California
 (Suarez et al. 2008). We will use this data to fit different models
 for the species-area relationship.
 
-Load the required libraries and the data, which is
-available in the supplementary material of Ohyama *et al.* (2021):
+Load the required libraries and the data, which is available in the
+supplementary material of Ohyama *et al.* (2021):
 
 
 ```{r, eval = TRUE }
@@ -64,7 +64,7 @@ regression:
 
 $$
 \begin{align}
-\ln S_i &\sim \mathcal{N}(\mu_i, \sigma) \\
+\ln S_i &\sim \text{Nornal}(\mu_i, \sigma) \\
 \mu_i & = \beta_{0} + \beta_1 \ln A_i
 \end{align}
 $$
@@ -102,10 +102,11 @@ LL1 <- function(beta0, beta1, sigma){
 The command above creates an object of the class `function` with the
 three parameters of the linear model as arguments. The first line of
 the function calculates the expected value $\mu$, using any value of
-${\beta_0,\beta_1}$ you supply to the function. The second line calculates
-the value of the normal density function for each value of $ln S$,
-takes the logarithm of these densities, and sum all them up. For instance, the negative log-likelihood of this model for this data
-using $\beta_0 =1, \beta_1=1$ and $\sigma =1$ is
+${\beta_0,\beta_1}$ you supply to the function. The second line
+calculates the value of the normal density function for each value of
+$ln S$, takes the logarithm of these densities, and sum all them
+up. For instance, the negative log-likelihood of this model for this
+data using $\beta_0 = 1, \beta_1 = 1$ and $\sigma = 1$ is
 
 
 ```{r , eval=TRUE}
@@ -170,7 +171,7 @@ plotprofmle(ml1.p, ylim = c(0,3))
 ```
 
 The plot shows the negative log-likelihood re-rescaled to have a
-minimum at zero. The red line marks the limit of $L_y(\theta) = 2$. It
+minimum at zero. The blue line marks the limit of $L_y(\theta) = 2$. It
 is a popular rule that parameter values that result in a likelihood
 value below this threshold are equally plausible. With this we define
 a **plausible interval** for the MLEs. The function
@@ -206,7 +207,7 @@ and then comparing the coefficients of both fits:
 ml1.cf[1:2]
 ```
 
-In simples cases like that, the limits of the frequentist confidence
+In simple cases like that, the limits of the frequentist confidence
 interval also fall close those of the plausibility interval:
 
 ```{r }
@@ -214,8 +215,8 @@ confint(ls1)
 likelregions(ml1.p)
 ```
 
-There is a systematic difference, though. The MLE of the $\sigma$ parameter is
-the mean of the squared residuals:
+There is a systematic difference, though. The MLE of the $\sigma$
+parameter is the mean of the squared residuals:
 
 $$\hat{\sigma}=\sqrt{\frac{\sum(y_i-\hat{y})^2}{n}}$$
 
@@ -340,7 +341,7 @@ logarithmic model.
 
 ## Cross validation
 
-AIC spots the models that best approximates the unknown process that
+AIC spots the models that best approximate the unknown process that
 generates our data. So, models best ranked by AIC should provide best
 predictions from future samples.
 
@@ -364,7 +365,7 @@ set. The procedure is repeated by leaving each single observation
 out.
 
 There are many libraries for all flavors of cross-validation in R.
-But to illustrate we will run a leave one out cross validation with a
+But to illustrate we will run a leave-one-out cross validation with a
 loop that shows each step in a (hopefully) easy to read code:
 
 
@@ -400,7 +401,7 @@ And here we calculate the MSE:
 apply(results, 2, function(x) mean(x^2))
 ```
 
-A result  pretty similar to the model selection with AIC.
+As expected, we get a result  pretty similar to the model selection with AIC.
 
 
 # References
@@ -425,18 +426,3 @@ A result  pretty similar to the model selection with AIC.
    (II): a review of new models and parameterizations. Journal of
    Biogeography 36: 1435-1445.
 
-# Other learning resources
-
- - Video lectures, from a [more extensive Course on
- Statistical Models](http://insilvaarbores.com.br/BIE5781/)
- of the Graduate Program of Ecology at USP (in Portuguese):
-    * [The likelihood function](https://youtu.be/cJCr1ACbYBs)
-    * [Maximum likelihood method](https://youtu.be/gOWbQgmrFgM)
-    * [Fitting distributions with the ML method](https://youtu.be/wh_5YOlXIko)
-	* [Fitting a linear Gaussian model with ML method](https://youtu.be/LDJ_yTi15sc)
-    * [Information-based model selection](https://www.youtube.com/watch?v=kxrDsR55SR4)
- 
- - [Jupyter
-   notebooks](https://mybinder.org/v2/gh/piLaboratory/bie5782/master?filepath=jupyter%2F)
-   with mathematical deductions of some simple MLEs, with [sympy](https://www.sympy.org/pt/index.html).
- 

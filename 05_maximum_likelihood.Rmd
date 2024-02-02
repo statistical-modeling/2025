@@ -3,7 +3,7 @@ title: "Maximum likelihood method"
 description: |
   What's the likelihood function, and how it can be used to fit statistical models to data.
 author:
-  - name: Paulo Inácio K. L. Prado (PI)
+  - name: Paulo Inácio Prado (PI)
     url: 
     affiliation: 
     affiliation_url:
@@ -19,19 +19,18 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-#xaringanExtra::embed_xaringan("04_maximum_likelihood/slides.html")
+xaringanExtra::embed_xaringan("04_maximum_likelihood/slides.html")
 ```
 
-```{r slides-2}
-#| eval: true
-#xaringanExtra::embed_xaringan("04_maximum_likelihood/slides_2.html")
-```
 
 # Lab
 
-[Maximum likelihood fitting and inference]()
+[Maximum likelihood fitting and inference](04_maximum_likelihood/lab.html)
 
-# Further reading
+
+# To know more
+
+## Further reading
 
  * Likelihood and all that. chapter 6 in: Bolker, B.M. 2008
     Ecological Models and Data in R Princeton: Princeton University
@@ -47,6 +46,21 @@ knitr::opts_chunk$set(echo = FALSE)
   York, Springer-Verlag.	
  * [Vignette of the package `bbmle`](https://cran.r-project.org/web/packages/bbmle/vignettes/mle2.pdf) 
 
+## Other learning resources
+
+ - Video lectures, from a [more extensive Course on
+ Statistical Models](http://insilvaarbores.com.br/BIE5781/)
+ of the Graduate Program of Ecology at USP (in Portuguese):
+    * [The likelihood function](https://youtu.be/cJCr1ACbYBs)
+    * [Maximum likelihood method](https://youtu.be/gOWbQgmrFgM)
+    * [Fitting distributions with the ML method](https://youtu.be/wh_5YOlXIko)
+	* [Fitting a linear Gaussian model with ML method](https://youtu.be/LDJ_yTi15sc)
+    * [Information-based model selection](https://www.youtube.com/watch?v=kxrDsR55SR4)
+ 
+ - [Jupyter
+   notebooks](https://mybinder.org/v2/gh/piLaboratory/bie5782/master?filepath=jupyter%2F)
+   with mathematical deductions of some simple MLEs, with [sympy](https://www.sympy.org/pt/index.html).
+ 
 
 
 

@@ -37,7 +37,12 @@ xaringanExtra::embed_xaringan("04_multiple_regression/slides.html")
 
 + McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
 
+## Other learning resources
 
+ - Video lecture, from a [more extensive Course on
+ Statistical Models](http://insilvaarbores.com.br/BIE5781/)
+ of the Graduate Program of Ecology at USP (in Portuguese):
+  - [Gaussian linear and non-linear regression](https://youtu.be/LDJ_yTi15sc)
 
 
 

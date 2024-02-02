@@ -1,9 +1,9 @@
 ---
-title: "Statistical models : linking data to theory"
-subtitle: "Maximum likelihood fitting - I"
+title: "Maximum likelihood fitting"
+subtitle: "Quantitative Ecology Training Program - Serrapilheira"
 author: 
   - "PI (Paulo Inácio Prado)"
-date: '16 Jan 2023'
+date: '02 Feb 2024'
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -26,6 +26,9 @@ knitr::opts_chunk$set(eval = TRUE, echo = FALSE, warning = FALSE, message = FALS
 library(xaringanthemer)
 library(ggplot2)
 library(ggthemes)
+library(dplyr)
+library(MASS)
+library(sads)
 style_duo_accent(
   primary_color = "#03045E",
   secondary_color = "#669bbc",
@@ -229,6 +232,10 @@ y_i &\sim \mathcal{N}(\mu_i, \sigma) \\
 \end{align}
 $$
 
+### Example: 
+
+What's the Normal density for $\{x=0.5, y=32\}$?
+
 ]
 
 .pull-right[
@@ -243,13 +250,16 @@ p1 <-
 p1b <-
     p1 +
     theme(plot.margin=margin(b=1, l=1, r = 5, unit="lines")) +
-    coord_cartesian(xlim = c(0, 1.2), clip = "off")+
+    coord_cartesian(xlim = c(0, 1.2), clip = "off") +
     annotate("text", x = 1.12, y = 40, label= "50%", color="blue", size=5) +
     annotate("text", x = 1.32, y = 40, label= "95%", color="blue", alpha =0.75, size=5) +
-    annotate("segment", x = 1.05, xend = 1.05, y = z$low.2, yend = z$upp.2,
+    annotate("segment", x = 1.05, xend = 1.05, y = df2[nrow(df2),]$low.2, yend = df2[nrow(df2),]$upp.2,
              colour = "blue", linewidth = 1.25) +
-    annotate("segment", x = 1.25, xend = 1.25, y = z$low.1, yend = z$upp.1,
-             colour = "blue", alpha = 0.75, linewidth = 1.25)
+    annotate("segment", x = 1.25, xend = 1.25, y = df2[nrow(df2),]$low.1, yend = df2[nrow(df2),]$upp.1,
+             colour = "blue", alpha = 0.75, linewidth = 1.25) +
+    geom_segment(aes(x = 0.5, xend = 0.5, y = 0, yend = 32), lty = 2, col ="navy") +
+    geom_segment(aes(x = 0, xend = 0.5, y = 32, yend = 32), lty = 2, col ="navy") +
+    geom_point(data=data.frame(x=0.5, y=32), col="red", size=2.5, stroke =2)
 
 p1b
 
@@ -259,14 +269,53 @@ p1b
 
 ---
 
+# Models assign probabilities to observations
 
-## Statistical models are hypotheses ...
+.pull-left[
+
+$$
+\begin{align}
+y_i &\sim \mathcal{N}(\mu_i, \sigma) \\
+\mu_i & = \beta_0 + \beta_i x_i \\
+\end{align}
+$$
+
+### Example: 
+Normal density for $\{x=0.5, y=32\}$:
+
+```{r , echo=TRUE}
+(mu <- 10 + 30*0.5)
+dnorm(32, mean = mu, sd = 5)
+```
+
+]
+
+.pull-right[
+.center[
+
+```{r }
+
+p1b +
+    geom_segment(aes(x = 0.5, xend = 0, y = mu, yend = mu), lty = 2, col ="navy")
+    
+
+```
+]
+]
+
+---
+
+
+## Statistical models are hypotheses ... 
 
 .center[
 
 .pull-left[
 ```{r }
-p1
+p1c <-
+    p1 +
+    ggtitle(bquote(H1:~ beta[0]==10~beta[1]==30))
+p1c
 ```
 ]
 
@@ -276,7 +325,7 @@ new.cfs <- c(mean(df1$y) - 15*mean(df1$x), 15)
 p2 <-
     make.q(0, 1, cfs = new.cfs, sig = summary(lm1)$sigma) %>%
     plot.q(df1) +
-    ggtitle(bquote(beta[0]==.(round(new.cfs[1],1))~beta[1]==.(round(new.cfs[2],1))))
+    ggtitle( bquote(H2: ~ beta[0]==.(round(new.cfs[1],1))~beta[1]==.(round(new.cfs[2],1))))
 p2
 ```
 ]
@@ -290,7 +339,7 @@ p2
 
 .pull-left[
 ```{r }
-p1
+p1c
 ```
 ]]
 
@@ -299,46 +348,9 @@ p1
 ```{r  }
 make.q(0, 1, cfs = c(10,30), sig = 5 * seq(0.5,1.5,length=100)) %>%
     plot.q(df1) +
-    ggtitle(bquote(beta[0]==10~beta[1]==30))
+    ggtitle(bquote(H3: ~ beta[0]==10~beta[1]==30))
 ```
 ]]
-
-
----
-
-# Reminder: models assign probabilities !
-
-.pull-left[
-
-$$
-\begin{align}
-y_i &\sim \mathcal{N}(\mu_i, \sigma) \\
-\mu_i & = 10 + 30 x_i \\
-\sigma & = 5 \\
-\end{align}
-$$
-
-### Example: 
-
-Normal density for $\{x=0.5, y=32\}$:
-
-```{r , echo=TRUE}
-mu <- 10 + 30*0.5
-dnorm(32, mean = mu, sd = 5)
-```
-
-]
-
-.pull-right[
-.center[
-```{r }
-p1b +
-    geom_segment(aes(x = 0.5, xend = 0.5, y = 0, yend = 32), lty = 2, col ="navy") +
-    geom_segment(aes(x = 0, xend = 0.5, y = 32, yend = 32), lty = 2, col ="navy") +
-    geom_point(data=data.frame(x=0.5, y=32), col="red", size=2.5, stroke =2)
-```
-]
-]
 
 ---
 
@@ -827,6 +839,141 @@ https://towardsdatascience.com/a-visual-explanation-of-gradient-descent-methods-
 
 ---
 
+# Inference about parameters 
+
+```{r }
+Birds <- read.csv("DatasetS1-IndivBirdParasiteLoad.csv")
+Birds.m <- 
+    Birds %>%
+    group_by(BirdSpecies) %>%
+    summarise(m.Mh = mean(Mh.g.), m.Wp = mean(Wp.tot),
+              lm.Mh = log10(m.Mh), lm.Wp = log10(m.Wp))
+
+
+## starting values
+Bird.m0 <- lm(lm.Wp~lm.Mh, data=Birds.m)
+cfs <- list(coef(Bird.m0)[1], coef(Bird.m0)[2], summary(Bird.m0)$sigma)
+names(cfs) <- c("beta0", "beta1", "sigma")
+
+Birds.m1 <- mle2(lm.Wp ~ dnorm(beta0 + beta1* lm.Mh, sd =sigma),
+                 start = cfs,
+                 data = Birds.m,
+                 parameters=list(beta0~1, beta1~1, sigma ~1))
+Birds.p <- profile(Birds.m1)
+```
+
+.pull-left[
+
+### Log-likelihood profiles
+
+* A plot of the minimum of the **negative log-likelihood** value as a
+function of a single parameter;
+
+* Y-axis standardized such as its minimum is zero.
+
+* **Canonical rule**: all parameter values within 2 units of the relative
+  negative log-likelihood are equally plausible.
+
+]
+
+.pull-right[
+.center[
+```{r }
+par(las=1, mar=c(6,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25)
+plotprofmle(Birds.p, which =3, lwd =2) 	
+```
+]]
+
+---
+
+# Danger Will Robinson!
+
+.pull-left[
+.center[
+[![](./figs/one_thing.png)](https://www.youtube.com/watch?v=_U-7L1tmBAo)
+]
+]
+
+.pull-right[
+.center[
+![](figs/amostra100.png)
+]]
+
+---
+
+# Example: scaling of parasite loads
+
+.pull-left[
+* The biomass of bird ectoparasites is proportional to the $2/3$
+power of host body mass.
+* Data: Average body biomass and average ectoparasites mass per bird for 42
+   bird species.
+* Simple linear regression of log of average parasite biomass as the response, and log of average body mass as the predictor variable.
+ 
+.footnote[Hechinger et al. Proc. R. Soc, 2019]
+ ]
+
+
+.pull-right[
+.center[
+```{r }
+par(las=1, mar=c(6,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25)
+plot(lm.Wp ~ lm.Mh, data = Birds.m,
+     xlab = "log Average body mass (g)",
+     ylab = "log Average parasite mass (g)",
+     pch=19, col="blue")
+```
+]]
+
+---
+
+# Plausibility intervals
+
+.pull-left[
+.center[
+
+```{r }
+par(las=1, mar=c(6,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25)
+plotprofmle(Birds.p, which =2, lwd =2)
+arrows(x0 = 2/3, y0= -0.2, x1=2/3, y=.5, code =1, lwd = 2)
+```
+]
+]
+
+.pull-right[
+.center[
+```{r }
+par(las=1, mar=c(6,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25)
+plot(lm.Wp ~ lm.Mh, data = Birds.m,
+     xlab = "log Average body mass (g)",
+     ylab = "log Average parasite mass (g)",
+     pch=19, col="blue")
+abline(Bird.m0, lwd= 1.5)
+```
+]]
+
+---
+
+## Take-home messages
+
++ Any statistical model hypothesis on how data has been generated. As
+  such, these hypotheses assigns probabilities to data.
++ Likelihood law: stick with the model that assigns the larger probability to your data
++ The (log) likelihood expresses the support of the data for a given
+  model, **compared** to other models fitted to the same data set.
++ We can fit statistical models by finding the values of the
+  parameters that maximize the model likelihood.
++ Maximum likelihood estimates have many nice statistical properties.
+
+---
 
 # Further reading
 

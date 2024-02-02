@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Statistical models : linking data to theory</title>
+    <title>Maximum likelihood fitting</title>
     <meta charset="utf-8" />
     <meta name="author" content="PI (Paulo Inácio Prado)" />
-    <meta name="date" content="2023-01-16" />
+    <meta name="date" content="2024-02-02" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <script src="libs/clipboard/clipboard.min.js"></script>
     <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
@@ -18,8 +18,8 @@
     <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
     <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
     <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
-    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
-    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -27,16 +27,16 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Statistical models : linking data to theory
+# Maximum likelihood fitting
 ]
 .subtitle[
-## Maximum likelihood fitting - I
+## Quantitative Ecology Training Program - Serrapilheira
 ]
 .author[
 ### PI (Paulo Inácio Prado)
 ]
 .date[
-### 16 Jan 2023
+### 02 Feb 2024
 ]
 
 ---
@@ -143,6 +143,10 @@ y_i &amp;\sim \mathcal{N}(\mu_i, \sigma) \\
 \end{align}`
 $$
 
+### Example: 
+
+What's the Normal density for `\(\{x=0.5, y=32\}\)`?
+
 ]
 
 .pull-right[
@@ -153,57 +157,30 @@ $$
 
 ---
 
-
-## Statistical models are hypotheses ...
-
-.center[
-
-.pull-left[
-![](slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
-]
-
-.pull-right[
-![](slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
-]
-]
-
----
-
-## ... about the process that generated the data
-
-.center[
-
-.pull-left[
-![](slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
-]]
-
-.center[
-.pull-right[
-![](slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
-]]
-
-
----
-
-# Reminder: models assign probabilities !
+# Models assign probabilities to observations
 
 .pull-left[
 
 $$
 `\begin{align}
 y_i &amp;\sim \mathcal{N}(\mu_i, \sigma) \\
-\mu_i &amp; = 10 + 30 x_i \\
-\sigma &amp; = 5 \\
+\mu_i &amp; = \beta_0 + \beta_i x_i \\
 \end{align}`
 $$
 
 ### Example: 
-
 Normal density for `\(\{x=0.5, y=32\}\)`:
 
 
 ```r
-mu &lt;- 10 + 30*0.5
+(mu &lt;- 10 + 30*0.5)
+```
+
+```
+## [1] 25
+```
+
+```r
 dnorm(32, mean = mu, sd = 5)
 ```
 
@@ -215,9 +192,41 @@ dnorm(32, mean = mu, sd = 5)
 
 .pull-right[
 .center[
+
+![](slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+]
+
+---
+
+
+## Statistical models are hypotheses ... 
+
+.center[
+
+.pull-left[
+![](slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+![](slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+]
+]
+
+---
+
+## ... about the process that generated the data
+
+.center[
+
+.pull-left[
+![](slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+]]
+
+.center[
+.pull-right[
 ![](slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
-]
-]
+]]
 
 ---
 
@@ -645,11 +654,100 @@ https://towardsdatascience.com/a-visual-explanation-of-gradient-descent-methods-
 
 ---
 
+# Inference about parameters 
+
+
+
+.pull-left[
+
+### Log-likelihood profiles
+
+* A plot of the minimum of the **negative log-likelihood** value as a
+function of a single parameter;
+
+* Y-axis standardized such as its minimum is zero.
+
+* **Canonical rule**: all parameter values within 2 units of the relative
+  negative log-likelihood are equally plausible.
+
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+# Danger Will Robinson!
+
+.pull-left[
+.center[
+[![](./figs/one_thing.png)](https://www.youtube.com/watch?v=_U-7L1tmBAo)
+]
+]
+
+.pull-right[
+.center[
+![](figs/amostra100.png)
+]]
+
+---
+
+# Example: scaling of parasite loads
+
+.pull-left[
+* The biomass of bird ectoparasites is proportional to the `\(2/3\)`
+power of host body mass.
+* Data: Average body biomass and average ectoparasites mass per bird for 42
+   bird species.
+* Simple linear regression of log of average parasite biomass as the response, and log of average body mass as the predictor variable.
+ 
+.footnote[Hechinger et al. Proc. R. Soc, 2019]
+ ]
+
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+# Plausibility intervals
+
+.pull-left[
+.center[
+
+![](slides_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+]
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+]]
+
+---
+
+## Take-home messages
+
++ Any statistical model hypothesis on how data has been generated. As
+  such, these hypotheses assigns probabilities to data.
++ Likelihood law: stick with the model that assigns the larger probability to your data
++ The (log) likelihood expresses the support of the data for a given
+  model, **compared** to other models fitted to the same data set.
++ We can fit statistical models by finding the values of the
+  parameters that maximize the model likelihood.
++ Maximum likelihood estimates have many nice statistical properties.
+
+---
 
 # Further reading
 
-+   Likelihood and all that. chapter 6 *in* Bolker, B.M. 2008 Ecological
-    Models and Data in R. Princeton: Princeton University Press.
++   Likelihood and all that. chapter 6 *in* Bolker, B.M. 2008
+    Ecological Models and Data in R. Princeton: Princeton University
+    Press.
 
 +   Hobbs, N.T. &amp; Hilborn, R. 2006. Alternatives to statistical
     hypothesis testing in ecology: A guide to
