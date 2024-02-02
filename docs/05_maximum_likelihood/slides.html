@@ -46,7 +46,7 @@ class: center, middle, inverse, title-slide
 
 
 
-# Recap
+##Recap
 
 * Statistical models describe the distribution of probabilities of
   random variables.
@@ -71,7 +71,7 @@ $$
 
 ---
 
-# Recap
+##Recap
 
 * The least squares method (LS) is a way to fit the linear
   regression model, by minimizing the sum of the squared residuals.
@@ -91,7 +91,7 @@ $$
 
 ---
 
-# Today we'll see ...
+##Today we'll see ...
 
 * that LS is a rather good idea to fit Gaussian models, as it is a
 particular case of the **Maximum Likelihood Method** (ML)
@@ -108,7 +108,7 @@ particular case of the **Maximum Likelihood Method** (ML)
 
 ---
 
-# Our Good Ol'friend, the linear regression
+##Our Good Ol'friend, the linear regression
 
 .pull-left[
 
@@ -131,7 +131,7 @@ $$
 
 ---
 
-# Models assign probabilities to observations
+##Models assign probabilities to observations
 
 .pull-left[
 
@@ -157,7 +157,7 @@ What's the Normal density for `\(\{x=0.5, y=32\}\)`?
 
 ---
 
-# Models assign probabilities to observations
+##Models assign probabilities to observations
 
 .pull-left[
 
@@ -230,7 +230,7 @@ dnorm(32, mean = mu, sd = 5)
 
 ---
 
-# Likelihood: a measure of support
+##Likelihood: a measure of support
 
 ### The likelihood law (informal statement)
 
@@ -253,7 +253,7 @@ supported by the data, or the more plausible model.  ]
 
 ---
 
-# Likelihood law: a simple example
+##Likelihood law: a simple example
 
 .pull-left[
 **Two hypotheses**
@@ -273,7 +273,7 @@ Draw balls at random from the urn, with replacement
 
 ---
 
-# Likelihood law: a simple example
+##Likelihood law: a simple example
 
 ### A single drawn, and the ball is red
 
@@ -292,7 +292,7 @@ supported by the observation) than `\(H_B\)`.
 ---
 
 
-# Likelihood law: a simple example
+##Likelihood law: a simple example
 
 ### Two draws, both of red balls
 
@@ -312,7 +312,7 @@ supported by the observations) than `\(H_B\)`. &lt;sup&gt;1&lt;/sup&gt;
 
 ---
 
-# The likelihood function
+##The likelihood function
 
 Any function proportional to the product of probabilities assigned by
 a statistical model to each observation in data:
@@ -325,7 +325,7 @@ $$ \mathcal{L} \propto P(y_1 \mid H) \times P(y_2 \mid H) \times \ldots P(y_i \m
 
 ---
 
-# The likelihood function
+##The likelihood function
 
 Any function proportional to the product of probabilities assigned by
 a statistical model to each observation in data:
@@ -337,7 +337,7 @@ $$ \mathcal{L} \propto \prod^N P(y_i \mid H)$$
 
 ---
 
-# The log-likelihood function
+##The log-likelihood function
 
 The logarithm of the likelihood function, that is, any function
 proportional to the **sum of the probabilities** assigned by a model
@@ -350,7 +350,7 @@ $$ \textbf{L} \propto \sum^N \ln P(y_i \mid H)$$
 
 ---
 
-# Important remarks
+##Important remarks
 
 **The likelihood is a function of the model parameters:** likelihoods
 are conditional to a given data set. That is, data is taken as an
@@ -373,7 +373,7 @@ We will use to notation `\(L_y(\theta)\)` to express:
 
 ---
 
-# Likelihood function of simple linear regression
+##Likelihood function of simple linear regression
 
 The probability density function of the Gaussian for a given observation `\(y_i\)` is
 
@@ -398,7 +398,7 @@ product of the density function defined above over all values of
 
 ---
 
-# Example of likelihood for one parameter
+##Example of likelihood for one parameter
 
 .pull-left[
 .center[
@@ -414,7 +414,7 @@ product of the density function defined above over all values of
 
 ---
 
-# Example of likelihood for one parameter
+##Example of likelihood for one parameter
 
 .pull-left[
 .center[
@@ -430,7 +430,7 @@ product of the density function defined above over all values of
 
 ---
 
-# The method of maximum likelihood
+##The method of maximum likelihood
 
   When you choose one or more statistical models to describe data,
   you do not know the values of the model parameters.
@@ -448,7 +448,7 @@ product of the density function defined above over all values of
 
 ---
 
-# Simple linear regression: MLEs deduction 
+##Simple linear regression: MLEs deduction 
 
 ### Log-likelihood function of the model:
 
@@ -463,7 +463,7 @@ $$
 
 
 ---
-# Simple linear regression: MLEs deduction 
+##Simple linear regression: MLEs deduction 
 
 ### Take derivatives and set equal to zero
 
@@ -477,7 +477,7 @@ $$
 
 ---
 
-# LS method is the maximum likelihood solution for Gaussian models!
+##LS method is the maximum likelihood solution for Gaussian models!
 
 ### Solving the system with the first two equations:
 
@@ -498,7 +498,7 @@ $$
 
 ---
 
-# Some other analytical MLEs
+##Some other analytical MLEs
 
 To fit distributions to data (very simple models, no predictors):
 
@@ -514,7 +514,7 @@ To fit distributions to data (very simple models, no predictors):
 
 ---
 
-# Example: Poisson ML fitting
+##Example: Poisson ML fitting
 
 
 .pull-left[
@@ -538,7 +538,7 @@ $$ \hat{\lambda}  =  \frac{4242~\text{trees}}{568~\text{plots}}   =  7.468/ \tex
 
 ---
 
-# Example: Poisson ML fitting
+##Example: Poisson ML fitting
 
 .center[
 ![](slides_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
@@ -546,7 +546,7 @@ $$ \hat{\lambda}  =  \frac{4242~\text{trees}}{568~\text{plots}}   =  7.468/ \tex
 
 ---
 
-# Poisson x Negative Binomial
+##Poisson x Negative Binomial
 
 .pull-left[
 
@@ -569,7 +569,7 @@ $$ \hat{\lambda}  =  \frac{4242~\text{trees}}{568~\text{plots}}   =  7.468/ \tex
 
 ---
 
-# Finding MLEs numerically
+##Finding MLEs numerically
 
 .pull-left[
 
@@ -597,7 +597,7 @@ https://towardsdatascience.com/a-visual-explanation-of-gradient-descent-methods-
 
 ---
 
-# Optimization is tricky
+##Optimization is tricky
 
 .pull-left[
 .center[
@@ -614,7 +614,7 @@ https://towardsdatascience.com/a-visual-explanation-of-gradient-descent-methods-
 ---
 
 
-# Look for ML fitting in good libraries
+##Look for ML fitting in good libraries
 
 * There are libraries for ML fitting of a huge variety of models.
 
@@ -635,7 +635,7 @@ https://towardsdatascience.com/a-visual-explanation-of-gradient-descent-methods-
 
 ---
 
-# Properties of MLEs
+##Properties of MLEs
 
 ### as `\(n \rightarrow \infty\)` :
 
@@ -647,14 +647,14 @@ https://towardsdatascience.com/a-visual-explanation-of-gradient-descent-methods-
 
 ### In general:
 
-* **Functional equivariance**: a monotonic function of a MLE is also a MLE.
+* **Functional invariance**: a monotonic function of a MLE is also a MLE.
 
 
 .footnote[[2] A generalization of Central Limit Theorem, follows from the efficiency property]
 
 ---
 
-# Inference about parameters 
+##Inference about parameters 
 
 
 
@@ -679,7 +679,7 @@ function of a single parameter;
 
 ---
 
-# Danger Will Robinson!
+##Danger Will Robinson!
 
 .pull-left[
 .center[
@@ -694,7 +694,7 @@ function of a single parameter;
 
 ---
 
-# Example: scaling of parasite loads
+##Example: scaling of parasite loads
 
 .pull-left[
 * The biomass of bird ectoparasites is proportional to the `\(2/3\)`
@@ -714,7 +714,7 @@ power of host body mass.
 
 ---
 
-# Plausibility intervals
+##Plausibility intervals
 
 .pull-left[
 .center[
@@ -734,16 +734,28 @@ power of host body mass.
 
 + Any statistical model hypothesis on how data has been generated. As
   such, these hypotheses assigns probabilities to data.
+
+--
+
 + Likelihood law: stick with the model that assigns the larger probability to your data
+
+--
+
 + The (log) likelihood expresses the support of the data for a given
   model, **compared** to other models fitted to the same data set.
+
+--
+
 + We can fit statistical models by finding the values of the
   parameters that maximize the model likelihood.
+
+--
+
 + Maximum likelihood estimates have many nice statistical properties.
 
 ---
 
-# Further reading
+## Further reading
 
 +   Likelihood and all that. chapter 6 *in* Bolker, B.M. 2008
     Ecological Models and Data in R. Princeton: Princeton University
