@@ -966,11 +966,23 @@ abline(Bird.m0, lwd= 1.5)
 
 + Any statistical model hypothesis on how data has been generated. As
   such, these hypotheses assigns probabilities to data.
+
+--
+
 + Likelihood law: stick with the model that assigns the larger probability to your data
+
+--
+
 + The (log) likelihood expresses the support of the data for a given
   model, **compared** to other models fitted to the same data set.
+
+--
+
 + We can fit statistical models by finding the values of the
   parameters that maximize the model likelihood.
+
+--
+
 + Maximum likelihood estimates have many nice statistical properties.
 
 ---
