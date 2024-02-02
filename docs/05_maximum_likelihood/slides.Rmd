@@ -658,7 +658,7 @@ To fit distributions to data (very simple models, no predictors):
 
 * Poisson: $\; \hat{\lambda} \, = \, \frac{\sum{y_i}}{n}$ 
 
-* Normal: $\; \hat{\mu} \, = \, \frac{\sum{y_i}}{n}$ , $\; \hat{\sigma} \, = \, \frac{\sqrt{(y_i - \bar{x})^2}}{n}$
+* Normal: $\; \hat{\mu} \, = \, \frac{\sum{y_i}}{n}$ , $\; \hat{\sigma} \, = \, \frac{\sqrt{(y_i - \bar{y})^2}}{n}$
 
 * Binomial: $\; \hat{p} \, = \, \frac{y}{N}$
 
