@@ -64,7 +64,7 @@ regression:
 
 $$
 \begin{align}
-\ln S_i &\sim \text{Nornal}(\mu_i, \sigma) \\
+\ln S_i &\sim \text{Normal}(\mu_i, \sigma) \\
 \mu_i & = \beta_{0} + \beta_1 \ln A_i
 \end{align}
 $$
