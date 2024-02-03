@@ -24,6 +24,10 @@ xaringanExtra::embed_xaringan("06_bayesian_statistics/slides.html")
 
 [Slides PDF](06_bayesian_statistics/06_bayesian_statistics.pdf)
 
+# Lab
+
+[Bayesian model fitting and inference](06_bayesian_statistics/ModelFittingTutorial.html)
+
 # Further reading
 
 
