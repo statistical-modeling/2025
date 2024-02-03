@@ -21,10 +21,8 @@ navbar:
           href: 04_multiple_regression.html
         - text: "Maximum likelihood fitting"
           href: 05_maximum_likelihood.html
-        - text: "Bayesian statistics - I"
+        - text: "Bayesian statistics - I and II"
           href: 06_bayesian_statistics.html
-        - text: "Bayesian statistics - II"
-          href: 07_bayesian_statistics.html
         - text: "Causal thinking"
           href: 08_causal_thinking.html
         - text: "Generalized linear models"

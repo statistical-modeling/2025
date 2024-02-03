@@ -1,5 +1,5 @@
 ---
-title: "Bayesian Statistics - I"
+title: "Bayesian Statistics - I and II"
 description: |
   Bayesian fitting method, priors, how to interpret/report results.
 author:
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-#xaringanExtra::embed_xaringan("06_bayesian_statistics/slides/index.html")
+xaringanExtra::embed_xaringan("06_bayesian_statistics/slides.html")
 ```
 
 

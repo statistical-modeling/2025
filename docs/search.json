@@ -71,7 +71,7 @@
     },
     {
       "path": "06_bayesian_statistics.html",
-      "title": "Bayesian Statistics - I",
+      "title": "Bayesian Statistics - I and II",
       "description": "Bayesian fitting method, priors, how to interpret/report results.\n",
       "author": [
         {
@@ -80,22 +80,8 @@
         }
       ],
       "date": "2024-02-05",
-      "contents": "\nSlides\n\n\n\nFurther reading\n\n\n\n",
-      "last_modified": "2024-02-02T10:25:20-03:00"
-    },
-    {
-      "path": "07_bayesian_statistics.html",
-      "title": "Bayesian Statistics - II",
-      "description": "Comparisons between bayes and ML.\n",
-      "author": [
-        {
-          "name": "Diogo Melo",
-          "url": {}
-        }
-      ],
-      "date": "2024-02-05",
-      "contents": "\nSlides\n\n\n\nFurther reading\n\n\n\n",
-      "last_modified": "2024-02-02T10:25:20-03:00"
+      "contents": "\nSlides\n\n\n\n\n\nFurther reading\n\n\n\n",
+      "last_modified": "2024-02-03T11:34:11-03:00"
     },
     {
       "path": "08_causal_thinking.html",
@@ -144,7 +130,7 @@
       "title": "About us",
       "author": [],
       "contents": "\nSara Mortara\nDiogo Melo\nPaulo Inácio Prado\n\n\n\n",
-      "last_modified": "2024-02-02T10:25:20-03:00"
+      "last_modified": "2024-02-03T11:34:11-03:00"
     },
     {
       "path": "index.html",
@@ -152,7 +138,7 @@
       "description": "Serrapilheira Training Program in Quantitative Biology and Ecology - 2024\n",
       "author": [],
       "contents": "\nWelcome to the Statistical Inference module of the\nSerrapilheira Training Program in Quantitative Biology and\nEcology 2024. Statistical models are a useful tool to bridge theory\nand data. Why do ecologists fit statistical models? There are three\nmain reasons: explore data, make inferences, and derive predictions.\nCheck here the 2023 course website\nGoal\nOur general goal is to provide appropriate conceptual foundations on\nstatistical thinking in ecology. We will teach you basic tools needed to connect\ntheory and hypothesis to data and show you additional paths you can\ntake to further explore more advanced topics. There are two main steps\nin this endeavor: (i) the construction and fit of statistical models;\nand (ii) the inferences that can be made with and about the models.\nInstructors\nSara Mortara re.green, ¡liibre!\nDiogo Melo, Princeton University\nPaulo Inácio Prado, Universidade de São Paulo\nInstuctors from previous courses\nAndrea Sánchez-Tapia, Universidade Federal do ABC, ¡liibre!\nPaula Lemos-Costa, The University of Chicago\nPreparing for the course\nBefore the course starts, follow these\ninstructions to install R  and\nthe necessary R packages in your computer, and also to recap the\nbasics on R we’ll need to start.\nCourse schedule\n\nDate\nTheme\nInstructor\n29/jan\nCourse presentation: statistical models link data to theory\nSara\n29/jan\nProbability distributions\nPaulo\n30/jan\nProbability distributions lab\nPaulo\n30/jan\nQ&A\ntodes\n31/jan\nLinear models\nSara\n31/jan\nMultiple regression and model comparison\nPaulo\n01/fev\nLinear models lab\nSara\n01/fev\nQ&A\ntodes\n02/fev\nMaximum likelihood fitting - I\nPaulo\n02/fev\nMaximum likelihood fitting lab\nPaulo/Diogo\n05/fev\nBayesian statistics - I\nDiogo\n05/fev\nBayesian statistics - II\nDiogo\n06/fev\nBayesian fitting lab\nSara\n06/fev\nQ&A\ntodes\n07/fev\nCausal thinking and model building\nDiogo\n07/fev\nCausal thinking Lab\nDiogo / PI\n08/fev\nGeneralized linear models\nSara\n08/fev\nQ&A\ntodes\n09/fev\nMixed and hierachical models\nDiogo\n09/fev\nMixed and hierachical models lab\nPI\nExtra\nGLM(M)s lab\nSara/PI\n\n\n\n\n",
-      "last_modified": "2024-02-03T11:27:18-03:00"
+      "last_modified": "2024-02-03T11:32:51-03:00"
     }
   ],
   "collections": []
