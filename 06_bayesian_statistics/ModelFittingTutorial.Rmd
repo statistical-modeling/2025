@@ -282,8 +282,6 @@ prior + posterior
 
 If you want to run this tutorial in your own computer (and not the server), you will need to install the rethinking package.
 
-We are going to use rethinking, a simpler model fitting package designed for a teaching environment. If you have rethinking installed, jump to the next section.
-
 First we need to install rstan:
 
 ```{r, eval = FALSE}
