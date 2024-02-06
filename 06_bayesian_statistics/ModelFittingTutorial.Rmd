@@ -4,13 +4,24 @@ description: |
 author: "Diogo Melo"
 date: '2024-02-06'
 output: 
-    distill::distill_article
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
 editor_options: 
   chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval =FALSE)
+# clipboard
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
+    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
+  ),
+  rmarkdown::html_dependency_font_awesome()
+  )
 ```
 
 # Defining a very simple posterior
@@ -20,7 +31,7 @@ Consider the following model:
 Likelihood:
 
 $$
-y_i \sim Normal(\mu, \sigma) 
+y_i \sim Normal(\mu, \sigma = 1) 
 $$
 
 Prior:
@@ -50,7 +61,9 @@ logP_theta_y = function(mu, sigma = 1, data = y){
 }
 ```
 
-In this univariate case it's easy to check many possible values of $\mu$ to find the high probability values, but in high dimensions this is not feasible.
+In this univariate case it's easy to check many possible values of
+$\mu$ to find the high probability values, but in high dimensions this
+is not feasible.
 
 ```{r}
 x = seq(0, 4, 0.01)
@@ -78,31 +91,39 @@ First, let's do the exercise of checking the assumed distriburions for the three
 A normal distribution with $\mu = 0$ and $\sigma = 1$:
 
 ```{r}
-curve(dnorm(x, mean = 0, sd = 1))
+curve(dnorm(x, mean = 0, sd = 1), -3, 3)
 ```
 
 An exponential distribution with $\lambda = 1$
 
 ```{r}
-curve(dexp(x, rate = 1))
+curve(dexp(x, rate = 1), 0, 3)
 ```
 
+First we simulate some data:
 
-Our model translates to the following code, including some simulated data:
 
-```{r, eval = TRUE, message=FALSE, warning=FALSE}
-library(rethinking)
+```{r }
 N = 100 # sample size
 
 # Linear regression parameters
 alpha = 1 # Intercept
 beta = 1  # slope on x
- 
+## Simulate a normal response that has mu as  a linear function of a predictor 
 x = rnorm(N)           # Simulated independent variable. Mean = 0 and sd = 1
 mu = alpha + beta * x  # linear model for the expected value
 y = rnorm(N, mu)       # Response variable, with residual sd = 1
 
-# Rethinking code
+```
+
+An now we fit our model, that translates to the following code:
+
+
+```{r, eval = FALSE, message=FALSE, warning=FALSE}
+
+library(rethinking)
+
+## Rethinking code
 m1 = ulam(alist(
   y ~ normal(mu, sigma),     # Likelihood
   mu <- a + b * x,           # Linear model
@@ -111,26 +132,43 @@ m1 = ulam(alist(
   sigma ~ exponential(1)),   # Prior on residual variance
   data = list(y = y, x = x), # Data list
   iter = 2000, chains = 4, cores = 4, refresh = 0, cmdstan = TRUE) # Sampler control parameters
+
+```
+
+The `precis()` function generates a simple summary table of fitted coefficients:
+
+
+```{r }
 precis(m1, digits = 2) # Summary of model fit
 ```
 
-The precis() function generates a simple summary table of fitted coefficients. 
 
-__Exercise:__ Fit the same model using the lm() function in R, and compare the summary of the two fitted models. 
+__Exercise:__ Fit the same model using the lm() function in R, and
+compare the summary of the two fitted models.
 
-If the sample size is large, the likelihood overwhelms the prior and even strong priors can lead to similar inferences.
+If the sample size is large, the likelihood overwhelms the prior and
+even strong priors can lead to similar inferences.
 
-__Exercise:__ Change the priors. Can you find a prior that substantially changes the estimates? Next, reduce the sample size (change the N variable). Do the priors make a difference now?
+__Exercise:__ Change the priors. Can you find a prior that
+substantially changes the estimates? Next, reduce the sample size
+(change the N variable). Do the priors make a difference now?
+
 
 ## Getting the generated Stan code
 
-Some models are too complicated to fit in the simple rethinking syntax. For these models we have to write Stan code directly. We can start to see how these models are structured by looking at the Stan code rethinking generates.
+Some models are too complicated to fit in the simple rethinking
+syntax. For these models we have to write Stan code directly. We can
+start to see how these models are structured by looking at the Stan
+code rethinking generates.
 
 ```{r, fold = TRUE}
 writeLines(m1@model)
 ```
 
-Note the different code blocks for declaring the different parts of the model (data, parameters, and model). Also note the need to declare all variables and their domain constraints. We will see more complicated Stan models later in the course.
+Note the different code blocks for declaring the different parts of
+the model (data, parameters, and model). Also note the need to declare
+all variables and their domain constraints. We will see more
+complicated Stan models later in the course.
 
 ## Checking convergence
 
@@ -138,20 +176,29 @@ Running multiple independent MCMC chains allows us to check if the chains conver
 to the same parameter values. Ideally, all chains should jump around the same values, without
 getting stuck on some value and without much similarity between subsequent values. Let's plot the 4 chains:
 
-```{r, evol = TRUE}
+```{r, eval = TRUE}
 traceplot_ulam(m1)
 ```
 
-These look fine. Notice the initial jumps far away from the typical set. This is the sampler's initial warm-up phase, before the chains converge.
+These look fine. Notice the initial jumps far away from the typical
+set. This is the sampler's initial warm-up phase, before the chains
+converge.
 
-There are also diagnostics calculated on multiple chains to check for convergence.
-The most common one is the R-hat diagnostic, which measures the ratio of the within and between chain variance. If the chains converged to the same value, R-hat should be very close to 1. The precis() summary outputs the R-hat for all parameters by default.
+There are also diagnostics calculated on multiple chains to check for
+convergence.  The most common one is the R-hat diagnostic, which
+measures the ratio of the within and between chain variance. If the
+chains converged to the same value, R-hat should be very close
+to 1. The `precis()` summary outputs the R-hat for all parameters by
+default.
 
 There are other more advanced diagnostics in Stan models, which can be very powerful and allow us to identify ill behaved models. See this [post](https://mc-stan.org/misc/warnings.html) for more.
 
 ## Ploting the posterior
 
-When we are using simulated data, we can compare the posterior estimates to the known parameters. The [bayesplot package](https://mc-stan.org/bayesplot/) provides several functions for visualizing the posterior:
+When we are using simulated data, we can compare the posterior
+estimates to the known parameters. The [bayesplot
+package](https://mc-stan.org/bayesplot/) provides several functions
+for visualizing the posterior:
 
 ```{r}
 library(bayesplot)
@@ -159,13 +206,20 @@ samples = as.data.frame(extract.samples(m1))
 mcmc_recover_hist(samples[,c("a", "b")] , true = c(alpha, beta))
 ```
 
-Sometimes the mean of the posterior does not match the simulated value exactly. This is normal for any single run so long as the simulated value is in a reasonably high probability region of the posterior. A more thorough check would be to run the simulation several times and to check model is properly calibrated. For example, we might check if the true value falls into the 50% confidence region 50% of the runs.
+Sometimes the mean of the posterior does not match the simulated value
+exactly. This is normal for any single run so long as the simulated
+value is in a reasonably high probability region of the posterior. A
+more thorough check would be to run the simulation several times and
+to check model is properly calibrated. For example, we might check if
+the true value falls into the 50% confidence region 50% of the runs.
 
 __Challenge exercise__: Make a for loop to check model calibration.
 
 ## Ploting the data and the regression
 
-Now we can evaluate the model fit to the simulated data. First, let's draw a few regression lines from the posterior. This will give us some idea about the uncertainty in the regression line.
+Now we can evaluate the model fit to the simulated data. First, let's
+draw a few regression lines from the posterior. This will give us some
+idea about the uncertainty in the regression line.
 
 ```{r}
 plot(y ~ x, pch = 19)
@@ -183,9 +237,12 @@ plot(y ~ x, pch = 19)
 abline(a = coef["a"], b = coef["b"], col = 2, lwd = 2)
 ```
 
-While looking at the fitted model against the data is usually more informative, we can also plot the coefficient estimates directly. It is sometimes difficult to interpret coefficients directly, but with some practice numerical estimates can be useful in inference.
+While looking at the fitted model against the data is usually more
+informative, we can also plot the coefficient estimates directly. It
+is sometimes difficult to interpret coefficients directly, but with
+some practice numerical estimates can be useful in inference.
 
-A basic confidence interval plot can be generated by calling the plot function on the precis() output table:
+A basic confidence interval plot can be generated by calling the plot function on the `precis()` output table:
 
 ```{r}
 plot(precis(m1), xlim = c(-0.1, 1.5))
@@ -193,7 +250,12 @@ plot(precis(m1), xlim = c(-0.1, 1.5))
 
 ## Posterior predictive checks
 
-One powerful concept in Bayesian models is of simulated data from the posterior. Ideally, we would like the posterior distribution to generate simulated data that is compatible with the data used to fit the model. If we can not reproduce some relevant aspect of the data given the fitted model, it is usually a sign that the model needs to be modified.
+One powerful concept in Bayesian models is of simulated data from the
+posterior. Ideally, we would like the posterior distribution to
+generate simulated data that is compatible with the data used to fit
+the model. If we can not reproduce some relevant aspect of the data
+given the fitted model, it is usually a sign that the model needs to
+be modified.
 
 Here, we generate 30 simulated data sets from the posterior:
 
@@ -211,12 +273,15 @@ for(k in 1:n_samples)
 
 ```
 
-One useful technique is to compare some tail percentile from the posterior predictive distribution to the observed percentile. This can identify problems at the extreme tails of the data distribution, where it's harder to get a good fit.
+One useful technique is to compare some tail percentile from the
+posterior predictive distribution to the observed percentile. This can
+identify problems at the extreme tails of the data distribution, where
+it's harder to get a good fit.
 
 ```{r}
 # Comparing the predicted 90% percentile to the observed
-simualated_quantile = apply(simulated_data, 2, quantile, 0.9)
-dens(simualated_quantile, col = 2, lwd = 4) # density of simulated 90% percentiles
+simulated_quantile = apply(simulated_data, 2, quantile, 0.9)
+dens(simulated_quantile, col = 2, lwd = 4) # density of simulated 90% percentiles
 abline(v = quantile(y, 0.9), lwd = 3)       # observed 90% percentile
 ```
 
@@ -245,7 +310,7 @@ b <- rlnorm(N, 0, 1) # Samples of the posterior distribution of the slope
 data = data.frame(a, b)
 
 # Visualizing the prior
-prior = ggplot() + 
+p.prior = ggplot() + 
   ylim(-100, 400) +
   geom_abline(data = data, aes(slope = b, intercept = a), alpha = 0.2) + 
   geom_hline(yintercept = 0) +
@@ -256,7 +321,7 @@ prior = ggplot() +
         ggtitle("log(b) ~ Normal(0, 1)") + 
         annotate("text", x = -13, y = 274, label = "Tallest person ever (272cm)", 
         hjust = 0, vjust = 0) + ggtitle("Prior")
-prior
+p.prior
 
 # Model:
 fit = ulam(alist(
@@ -275,7 +340,7 @@ e_b = mean(samples$b) # Mean posterior estimate of b
 e_a = mean(samples$a) # Mean posterior estimate of a
 
 # Plotting the posterior
-posterior = ggplot() + 
+p.posterior = ggplot() + 
   ylim(-100,400) +
   geom_point(data = d2, aes(x = weight, y = height), alpha = 0.1, shape = 19) + 
   geom_abline(data = samples[1:100,], aes(slope = b, intercept = a), alpha = 0.1) + 
@@ -290,7 +355,7 @@ posterior = ggplot() +
         hjust = 0, vjust = 0) + ggtitle("Posterior")
 
 # comparing the prior and the posterior
-prior + posterior 
+p.prior + p.posterior 
 ```
 
 # Installing the rethinking package

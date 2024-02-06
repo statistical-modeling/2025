@@ -29,9 +29,12 @@ xaringanExtra::embed_xaringan("06_bayesian_statistics/slides.html")
 
 [Bayesian model fitting and inference](06_bayesian_statistics/ModelFittingTutorial.html)
 
+
 # Further reading
 
+Jaynes, E.T., 2003. Probability theory: The logic of science. Cambridge University press.
 
+McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
 
 
 
