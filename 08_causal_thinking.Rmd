@@ -32,7 +32,9 @@ xaringanExtra::embed_xaringan("08_causal_thinking/slides/index.html")
 
 # Further reading
 
+- Pearl, J., Glymour, M. & Jewell, N. P. Causal Inference in Statistics: A Primer. (John Wiley & Sons, 2016).
 
+- Science Before Statistics: Causal Inference: https://www.youtube.com/watch?v=KNPYUVmY3NM
 
 
 
