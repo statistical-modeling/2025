@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = FALSE)
 xaringanExtra::embed_xaringan("08_causal_thinking/slides/index.html")
 ```
 
-[Open slides in new window](06_bayesian_statistics/slides.html)
+[Open slides in new window](08_causal_thinking/slides/index.html)
 
 [Slides PDF](08_causal_thinking/08_CausalThinking.pdf)
 
