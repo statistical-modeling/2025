@@ -1,27 +1,22 @@
 ---
 title: "Causal model building"
 description: |
-author: "Diogo Melo"
-date: '2023-01-24'
+author: 
+ - "Diogo Melo"
+ - "Paulo Inácio Prado"
+date: '2024-02-07'
 output: 
-    distill::distill_article
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
 editor_options: 
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, eval =TRUE}
+knitr::opts_chunk$set(echo = TRUE, eval =FALSE)
 ```
 
-# dagitty package
-
-Much of the causal implications contained in DAGs can be analyzed automatically. 
-The dagitty package provides functions for this.
-
-```{r}
-if(!require("dagitty")) install.packages("dagitty")
-library(dagitty)
-```
 
 # Remembering multiple regression
 
@@ -43,7 +38,7 @@ coefficients $\beta_j$ express the isolated effects of each predictor
 on the response. You can check this by creating a Gaussian variable with
 a mean value that is the sum of two independent predictors:
 
-```{r, eval=FALSE }
+```{r,  eval=FALSE }
 set.seed(42)
 x1 <- runif(1000)
 x2 <- runif(1000)
@@ -140,9 +135,13 @@ When fitting causal models, it is often necessary to add covariates to a linear 
 
 For example, in the following DAGs, where X, Y and Z are observed, and U is unobserved:
 
-![](../figures/DAGS/good_controls_1.png)
+![](figs/good_controls_1.png)
 
-There is always a shared common cause between X and Y, and estimating the effect of X on Y requires blocking this non-causal path. The variable Z can be used as a covariate in all cases, even in the presence of the unobserved confound U.
+There is always a shared common cause between X and Y, and estimating
+the effect of X on Y requires blocking this non-causal path, by
+including the shared cause (or confound variable) as a control in the
+model. The variable Z can be used as a covariate in all cases, even in
+the presence of the unobserved confound U.
 
 Let's check this by simulating the DAG in model 2:
 
@@ -164,26 +163,31 @@ lm(Y ~ X + Z) |> coef() # Unbiased, effect of X is correct and equal to b_yx
 
 The same logic applies if the confound is mediated by another variable M:
 
-![](../figures/DAGS/good_controls_2.png)
+![](figs/good_controls_2.png)
 
 Z should be added as a covariate in all of these cases. 
 
 
-__Question__: If we are interested in the effect of X on Y, could M also be added to the model? Explain.
+__Question__: If we are interested in the effect of X on Y, could M
+also be added to the model? Explain.
 
-__Exercise__: Choose one of these DAGs and run a simulation, explore the effect of adding Z or M as covariates.
+__Exercise__: Choose one of these DAGs and run a simulation, explore
+the effect of adding Z or M as covariates.
 
 ## Pretty good controls
 
-Some covariates can be added to a model not to avoid bias, but to increase precision. For example, in the following DAG:
+Some covariates can be added to a model not to avoid bias, but to
+increase precision. For example, in the following DAG:
 
-```{r, out.height=100, out.width=100, echo=FALSE}
-knitr::include_graphics("../figures/DAGS/pretty_good.png")
+```{r, out.height=100, out.width=100, echo=FALSE,  eval =TRUE}
+knitr::include_graphics("figs/pretty_good.png")
 ```
 
-Adding Z as a covariate increases the precision of the estimate of the effect of X on Y.
+In this case, adding Z as a covariate increases the precision of the
+estimate of the effect of X on Y.
 
-Again, let's check using simulations:
+Again, let's check using simulations, and then check the posterior
+distributions of the estimated effects of X on Y:
 
 ```{r, eval=FALSE }
 set.seed(2)
@@ -194,14 +198,19 @@ Z = rnorm(N)
 b_yx = 1
 b_yz = 2
 Y = rnorm(N, b_yx * X + b_yz * Z)
-
+## Fit models without and with confound as a control, and generate posterior distributions
 yx = lm(Y ~ X) |> extract.samples()
 yxz = lm(Y ~ X + Z) |> extract.samples()
+## Density histogram of posteriors
 dens(yxz$X, lwd = 2, col = 2, xlim = c(0.4, 1.65), xlab = "b_yx")
 dens(yx$X, lwd = 2, col = 1, add =TRUE)
 ```
 
-This happens because adding the covariate removes part of the variation in Y that is not associated with X. 
+The posterior distributions of the coefficient for X have the same
+mean, but different variances. This happens because adding the
+covariate removes part of the variation in Y that is not associated
+with X, which decreases the variance of the estimated effect of X (or
+increases its precision, which is the same).
 
 __Question__: What if Z is a cause of X, not of Y. Would adding it to the regression help in this case?
 
@@ -211,14 +220,14 @@ Two classes of bad controls are the post-treatment or overcontrol bias, and bias
 
 In the following DAGs, controlling on Z would lead to a underestimate of the effect of X on Y.
 
-```{r, out.height=150, out.width=550, echo=FALSE}
-knitr::include_graphics("../figures/DAGS/overcontrol.png")
+```{r, out.height=150, out.width=550, echo=FALSE, eval =TRUE}
+knitr::include_graphics("figs/overcontrol.png")
 ```
 
 In the following case, controlling on Z would lead to an increase in the bias caused by the unobserved variable U.
 
-```{r, out.height=150, out.width=210, echo=FALSE}
-knitr::include_graphics("../figures/DAGS/bias_amplification.png")
+```{r, out.height=150, out.width=210, echo=FALSE, eval =TRUE}
+knitr::include_graphics("figs/bias_amplification.png")
 ```
 
 __Exercise__: Simulate the bias amplification example and check the effect of including the Z variable in the model.
@@ -263,16 +272,32 @@ __The only way to identify the possible bias is having a clear scientific model.
 
 # Practice DAGs
 
-For each of the following DAGs form the rethinking book, write down the correct models for estimating the total causal influence of X on Y:
+## dagitty package
 
-```{r, out.height=285, out.width=400, echo=FALSE}
-knitr::include_graphics("../figures/dags_6M3.png")
+Much of the causal implications contained in DAGs can be analyzed automatically. 
+The dagitty package provides functions for this.
+
+```{r,  eval =FALSE}
+## if(!require("dagitty")) install.packages("dagitty")
+## library(dagitty)
 ```
 
-You can check your answers using the dagitty package or the [online interface](http://www.dagitty.net/dags.html)^[For begginers, we reccomend to start playing with this interface, and then check the results with the `dagitty` package]. Here is an example:
+## Some DAGs to explore
+
+For each of the following DAGs from the rethinking book, write down
+the correct models for estimating the total causal influence of X on
+Y:
+
+```{r, out.height=285, out.width=400, echo=FALSE, eval =TRUE}
+knitr::include_graphics("figs/dags_6M3.png")
+```
+
+You can check your answers using the dagitty package or the [online
+interface](http://www.dagitty.net/dags.html)^[For begginers, we
+reccomend to start playing with this interface, and then check the
+results with the `dagitty` package]. Here is an example:
 
 ```{r, eval=FALSE }
-library(dagitty)
 dag1 = dagitty('dag { X -> Y Z -> X Z -> Y A -> Z A -> Y}')
 
 # Plotting the dag, we can use coordinates to place the nodes in the desired position
@@ -281,7 +306,7 @@ coordinates( dag1 ) <-
           y=c(X = 0, Y = 0, Z = -1, A = -1) )
 plot(dag1)
 
-# get all paths
+# get all paths from X to Y
 paths(dag1, from = "X", to = "Y")
 
 # get the correct adjustment set
