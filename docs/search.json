@@ -108,8 +108,8 @@
         }
       ],
       "date": "2024-02-08",
-      "contents": "\nSlides\n\n\n\n\n\nLab\nGLM Lab\nReferences\nCrawley, M. J. (2012). The R book. John Wiley & Sons.\nDobson, A. J., & Barnett, A. G. (2018). An introduction to generalized linear models. CRC press.\nGeneralized linear models with examples in R (Vol. 53).\nDunn, P. K., & Smyth, G. K. (2018) New York: Springer.\n“Regression models for count data in R.” Zeileis, Achim, Christian Kleiber,\nand Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.\n\n\n\n\n",
-      "last_modified": "2024-02-08T09:03:38-03:00"
+      "contents": "\nSlides\n\n\n\n\n\nLab\nGLM Lab\nReferences\nCrawley, M. J. (2012). The R book. John Wiley & Sons.\nDobson, A. J., & Barnett, A. G. (2018). An introduction to generalized linear models. CRC press.\nGeneralized linear models with examples in R (Vol. 53).\nDunn, P. K., & Smyth, G. K. (2018) New York: Springer.\n“Regression models for count data in R.” Zeileis, Achim, Christian Kleiber,\nand Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.\n\n\n\n",
+      "last_modified": "2024-02-08T09:07:54-03:00"
     },
     {
       "path": "10_mixed_and_hierarchical_models.html",

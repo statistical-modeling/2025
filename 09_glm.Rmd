@@ -38,6 +38,3 @@ xaringanExtra::embed_xaringan("09_glm/slides.html")
 
 + "Regression models for count data in R." Zeileis, Achim, Christian Kleiber, 
   and Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.
-  
-+ 
-
