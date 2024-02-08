@@ -3,19 +3,20 @@
   <head>
     <title>Statistical models: linking data to theory</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Paula (Paulinha) Lemos-Costa" />
-    <meta name="date" content="2023-01-26" />
+    <meta name="author" content="Sara Mortara" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <script src="libs/clipboard/clipboard.min.js"></script>
     <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
     <script src="libs/shareon/shareon.min.js"></script>
     <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
     <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <script src="libs/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
     <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
     <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
     <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
-    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
-    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -29,10 +30,10 @@ class: center, middle, inverse, title-slide
 ## The Generalized Linear Model
 ]
 .author[
-### Paula (Paulinha) Lemos-Costa
+### Sara Mortara
 ]
 .date[
-### 26 Jan 2023
+### 07 Fev 2024
 ]
 
 ---
@@ -43,7 +44,7 @@ class: center, middle, inverse, title-slide
 
 
 
-# Recap
+## Recap
 
 * The key interest in statistical analysis is to find a meaningful relationship 
   between the __response__ variable (usually denoted by `\(y\)`) and one or 
@@ -67,7 +68,7 @@ class: center, middle, inverse, title-slide
   a linear model   we use generalized linear models
 
 ---
-# Breaking the assumptions of a linear model
+## Breaking the assumptions of a linear model
 
 .pull-left[
 
@@ -86,7 +87,7 @@ class: center, middle, inverse, title-slide
 
 
 ---
-# Breaking the assumptions of a linear model
+## Breaking the assumptions of a linear model
 
 .pull-left[
 
@@ -108,7 +109,7 @@ class: center, middle, inverse, title-slide
 ]
 
 ---
-# Breaking the assumptions of a linear model
+## Breaking the assumptions of a linear model
 
 .pull-left[
 
@@ -129,7 +130,7 @@ class: center, middle, inverse, title-slide
 
 ]
 ---
-# Generalized Linear Models
+## Generalized Linear Models
 
 * The response variable is modeled by a distribution from the exponential family
   (e.g. Gaussian, Gamma, Binomial, Poisson)
@@ -150,7 +151,7 @@ class: center, middle, inverse, title-slide
 
 ---
 
-# Model Structure
+## Model Structure
 
 We need to determine three parts of the model:
 
@@ -166,7 +167,7 @@ y_i &amp;\sim \mathcal{Pois}(\lambda_i) \\
 $$
 ---
 
-# Model Structure
+## Model Structure
 
 We need to determine three parts of the model:
 
@@ -186,7 +187,7 @@ We need to determine three parts of the model:
 
 ---
 
-# A GLM consists of 3 steps
+## A GLM consists of 3 steps
 
 1. Choose the __distribution__ for the response variable:
 
@@ -205,7 +206,7 @@ We need to determine three parts of the model:
 
 ---
 
-# Binary Data
+## Binary Data
 
 *-* It's an extreme departure from normality. Response variable assumes only 
 values `\(1\)` or `\(0\)` (no/yes, survived/deceased, presence/absence, lost/won)
@@ -232,7 +233,7 @@ Now we want to relate the parameter `\(\pi_i\)` to the __linear predictor__
 
 ---
 
-# Logistic Regression
+## Logistic Regression
 
 The most popular choice is to use the _Logit_ function as the link function
 
@@ -263,7 +264,7 @@ $$
 
 ---
 
-# Logistic Regression
+## Logistic Regression
 
 The function `\(Logit(\pi_i) = \beta_0 + \beta_1 x_i\)` can be written as:
 
@@ -290,7 +291,7 @@ while the probability tends to one when `\(\beta_0 + \beta_1 x_i \to \infty\)` a
 
 ---
 
-# Logistic Regression
+## Logistic Regression
 
 Now let's see how this looks like
 
@@ -317,7 +318,7 @@ predicted_pi_i &lt;- exp(linear_predictor) /
 
 ---
 
-# Logistic Regression
+## Logistic Regression
 
 Now let's see how this looks like
 
@@ -346,15 +347,58 @@ This is a logistic curve. The parameters `\(\beta_0\)` and `\(\beta_1\)`
 ]
 
 ---
+## The Titanic example
 
-# The Titanic example
+.pull-left[
+
+&lt;img src="figs/titanic.jpg" width="1971" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+```r
+data("Titanic")
+Titanic[, , Age = "Child", ]
+```
+
+```
+## , , Survived = No
+## 
+##       Sex
+## Class  Male Female
+##   1st     0      0
+##   2nd     0      0
+##   3rd    35     17
+##   Crew    0      0
+## 
+## , , Survived = Yes
+## 
+##       Sex
+## Class  Male Female
+##   1st     5      1
+##   2nd    11     13
+##   3rd    13     14
+##   Crew    0      0
+```
+]
+
+
+
+---
+## The Titanic example
+
 
 Let's model the probability of survival according to class and gender. We can 
   start with a null model where we assume all passengers have the same 
   probability of survival
+  
+  `$$y_i \sim Binomial(n, \pi_i)$$`
+  
+  `$$logit(\pi_i) = \beta_0$$`
+  
 --
 
-.pull-left[
 
 
 ```r
@@ -365,7 +409,7 @@ model0 &lt;- glm(Survived ~ 1, # only intercept
               data = titanic_train, 
               family = "binomial") # logistic 
                                   # regression
-summary(model0)$coefficients[,-4]
+summary(model0)$coefficients[, -4]
 ```
 
 ```
@@ -373,16 +417,42 @@ summary(model0)$coefficients[,-4]
 ## -0.47328770  0.06888737 -6.87045663
 ```
 
-]
 
---
 
-.pull-right[
+---
+## The Titanic example: the null model
+
+
+$$
+`\begin{align}
+\pi_i = \frac{e^{\beta_0 + \beta_1 x_i}}{1+e^{\beta_0 + \beta_1 x_i}}
+\end{align}`
+$$
+
+
 
 ```r
-coeffs_m0 &lt;- model0$coefficients
-# the best fitting (alpha) intercept should lead to 
-# e^alpha / (1 + e^alpha) = mean(Survived)
+model0$coefficients
+```
+
+```
+## (Intercept) 
+##  -0.4732877
+```
+
+```r
+# the best fitting (beta0) intercept should lead to 
+# e^beta0 / (1 + e^beta0) = mean(Survived)
+beta0 &lt;- model0$coefficients
+exp(beta0) / (1 + exp(beta0))
+```
+
+```
+## (Intercept) 
+##   0.3838384
+```
+
+```r
 mean(titanic_train$Survived)
 ```
 
@@ -390,30 +460,27 @@ mean(titanic_train$Survived)
 ## [1] 0.3838384
 ```
 
-```r
-exp(coeffs_m0[1]) / (1 + exp(coeffs_m0[1]))
-```
 
-```
-## (Intercept) 
-##   0.3838384
-```
-]
 
 ---
 
-# The Titanic example
+# The Titanic example: the effect of gender
 
 Now let's include gender. What was the probability of surviving depending on gender?
 
-.pull-left[
+  `$$y_i \sim Binomial(n, \pi_i)$$`
+  
+  `$$logit(\pi_i) = \beta_0 + \beta_1 * Sex$$`
+  
+--
+
 
 ```r
 model1 &lt;- glm(Survived ~ Sex, # one sex as baseline
               data = titanic_train,
               family = "binomial")
 
-summary(model1)$coefficients[,-4]
+summary(model1)$coefficients[, -4]
 ```
 
 ```
@@ -422,18 +489,24 @@ summary(model1)$coefficients[,-4]
 ## Sexmale     -2.513710  0.1671782 -15.036107
 ```
 
-]
 
---
 
-.pull-right[
+---
+# The Titanic example: the effect of gender
+
+
+$$ p = \frac{1}{1 + e^{-logit(p)}}$$ 
+
+The calculation `\(\frac{1}{1 + odds}\)` converts odds to probabilities
+
 
 ```r
 # What is the best-fitting probability of 
  # survival for male/female?
-coeffs &lt;- model1$coefficients
+coeffs &lt;- as.numeric(model1$coefficients)
+
 # Probability of survival for women
-as.numeric(1 - 1 / (1 + exp(coeffs[1])))
+1 - 1 / (1 + exp(coeffs[1]))
 ```
 
 ```
@@ -442,47 +515,49 @@ as.numeric(1 - 1 / (1 + exp(coeffs[1])))
 
 ```r
 # Probability of survival for men
-as.numeric(1 - 1 / (1 + exp(coeffs[1] + 
-                              coeffs[2])))
+1 - 1 / (1 + exp(coeffs[1] + coeffs[2]))
 ```
 
 ```
 ## [1] 0.1889081
 ```
-]  
-  
+
 ---
 
-# The Titanic example
+# The Titanic example: the effect of gender and class
 
 Our data set also includes information on passenger's class. Let's incorporate 
   that into our model
 
-.pull-left[
+
+  `$$y_i \sim Binomial(n, \pi_i)$$`
+  
+  `$$logit(\pi_i) = \beta_0 + \beta_1 * Sex + \beta_2 * Class2 + \beta_3 * Class3$$`
+  
+
 
 ```r
 model2 &lt;- glm(Survived ~ Sex + factor(Pclass), # combine Sex and Pclass
               data = titanic_train,
               family = "binomial")
-
-summary(model2)$coefficients[,-4]
 ```
 
-```
-##                   Estimate Std. Error    z value
-## (Intercept)      2.2971232  0.2189839  10.489917
-## Sexmale         -2.6418754  0.1840954 -14.350577
-## factor(Pclass)2 -0.8379523  0.2447436  -3.423797
-## factor(Pclass)3 -1.9054951  0.2141410  -8.898319
-```
-]
 
---
+---
+## The Titanic example: the effect of gender and class
 
-.pull-right[
+
 
 ```r
-coeffs &lt;- model2$coefficients
+(coeffs &lt;- model2$coefficients)
+```
+
+```
+##     (Intercept)         Sexmale factor(Pclass)2 factor(Pclass)3 
+##       2.2971232      -2.6418754      -0.8379523      -1.9054951
+```
+
+```r
 # A woman in first class
 as.numeric(1 - 1 / (1 + exp(coeffs[1])))
 ```
@@ -501,10 +576,40 @@ as.numeric(1 - 1 / (1 + exp(coeffs[1] +
 ```
 ## [1] 0.09532814
 ```
-]
 
 ---
-# Count Data: Poisson Regression
+## Comparing estimates with the data
+
+
+```r
+library(dplyr)
+titanic_train %&gt;% 
+  group_by(Sex, Pclass) %&gt;% 
+  summarize(p = mean(Survived))
+```
+
+```
+## `summarise()` has grouped output by 'Sex'. You can override using the `.groups`
+## argument.
+```
+
+```
+## # A tibble: 6 × 3
+## # Groups:   Sex [2]
+##   Sex    Pclass     p
+##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
+## 1 female      1 0.968
+## 2 female      2 0.921
+## 3 female      3 0.5  
+## 4 male        1 0.369
+## 5 male        2 0.157
+## 6 male        3 0.135
+```
+
+
+
+---
+## Count Data: Poisson Regression
 
 Suppose your response variables are non-negative integers. For example, counting
   the number of eggs female lay as a function of their age, body size, etc. 
@@ -519,7 +624,7 @@ A possible model for this case is to think of the response variable as being
   expressed as `\(\lambda\)`
   
 ---
-# Poisson Regression
+## Poisson Regression
 
 Defining the Poisson regression model:
 
@@ -550,7 +655,7 @@ The logarithm as a link function transforms the relationship between fitted
   values and the predictors into a linear regression
 
 ---
-# Underdispersed and overdispersed data
+## Underdispersed and overdispersed data
 
 The main feature of the Poisson distribution is that the mean and the variance
 are both equal to `\(\lambda\)`.
@@ -574,7 +679,7 @@ variance)
 
 
 ---
-# Negative Binomial Regression
+## Negative Binomial Regression
 
 Fitting a Negative binomial amounts to fitting:
 
@@ -605,7 +710,7 @@ A simple way to test for dispersion is to fit a _quasipoisson_ model, which
 returns a dispersion parameter (anything larger than 1 means over-dispersion).
 
 ---
-# Other GLMs
+## Other GLMs
 
 Historically, GLMs have been defined for the canonical families:
 
@@ -625,7 +730,7 @@ There are also 'non-canonical' GLMs, that use the same general idea:
 * __Probit__: binary
 
 ---
-# Further reading
+## Further reading
 
 + Generalized linear models with examples in R (Vol. 53). 
   Dunn, P. K., &amp; Smyth, G. K. (2018) New York: Springer.
