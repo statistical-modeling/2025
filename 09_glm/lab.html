@@ -21,7 +21,7 @@ visibility: hidden;
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -93,9 +93,10 @@ code span.wa { color: #5e5e5e; font-style: italic; }
 
 
   <!--  https://schema.org/Article -->
-  <meta property="article:published" itemprop="datePublished" content="2023-01-26" />
-  <meta property="article:created" itemprop="dateCreated" content="2023-01-26" />
+  <meta property="article:published" itemprop="datePublished" content="2024-02-08" />
+  <meta property="article:created" itemprop="dateCreated" content="2024-02-08" />
   <meta name="article:author" content="Paula (Paulinha) Lemos-Costa" />
+  <meta name="article:author" content="Sara Mortara" />
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="Lab on GLM" />
@@ -110,7 +111,7 @@ code span.wa { color: #5e5e5e; font-style: italic; }
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","author","date","output"]}},"value":[{"type":"character","attributes":{},"value":["Lab on GLM"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Paula (Paulinha) Lemos-Costa"]}]}]},{"type":"character","attributes":{},"value":["2023-01-26"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_depth"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[2]}]}]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","author","date","output"]}},"value":[{"type":"character","attributes":{},"value":["Lab on GLM"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Paula (Paulinha) Lemos-Costa"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Sara Mortara"]}]}]},{"type":"character","attributes":{},"value":["2024-02-08"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_depth"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[2]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   
@@ -206,9 +207,18 @@ line-height: 1.5em;
 .hidden {
 display: none !important;
 }
+hr.section-separator {
+border: none;
+border-top: 1px solid rgba(0, 0, 0, 0.1);
+margin: 0px;
+}
+d-byline {
+border-top: none;
+}
 d-article {
 padding-top: 2.5rem;
 padding-bottom: 30px;
+border-top: none;
 }
 d-appendix {
 padding-top: 30px;
@@ -284,6 +294,10 @@ overflow: visible !important;
 d-article div.sourceCode pre {
 padding-left: 18px;
 font-size: 14px;
+}
+
+d-article pre.numberSource code > span {
+left: -2em;
 }
 d-article pre {
 font-size: 14px;
@@ -914,6 +928,12 @@ color: inherit;
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -991,8 +1011,9 @@ color: inherit;
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1018,12 +1039,13 @@ color: inherit;
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -2337,7 +2359,7 @@ distill-header .nav a {
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Lab on GLM","authors":[{"author":"Paula (Paulinha) Lemos-Costa","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2023-01-26T00:00:00.000-08:00","citationText":"Lemos-Costa, 2023"}
+{"title":"Lab on GLM","authors":[{"author":"Paula (Paulinha) Lemos-Costa","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""},{"author":"Sara Mortara","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2024-02-08T00:00:00.000-03:00","citationText":"Lemos-Costa & Mortara, 2024"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2348,6 +2370,7 @@ distill-header .nav a {
 
 <div class="d-title">
 <h1>Lab on GLM</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 
@@ -2357,7 +2380,10 @@ distill-header .nav a {
   
   Paula (Paulinha) Lemos-Costa
   
-<br />2023-01-26
+,   
+  Sara Mortara
+  
+<br />2024-02-08
 </div>
 
 <div class="d-article">
@@ -2366,7 +2392,7 @@ distill-header .nav a {
 <h3>Contents</h3>
 <ul>
 <li><a href="#generalized-linear-models" id="toc-generalized-linear-models">Generalized Linear Models</a></li>
-<li><a href="#admissions-at-uc-berkeley" id="toc-admissions-at-uc-berkeley">Admissions at UC-Berkeley</a></li>
+<li><a href="#case-study-admissions-at-uc-berkeley" id="toc-case-study-admissions-at-uc-berkeley">Case study: admissions at UC-Berkeley</a></li>
 <li><a href="#two-ways-of-approaching-the-berkeley-admission-data-set" id="toc-two-ways-of-approaching-the-berkeley-admission-data-set">Two ways of approaching the Berkeley Admission Data set</a></li>
 <li><a href="#bayesian-fitting" id="toc-bayesian-fitting">Bayesian fitting</a></li>
 <li><a href="#recommended-reading" id="toc-recommended-reading">Recommended reading</a></li>
@@ -2375,33 +2401,57 @@ distill-header .nav a {
 </nav>
 </div>
 <h2 id="generalized-linear-models">Generalized Linear Models</h2>
-<p>Now that we have seen in class the theory underlying generalized linear models, let’s learn how to fit them in R.
-For this lecture we will explore a few examples.</p>
-<p>First let’s remember a few key concepts. Regression models assume the mean response (<span class="math inline">\(\mu_i\)</span>) for an observation <span class="math inline">\(i\)</span> depends on <span class="math inline">\(p\)</span> explanatory variables <span class="math inline">\(x_1, x_2, \dots, x_p\)</span> via some general function <span class="math inline">\(f\)</span> through a number of regression parameters <span class="math inline">\(\beta\)</span> such that:
-<span class="math display">\[
-\mathbb{E}[y_i] = \mu_i = f(x_{1i}, x_{2i}, \dots, x_{pi})
-\]</span></p>
+<p>Now that we have seen in class the theory underlying generalized
+linear models, let’s learn how to fit them in R. For this lecture we
+will explore a few examples.</p>
+<p>First let’s remember a few key concepts. Regression models assume the
+mean response (<span class="math inline">\(\mu_i\)</span>) for an observation <span class="math inline">\(i\)</span> depends on <span class="math inline">\(p\)</span>
+explanatory variables <span class="math inline">\(x_1, x_2, \dots, x_p\)</span> via some general function
+<span class="math inline">\(f\)</span> through a number of regression parameters <span class="math inline">\(\beta\)</span> such that: <span class="math display">\[
+\mathbb{E}[y_i] = \mu_i = f(x_{1i}, x_{2i}, \dots, x_{pi}) \]</span></p>
 <p>In linear models, it is assumed that the response variable (<span class="math inline">\(y_i\)</span>) changes continuously and errors are normally distributed around the mean. Hence, the expected value was a linear (additive) combination of the parameters, and it had the form:
 <span class="math display">\[
 y_i \sim Normal(\mu_i, \sigma) \\
 \mu_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
-\]</span>
-However, in many cases some of these assumptions are not met and the response variable does not have support in the whole real line. For example when a researcher has count data, binary responses, only positive values. Additionally, errors might not be normally distributed and variance might change with the mean, which violates the assumptions of a linear model. For such cases, we rely on generalized linear models.
-In a generalized linear model, the expected value is some <strong>function</strong> of an additive combination of parameters.</p>
+\]</span></p>
+<p>However, in many cases some of these assumptions are not met and the
+response variable does not have support in the whole real line. For
+example when a researcher has count data, binary responses, only
+positive values. Additionally, errors might not be normally
+distributed and variance might change with the mean, which violates
+the assumptions of a linear model. For such cases, we rely on
+<strong>generalized linear models</strong> (glm). In a generalized linear model, the
+expected value is some <strong>function</strong> of an additive combination of
+parameters.</p>
+<p>For example, a glm for a binary response uses a Bernoulli distribution:</p>
 <p><span class="math display">\[
 \begin{align}
 Y \sim Bernoulli(p_i) \\
 p_i = g^{-1}(\beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}) \\
 g(p_i) = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
 \end{align}
-\]</span>
-where <span class="math inline">\(g()\)</span> is a link function, which in the case of a Bernoulli distribution can be the <strong>logit</strong> function, which will act to take the linear model parameters, which are in the real line, and convert them to the probability space, so that they can predict the value of the outcome variable.</p>
-<p>The structure of a generalized linear model has 3 components:
-1. Random Component: models the variation of the data about the mean
-2. Systematic Component: models how the mean response changes as the explanatory variables change
-3. Link function <span class="math inline">\(g(u)\)</span>: specifies how the random and systematic components are connected by linearizing the relationship between fitted values and predictors</p>
-<h2 id="admissions-at-uc-berkeley">Admissions at UC-Berkeley</h2>
-<p>In 1973, Bickel <strong>et al</strong> published a paper on admission rates of graduate students at UC-Berkeley. They were interested in investigating whether there were any gender biases in admission rates, as it seemed like women were suffering from lower acceptance rates. With that in mind, the authors wanted to dig deeper and investigate this problem to better understand whether or not there was any evidence for gender biases. Let’s take a look at that data set.</p>
+\]</span></p>
+<p>where <span class="math inline">\(g()\)</span> is a link function, which in the case of a Bernoulli
+distribution can be the <strong>logit</strong> function, which will act to take the
+linear model parameters, which are in the real line, and convert them
+to the probability space, so that they can predict the value of the
+outcome variable.</p>
+<p>A generalized linear model has 3 components:</p>
+<ol type="1">
+<li>Random Component: models the variation of the data about the mean</li>
+<li>Systematic Component: models how the mean response changes as the explanatory variables change</li>
+<li>Link function <span class="math inline">\(g(u)\)</span>: specifies how the random and systematic
+components are connected by linearizing the relationship between
+fitted values and predictors</li>
+</ol>
+<h2 id="case-study-admissions-at-uc-berkeley">Case study: admissions at UC-Berkeley</h2>
+<p>In 1973, Bickel <strong>et al</strong> published a paper on admission rates of
+graduate students at UC-Berkeley. They were interested in
+investigating whether there were any gender biases in admission rates,
+as it seemed like women were suffering from lower acceptance
+rates. With that in mind, the authors wanted to dig deeper and
+investigate this problem to better understand whether or not there was
+any evidence for gender biases. Let’s take a look at that data set.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class="va">berk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">UCBAdmissions</span><span class="op">)</span></span>
@@ -2428,7 +2478,10 @@ where <span class="math inline">\(g()\)</span> is a link function, which in the 
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">&quot;none&quot;</span><span class="op">)</span></span></code></pre>
 </div>
 </div>
-<p>It seems like women have a lower acceptance rate than men. But there is more information on the data set that we haven’t used yet. The data is separated by gender and Department, so let’s look at acceptance rates by department.</p>
+<p>It seems like women have a lower acceptance rate than men. But there
+is more information on the data set that we haven’t used yet. The data
+is separated by gender and Department, so let’s look at acceptance
+rates by department.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class="co"># Overall admission rate by gender</span></span>
@@ -2450,11 +2503,28 @@ where <span class="math inline">\(g()\)</span> is a link function, which in the 
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">&quot;none&quot;</span><span class="op">)</span></span></code></pre>
 </div>
 </div>
-<p>We can see that Departments vary in their acceptance rates, meaning some departments are much harder to get in (like Department F, which has an acceptance rate of less than <span class="math inline">\(0.1\)</span>) in comparison with others (like department A). Another observation is that women actually have higher acceptance rates in all but 2 departments (C and E).</p>
-<p>Now let’s do some model fitting and compare the results when looking at gender acceptance rates alone and when we control for the effect of department.</p>
+<p>We can see that Departments vary in their acceptance rates, meaning
+some departments are much harder to get in (like Department F, which
+has an acceptance rate of less than <span class="math inline">\(0.1\)</span>) in comparison with others
+(like department A). Another observation is that women actually have
+higher acceptance rates in all but 2 departments (C and E).</p>
+<p>Now let’s do some model fitting and compare the results when looking
+at gender acceptance rates alone and when we control for the effect of
+department.</p>
 <h2 id="two-ways-of-approaching-the-berkeley-admission-data-set">Two ways of approaching the Berkeley Admission Data set</h2>
-<p>There are (at least) two ways in which we can model this data which would provide us slightly distinct interpretations. One is to consider the probability that a given individual gets accepted at UC-Berkeley, which is a result of a binary variable (whether the person gets accepted or rejected). Another approach is to consider the acceptances as the outcome of an event and model the total number of accepted individuals. In both cases, gender and department might play a role in determining acceptance outcome. Let’s find out.</p>
-<p>If we opt for a Logistic Regression, we are considering binary outcomes (admitted versus rejected), and ultimately we want to know their probabilities. Alternatively, if we are modeling the number of events (number of accepted females and males) we would use a Poisson GLM.</p>
+<p>There are (at least) two ways in which we can model this data which
+would provide us slightly distinct interpretations. One is to consider
+the probability that a given individual gets accepted at UC-Berkeley,
+which is a result of a binary variable (whether the person gets
+accepted or rejected). Another approach is to consider the acceptances
+as the outcome of an event and model the total number of accepted
+individuals. In both cases, gender and department might play a role in
+determining acceptance outcome. Let’s find out.</p>
+<p>If we opt for a Logistic Regression, we are considering binary
+outcomes (admitted versus rejected), and ultimately we want to know
+their probabilities. Alternatively, if we are modeling the number of
+events (number of accepted females and males) we would use a Poisson
+GLM.</p>
 <h3 id="logistic-regression">Logistic Regression</h3>
 <p>For the logistic regression approach we need to de-aggregate the data.</p>
 <h4 id="m0-baseline-probability-of-acceptance">M0: Baseline probability of acceptance</h4>
@@ -2516,12 +2586,13 @@ on probability of admission</p>
 Does the same results you observed before still hold? What is the evidence of
 gender bias in acceptance at UC-Berkeley in 1973?</p>
 <h3 id="simpsons-paradox">Simpson’s Paradox</h3>
-<p>When first looking at the data, it seemed like departments were hiring more
-men than women. When all departments are combined, it seemed as they were
-‘discriminating’ against women. However, once we looked at the different
-departments, the overall picture was a bit different. When exploring the
-probability of acceptance by gender across departments, it seemed like women
-had a slightly higher probability of acceptance at most departments.</p>
+<p>When first looking at the data, it seemed like departments were
+hiring more men than women. When all departments are combined, it
+seemed as they were ‘discriminating’ against women. However, once we
+looked at the different departments, the overall picture was a bit
+different. When exploring the probability of acceptance by gender
+across departments, it seemed like women had a slightly higher
+probability of acceptance at most departments.</p>
 <p>One of the drivers behind this striking result is that women were more likely
 to apply to departments where fewer applicants could be admitted. Men, on the
 other hand, seemed to apply to departments that were less competitive.</p>
@@ -2532,7 +2603,7 @@ statistician Edward Simpson, who published an article in 1951 explaining the
 phenomenon.
 The paradox can be resolved when confounding variables and causal relations are
 appropriately addressed in the statistical modeling.</p>
-<p>Going back to our Berkeley example, In the end the authors of the study could
+<p>Going back to our Berkeley example, The authors of the study could
 not reach a conclusion regarding gender biases in acceptance. Rather, they
 realized there is a difference in the paths chosen by women and men when
 pursuing grad studies. This actually opens up the possibility of asking further
@@ -2597,8 +2668,8 @@ A_i \thicksim Binomial(N_i, \pi_i) \\
 logit(\pi_i) = \beta_{gender_{[i]}} \\
 \beta_{gender_{[i]}} \thicksim Normal(0, 1.5)
 \end{align}
-\]</span>
-where <span class="math inline">\(N_i\)</span> indicates <span class="math inline">\(applications[i]\)</span>, the number of applications on row <span class="math inline">\(i\)</span>.
+\]</span></p>
+<p>where <span class="math inline">\(N_i\)</span> indicates <span class="math inline">\(applications[i]\)</span>, the number of applications on row <span class="math inline">\(i\)</span>.
 The index variable <span class="math inline">\(gender[i]\)</span> indexes gender of an applicant.
 1 indicates male, and 2 indicates female</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2611,18 +2682,24 @@ Show code
 <span> <span class="co"># Don&#39;t worry too much on how to massage the data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rethinking</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">dat_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>admit <span class="op">=</span> <span class="va">berk_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Admit</span> <span class="op">==</span> <span class="st">&quot;Admitted&quot;</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">Freq</span><span class="op">)</span>,</span>
-<span>                 applications <span class="op">=</span> <span class="va">berk_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Dept</span>, <span class="va">Gender</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">Freq</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">total</span><span class="op">)</span>,</span>
-<span>                 gid <span class="op">=</span> <span class="va">berk_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Admit</span> <span class="op">==</span> <span class="st">&quot;Admitted&quot;</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>gid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">Gender</span> <span class="op">==</span> <span class="st">&quot;Male&quot;</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">gid</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">dat_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>admit <span class="op">=</span> <span class="va">berk_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Admit</span> <span class="op">==</span> <span class="st">&quot;Admitted&quot;</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>                     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">Freq</span><span class="op">)</span>,applications <span class="op">=</span> <span class="va">berk_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>                                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Dept</span>, <span class="va">Gender</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>                                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">Freq</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>                                    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>                                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">total</span><span class="op">)</span>,gid <span class="op">=</span> <span class="va">berk_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>                                                    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Admit</span> <span class="op">==</span> <span class="st">&quot;Admitted&quot;</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>                                                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>gid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">Gender</span> <span class="op">==</span> <span class="st">&quot;Male&quot;</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>                                                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">gid</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="va">m1_baeys</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/ulam.html">ulam</a></span><span class="op">(</span></span>
+<span><span class="va">m1_bayes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/ulam.html">ulam</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">alist</a></span><span class="op">(</span></span>
 <span>    <span class="va">admit</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">dbinom</a></span><span class="op">(</span> <span class="va">applications</span> , <span class="va">p</span> <span class="op">)</span> ,</span>
 <span>    <span class="fu">logit</span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">a</span><span class="op">[</span><span class="va">gid</span><span class="op">]</span> ,</span>
 <span>    <span class="va">a</span><span class="op">[</span><span class="va">gid</span><span class="op">]</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span> <span class="fl">0</span> , <span class="fl">1.5</span> <span class="op">)</span></span>
 <span>  <span class="op">)</span> , data<span class="op">=</span><span class="va">dat_list</span> , chains<span class="op">=</span><span class="fl">4</span> <span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/precis.html">precis</a></span><span class="op">(</span> <span class="va">m1_baeys</span> , depth<span class="op">=</span><span class="fl">2</span> <span class="op">)</span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/precis.html">precis</a></span><span class="op">(</span> <span class="va">m1_bayes</span> , depth<span class="op">=</span><span class="fl">2</span> <span class="op">)</span></span></code></pre>
 </div>
 </details>
 </div>
@@ -2631,22 +2708,23 @@ applicants. How much higher?</p>
 <p>We need to compute the contrast.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/extract.samples.html">extract.samples</a></span><span class="op">(</span><span class="va">m1_baeys</span><span class="op">)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/extract.samples.html">extract.samples</a></span><span class="op">(</span><span class="va">m1_bayes</span><span class="op">)</span></span>
 <span><span class="va">diff_a</span> <span class="op">&lt;-</span> <span class="va">post</span><span class="op">$</span><span class="va">a</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">post</span><span class="op">$</span><span class="va">a</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">diff_p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/rethinking-internal.html">inv_logit</a></span><span class="op">(</span><span class="va">post</span><span class="op">$</span><span class="va">a</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/rethinking-internal.html">inv_logit</a></span><span class="op">(</span><span class="va">post</span><span class="op">$</span><span class="va">a</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/precis.html">precis</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span> diff_a<span class="op">=</span><span class="va">diff_a</span> , diff_p<span class="op">=</span><span class="va">diff_p</span> <span class="op">)</span> <span class="op">)</span></span></code></pre>
 </div>
 </div>
-<p>The log-odds difference is certainly positive, corresponding to a higher
-probability of admission for male applicants.
-On the probability scale itself, the difference is somewhere between 12% and 16%.</p>
+<p>The log-odds difference is certainly positive, corresponding to a
+higher probability of admission for male applicants. On the
+probability scale itself, the difference is somewhere between 12% and
+16%.</p>
 <p>Before moving on to speculate on the cause of the male advantage,
 let’s plot posterior predictions for the model.
 We’ll use the default posterior validation check function, postcheck, and then
 dress it up a little by adding lines to connect data points from the same department.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/postcheck.html">postcheck</a></span><span class="op">(</span> <span class="va">m1_baeys</span> <span class="op">)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class="fu"><a href="https://rdrr.io/pkg/rethinking/man/postcheck.html">postcheck</a></span><span class="op">(</span> <span class="va">m1_bayes</span> <span class="op">)</span></span>
 <span><span class="co"># draw lines connecting points from same dept</span></span>
 <span><span class="kw">for</span> <span class="op">(</span> <span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span> <span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="op">(</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
@@ -2685,8 +2763,8 @@ logit(\pi_i) = \beta_{gender_{[i]}} + \beta_{department_{[i]}}\\
 \beta_{gender_{[i]}} \thicksim Normal(0, 1.5) \\
 \beta_{department_{[i]}} \thicksim Normal(0, 1.5)
 \end{align}
-\]</span>
-where <span class="math inline">\(department\)</span> indexes each department. So now each department <span class="math inline">\(k\)</span> gets its
+\]</span></p>
+<p>where <span class="math inline">\(department\)</span> indexes each department. So now each department <span class="math inline">\(k\)</span> gets its
 own log-odds of admission, <span class="math inline">\(\beta_k\)</span>, but the model still estimates universal
 adjustments, which are the same in all departments, for male and female
 applications.</p>
