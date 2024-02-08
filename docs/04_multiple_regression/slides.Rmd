@@ -689,7 +689,7 @@ curve(exp((x-0.3)^2) -1, lwd=2, add = TRUE, col="blue")
 .left-column[
 .center[
 ![](../05_maximum_likelihood/figs/Akaike.jpg)
-Hirotugu Akaike (1997-2009)
+Hirotugu Akaike (1927-2009)
 ]]
 
 .right-column[
