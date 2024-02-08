@@ -23,7 +23,6 @@ htmltools::tagList(
   rmarkdown::html_dependency_font_awesome()
   )
 
-library(tidyverse)
 ```
 
 ## Generalized Linear Models
@@ -94,6 +93,8 @@ investigate this problem to better understand whether or not there was
 any evidence for gender biases. Let's take a look at that data set.
 
 ```{r UC-Berkeley_visualizing}
+library(tidyverse)
+
 berk_data <- as.data.frame(UCBAdmissions)
 berk_data$Admit <- fct_relevel(berk_data$Admit, "Rejected", "Admitted")
 
