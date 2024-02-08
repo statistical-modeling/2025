@@ -18,12 +18,16 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-#xaringanExtra::embed_xaringan("10_mixed_models/MultiLevelModels.html")
+xaringanExtra::embed_xaringan("10_mixed_models/slides/index.html")
 ```
+
+[Open slides in new window](10_mixed_models/slides/index.html)
+
+[Slides PDF](10_mixed_models/10_MixedModels.pdf)
 
 # Lab
 
-[Hierachical Models Lab]()
+[Hierachical Models Lab](10_mixed_models/lad.html)
 
 # Further reading
 
