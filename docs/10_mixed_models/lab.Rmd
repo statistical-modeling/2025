@@ -3,7 +3,7 @@ title: "Mixed-effects and hierarchical models lab"
 author:
  - "Paulo Inácio Prado"
  - "Diogo Melo"
-date: "2023-01-31"
+date: "2024-02-09"
 output:
     distill::distill_article:
       toc: true
@@ -84,11 +84,12 @@ species^[by subtracting the mean of log species richness from each
 value]. The code also creates a numeric index for each study site
 (archipelago).
 
-```{r , eval=TRUE}
+```{r , eval =TRUE}
+
 ## Data set for oceanic islands
 ## and transformed area and richness
 islands <-
-    filter(raw, Island.Type== "Oceanic") %>%
+    dplyr::filter(raw, Island.Type== "Oceanic") %>%
     mutate(l_area = log(Island_area),
            l_S = log(Species.Richness),
            ls_area = (l_area - mean(l_area))/sd(l_area),
@@ -96,6 +97,7 @@ islands <-
            site_fac= factor(Study.location),
            site = as.integer(site_fac),
            site_id = factor(site))
+
 ```
 
 Tidyverse provides ggplot2 package, that allows to make a quick plot
@@ -701,14 +703,10 @@ AICctab(m0.ML, m1.ML, m2.ML, nobs=nrow(islands))
 According to this model selection, fitting independent intercepts and slopes is definitely overfitting.
 
 
-# References and further reading
+# References
 
-* Bates, D., Mächler M., Bolker, B.M. and Walker, S.C.. 2015. Fitting Linear Mixed-Effects Models Using lme4. Journal of Statistical Software 67 (1): 1-48.
-* Bolker, B. M. et al. 2009. Generalized linear mixed models: a practical guide for ecology and evolution. Trends in ecology & evolution, 24(3): 127-135.
-* The Generalized Linear Mixed Models FAQ page: https://bbolker.github.io/mixedmodels-misc/glmmFAQ
 * Gelman, A., Hwang, J., & Vehtari, A. (2014). Understanding predictive information criteria for Bayesian models. Statistics and computing, 24(6), 997-1016.
-* Gelman, Andrew, and Jennifer Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge, England: Cambridge University Press.
+
 * Ohyama, L., Holt, R. D., Matthews, T. J., & Lucky, A. (2021). The
   species–area relationship in ant ecology. Journal of Biogeography,
   48(8), 1824-1841.
-* Zuur, A et al. 2009. Mixed Effects Models and Extensions in Ecology with R. Springer.

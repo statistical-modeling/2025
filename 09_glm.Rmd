@@ -24,9 +24,20 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Lab
 
-[Lab]()
+[GLM Lab](09_glm/lab.html)
+
 
 # References
 
++ Crawley, M. J. (2012). The R book. John Wiley & Sons.
 
++ Dobson, A. J., & Barnett, A. G. (2018). An introduction to generalized linear models. CRC press.
+
++ Generalized linear models with examples in R (Vol. 53). 
+  Dunn, P. K., & Smyth, G. K. (2018) New York: Springer.
+
++ "Regression models for count data in R." Zeileis, Achim, Christian Kleiber, 
+  and Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.
+  
++ 
 
