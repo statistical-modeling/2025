@@ -1,7 +1,9 @@
 ---
 title: "Lab on GLM"
-author: "Paula (Paulinha) Lemos-Costa"
-date: "2023-01-26"
+author: 
+ - "Paula (Paulinha) Lemos-Costa"
+ - "Sara Mortara"
+date: "2024-02-08"
 output: 
     distill::distill_article:
       toc: true
@@ -15,21 +17,33 @@ library(tidyverse)
 
 ## Generalized Linear Models
 
-Now that we have seen in class the theory underlying generalized linear models, let's learn how to fit them in R. 
-For this lecture we will explore a few examples. 
+Now that we have seen in class the theory underlying generalized
+linear models, let's learn how to fit them in R.  For this lecture we
+will explore a few examples.
 
-First let's remember a few key concepts. Regression models assume the mean response ($\mu_i$) for an observation $i$ depends on $p$ explanatory variables $x_1, x_2, \dots, x_p$ via some general function $f$ through a number of regression parameters $\beta$ such that:
-$$
-\mathbb{E}[y_i] = \mu_i = f(x_{1i}, x_{2i}, \dots, x_{pi})
-$$
+First let's remember a few key concepts. Regression models assume the
+mean response ($\mu_i$) for an observation $i$ depends on $p$
+explanatory variables $x_1, x_2, \dots, x_p$ via some general function
+$f$ through a number of regression parameters $\beta$ such that: $$
+\mathbb{E}[y_i] = \mu_i = f(x_{1i}, x_{2i}, \dots, x_{pi}) $$
 
 In linear models, it is assumed that the response variable ($y_i$) changes continuously and errors are normally distributed around the mean. Hence, the expected value was a linear (additive) combination of the parameters, and it had the form:
 $$
 y_i \sim Normal(\mu_i, \sigma) \\
 \mu_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
 $$
-However, in many cases some of these assumptions are not met and the response variable does not have support in the whole real line. For example when a researcher has count data, binary responses, only positive values. Additionally, errors might not be normally distributed and variance might change with the mean, which violates the assumptions of a linear model. For such cases, we rely on generalized linear models.
-In a generalized linear model, the expected value is some **function** of an additive combination of parameters. 
+
+However, in many cases some of these assumptions are not met and the
+response variable does not have support in the whole real line. For
+example when a researcher has count data, binary responses, only
+positive values. Additionally, errors might not be normally
+distributed and variance might change with the mean, which violates
+the assumptions of a linear model. For such cases, we rely on
+**generalized linear models** (glm).  In a generalized linear model, the
+expected value is some **function** of an additive combination of
+parameters.
+
+For example, a glm for a binary response uses a Bernoulli distribution:
 
 $$
 \begin{align}
@@ -38,17 +52,33 @@ p_i = g^{-1}(\beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}) \\
 g(p_i) = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
 \end{align}
 $$
-where $g()$ is a link function, which in the case of a Bernoulli distribution can be the **logit** function, which will act to take the linear model parameters, which are in the real line, and convert them to the probability space, so that they can predict the value of the outcome variable.
 
 
-The structure of a generalized linear model has 3 components: 
+where $g()$ is a link function, which in the case of a Bernoulli
+distribution can be the **logit** function, which will act to take the
+linear model parameters, which are in the real line, and convert them
+to the probability space, so that they can predict the value of the
+outcome variable.
+
+
+A generalized linear model has 3 components: 
+
 1. Random Component: models the variation of the data about the mean 
 2. Systematic Component: models how the mean response changes as the explanatory variables change
-3. Link function $g(u)$: specifies how the random and systematic components are connected by linearizing the relationship between fitted values and predictors
+3. Link function $g(u)$: specifies how the random and systematic
+   components are connected by linearizing the relationship between
+   fitted values and predictors
 
 
-## Admissions at UC-Berkeley
-In 1973, Bickel **et al** published a paper on admission rates of graduate students at UC-Berkeley. They were interested in investigating whether there were any gender biases in admission rates, as it seemed like women were suffering from lower acceptance rates. With that in mind, the authors wanted to dig deeper and investigate this problem to better understand whether or not there was any evidence for gender biases. Let's take a look at that data set. 
+## Case study: admissions at UC-Berkeley
+
+In 1973, Bickel **et al** published a paper on admission rates of
+graduate students at UC-Berkeley. They were interested in
+investigating whether there were any gender biases in admission rates,
+as it seemed like women were suffering from lower acceptance
+rates. With that in mind, the authors wanted to dig deeper and
+investigate this problem to better understand whether or not there was
+any evidence for gender biases. Let's take a look at that data set.
 
 ```{r UC-Berkeley_visualizing}
 berk_data <- as.data.frame(UCBAdmissions)
@@ -75,7 +105,10 @@ ggplot(admi_by_gender, aes(x = Gender, y = prop, fill = Gender)) +
   guides(fill = "none")
 ```
 
-It seems like women have a lower acceptance rate than men. But there is more information on the data set that we haven't used yet. The data is separated by gender and Department, so let's look at acceptance rates by department.
+It seems like women have a lower acceptance rate than men. But there
+is more information on the data set that we haven't used yet. The data
+is separated by gender and Department, so let's look at acceptance
+rates by department.
 
 ```{r UC-Berkeley_dept}
 # Overall admission rate by gender
@@ -98,21 +131,39 @@ ggplot(admi_dept_gender, aes(x = Gender, y = prop, fill = Gender)) +
 
 ```
 
-We can see that Departments vary in their acceptance rates, meaning some departments are much harder to get in (like Department F, which has an acceptance rate of less than $0.1$) in comparison with others (like department A). Another observation is that women actually have higher acceptance rates in all but 2 departments (C and E).
+We can see that Departments vary in their acceptance rates, meaning
+some departments are much harder to get in (like Department F, which
+has an acceptance rate of less than $0.1$) in comparison with others
+(like department A). Another observation is that women actually have
+higher acceptance rates in all but 2 departments (C and E).
 
-Now let's do some model fitting and compare the results when looking at gender acceptance rates alone and when we control for the effect of department.
+Now let's do some model fitting and compare the results when looking
+at gender acceptance rates alone and when we control for the effect of
+department.
 
 ## Two ways of approaching the Berkeley Admission Data set
 
-There are (at least) two ways in which we can model this data which would provide us slightly distinct interpretations. One is to consider the probability that a given individual gets accepted at UC-Berkeley, which is a result of a binary variable (whether the person gets accepted or rejected). Another approach is to consider the acceptances as the outcome of an event and model the total number of accepted individuals. In both cases, gender and department might play a role in determining acceptance outcome. Let's find out.
+There are (at least) two ways in which we can model this data which
+would provide us slightly distinct interpretations. One is to consider
+the probability that a given individual gets accepted at UC-Berkeley,
+which is a result of a binary variable (whether the person gets
+accepted or rejected). Another approach is to consider the acceptances
+as the outcome of an event and model the total number of accepted
+individuals. In both cases, gender and department might play a role in
+determining acceptance outcome. Let's find out.
 
-If we opt for a Logistic Regression, we are considering binary outcomes (admitted versus rejected), and ultimately we want to know their probabilities. Alternatively, if we are modeling the number of events (number of accepted females and males) we would use a Poisson GLM.
+If we opt for a Logistic Regression, we are considering binary
+outcomes (admitted versus rejected), and ultimately we want to know
+their probabilities. Alternatively, if we are modeling the number of
+events (number of accepted females and males) we would use a Poisson
+GLM.
 
 ### Logistic Regression
 
 For the logistic regression approach we need to de-aggregate the data.
 
 #### M0: Baseline probability of acceptance
+
 Our first (null) model only considers the baseline probability of acceptance.
 
 ```{r UCBerkeley_m0}
@@ -133,6 +184,7 @@ exp(m0$coefficients)/(1+exp(m0$coefficients))
 
 
 #### M1: Probability of acceptance by gender
+
 Now let's include the information on gender.
 
 ```{r UC_Berkeley_m1}
@@ -179,12 +231,13 @@ gender bias in acceptance at UC-Berkeley in 1973?
 
 ### Simpson's Paradox
 
-When first looking at the data, it seemed like departments were hiring more
-  men than women. When all departments are combined, it seemed as they were 
-  'discriminating' against women. However, once we looked at the different 
-  departments, the overall picture was a bit different. When exploring the 
-  probability of acceptance by gender across departments, it seemed like women 
-  had a slightly higher probability of acceptance at most departments.
+When first looking at the data, it seemed like departments were
+  hiring more men than women. When all departments are combined, it
+  seemed as they were 'discriminating' against women. However, once we
+  looked at the different departments, the overall picture was a bit
+  different. When exploring the probability of acceptance by gender
+  across departments, it seemed like women had a slightly higher
+  probability of acceptance at most departments.
   
 One of the drivers behind this striking result is that women were more likely 
   to apply to departments where fewer applicants could be admitted. Men, on the
@@ -198,7 +251,7 @@ This phenomenon is known as Simpson’s Paradox, named after the British
 The paradox can be resolved when confounding variables and causal relations are 
   appropriately addressed in the statistical modeling.
 
-Going back to our Berkeley example, In the end the authors of the study could 
+Going back to our Berkeley example, The authors of the study could 
  not reach a conclusion regarding gender biases in acceptance. Rather, they 
  realized there is a difference in the paths chosen by women and men when 
  pursuing grad studies. This actually opens up the possibility of asking further
@@ -216,6 +269,7 @@ Going back to our Berkeley example, In the end the authors of the study could
 
 
 ### Poisson Regression
+
 Another way to look at the same data and fit models to explore patterns of
   acceptance is through a Poisson Regression. With a Poisson regression we are 
   interested in the number of events (counts), which in our case are the number
@@ -274,6 +328,7 @@ logit(\pi_i) = \beta_{gender_{[i]}} \\
 \beta_{gender_{[i]}} \thicksim Normal(0, 1.5)
 \end{align}
 $$
+
 where  $N_i$ indicates $applications[i]$, the number of applications on row $i$.
 The index variable $gender[i]$ indexes gender of an applicant. 
 1 indicates male, and 2 indicates female
@@ -283,18 +338,24 @@ The index variable $gender[i]$ indexes gender of an applicant.
  # Don't worry too much on how to massage the data
 library(rethinking)
 
-dat_list <- list(admit = berk_data %>% filter(Admit == "Admitted") %>% pull(Freq),
-                 applications = berk_data %>% group_by(Dept, Gender) %>% mutate(total = sum(Freq)) %>% dplyr::slice(1) %>% pull(total),
-                 gid = berk_data %>% filter(Admit == "Admitted") %>% mutate(gid = ifelse(Gender == "Male", 1, 2)) %>% pull(gid))
+dat_list <- list(admit = berk_data %>% filter(Admit == "Admitted") %>%
+                     pull(Freq),applications = berk_data %>%
+                                    group_by(Dept, Gender) %>%
+                                    mutate(total = sum(Freq)) %>%
+                                    dplyr::slice(1) %>%
+                                    pull(total),gid = berk_data %>%
+                                                    filter(Admit == "Admitted") %>%
+                                                    mutate(gid = ifelse(Gender == "Male", 1, 2)) %>%
+                                                    pull(gid))
 
 
-m1_baeys <- ulam(
+m1_bayes <- ulam(
   alist(
     admit ~ dbinom( applications , p ) ,
     logit(p) <- a[gid] ,
     a[gid] ~ dnorm( 0 , 1.5 )
   ) , data=dat_list , chains=4 )
-precis( m1_baeys , depth=2 )
+precis( m1_bayes , depth=2 )
 ```
 
 The posterior for male applicants, $a[1]$, is higher than that of female
@@ -303,15 +364,16 @@ applicants. How much higher?
 We need to compute the contrast.
 
 ```{r Baeysian_UCBerkeley, message=FALSE, warning=FALSE}
-post <- extract.samples(m1_baeys)
+post <- extract.samples(m1_bayes)
 diff_a <- post$a[,1] - post$a[,2]
 diff_p <- inv_logit(post$a[,1]) - inv_logit(post$a[,2])
 precis( list( diff_a=diff_a , diff_p=diff_p ) )
 ```
 
-The log-odds difference is certainly positive, corresponding to a higher 
-probability of admission for male applicants. 
-On the probability scale itself, the difference is somewhere between 12\% and 16\%.
+The log-odds difference is certainly positive, corresponding to a
+higher probability of admission for male applicants.  On the
+probability scale itself, the difference is somewhere between 12\% and
+16\%.
 
 
 Before moving on to speculate on the cause of the male advantage, 
@@ -321,7 +383,7 @@ dress it up a little by adding lines to connect data points from the same depart
 
 
 ```{r Baeysian_UCBerkeley_check}
-postcheck( m1_baeys )
+postcheck( m1_bayes )
 # draw lines connecting points from same dept
 for ( i in 1:6 ) {
   x <- 1 + 2*(i-1)
@@ -369,6 +431,7 @@ logit(\pi_i) = \beta_{gender_{[i]}} + \beta_{department_{[i]}}\\
 \beta_{department_{[i]}} \thicksim Normal(0, 1.5)
 \end{align}
 $$
+
 where $department$ indexes each department. So now each department $k$ gets its 
  own log-odds of admission, $\beta_k$, but the model still estimates universal 
  adjustments, which are the same in all departments, for male and female 
