@@ -40,8 +40,10 @@ $f$ through a number of regression parameters $\beta$ such that: $$
 
 In linear models, it is assumed that the response variable ($y_i$) changes continuously and errors are normally distributed around the mean. Hence, the expected value was a linear (additive) combination of the parameters, and it had the form:
 $$
-y_i \sim Normal(\mu_i, \sigma) \\
-\mu_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
+\begin{align}
+y_i &\sim Normal(\mu_i, \sigma) \\
+\mu_i &= \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
+\end{align}
 $$
 
 However, in many cases some of these assumptions are not met and the
@@ -58,9 +60,9 @@ For example, a glm for a binary response uses a Bernoulli distribution:
 
 $$
 \begin{align}
-Y \sim Bernoulli(p_i) \\
-p_i = g^{-1}(\beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}) \\
-g(p_i) = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
+Y &\sim Bernoulli(p_i) \\
+p_i &= g^{-1}(\beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}) \\
+g(p_i) &= \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
 \end{align}
 $$
 
@@ -412,9 +414,9 @@ Binomial Distribution. Our model can be written as:
 
 $$
 \begin{align}
-A_i \thicksim Binomial(N_i, \pi_i) \\
-logit(\pi_i) = \beta_{gender_{[i]}} \\
-\beta_{gender_{[i]}} \thicksim Normal(0, 1.5)
+A_i &\sim Binomial(N_i, \pi_i) \\
+logit(\pi_i) &= \beta_{gender_{[i]}} \\
+\beta_{gender_{[i]}} &\sim Normal(0, 1.5)
 \end{align}
 $$
 
@@ -514,10 +516,10 @@ In order to ask the second question, we estimate unique female and male
   
 $$
 \begin{align}
-A_i \thicksim Binomial(N_i, \pi_i) \\
-logit(\pi_i) = \beta_{gender_{[i]}} + \beta_{department_{[i]}}\\
-\beta_{gender_{[i]}} \thicksim Normal(0, 1.5) \\
-\beta_{department_{[i]}} \thicksim Normal(0, 1.5)
+A_i &\thicksim Binomial(N_i, \pi_i) \\
+logit(\pi_i) &= \beta_{gender_{[i]}} + \beta_{department_{[i]}}\\
+\beta_{gender_{[i]}} &\thicksim Normal(0, 1.5) \\
+\beta_{department_{[i]}} &\thicksim Normal(0, 1.5)
 \end{align}
 $$
 

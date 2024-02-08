@@ -3,6 +3,7 @@ title: "Lab on GLM"
 author: 
  - "Paula (Paulinha) Lemos-Costa"
  - "Sara Mortara"
+ - "Paulo Inácio Prado"
 date: "2024-02-08"
 output: 
     distill::distill_article:
@@ -12,6 +13,16 @@ output:
 
 ```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+# clipboard
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
+    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
+  ),
+  rmarkdown::html_dependency_font_awesome()
+  )
+
 library(tidyverse)
 ```
 
@@ -29,8 +40,10 @@ $f$ through a number of regression parameters $\beta$ such that: $$
 
 In linear models, it is assumed that the response variable ($y_i$) changes continuously and errors are normally distributed around the mean. Hence, the expected value was a linear (additive) combination of the parameters, and it had the form:
 $$
-y_i \sim Normal(\mu_i, \sigma) \\
-\mu_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
+\begin{align}
+y_i &\sim Normal(\mu_i, \sigma) \\
+\mu_i &= \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
+\end{align}
 $$
 
 However, in many cases some of these assumptions are not met and the
@@ -47,9 +60,9 @@ For example, a glm for a binary response uses a Bernoulli distribution:
 
 $$
 \begin{align}
-Y \sim Bernoulli(p_i) \\
-p_i = g^{-1}(\beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}) \\
-g(p_i) = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
+Y &\sim Bernoulli(p_i) \\
+p_i &= g^{-1}(\beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}) \\
+g(p_i) &= \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
 \end{align}
 $$
 
@@ -168,18 +181,37 @@ Our first (null) model only considers the baseline probability of acceptance.
 
 ```{r UCBerkeley_m0}
 # De-aggregating the data with the function uncount() 
-berk_data_long <- uncount(data = berk_data, weights = Freq)
+berk_data_long <-
+    uncount(data = berk_data, weights = Freq) %>%
+    ## Admit = 1
+    mutate(Admit = factor(Admit, levels = c("Rejected", "Admitted")))
 
 ### Logistic regression #######
 
 # Model 0: Only intercept, overall probability of admission
 m0 <- glm(Admit ~ 1, data = berk_data_long, family = "binomial")
+## Model summary
 summary(m0)
+```
 
+As you can see in the model summary, this model has estimates a single
+parameter. With this, we get the expected value of the logit of the
+overall admittance probability, which is the single parameter itself:
+
+
+```{r }
+(m0.cf <- coef(m0))
+```
+
+To express this coefficient as a probability (of being admmited in
+this case), we apply the inverse of the logit function to the single expected value this model provides, for all observations:
+
+
+```{r }
 # The best fitting intercept (b0 should lead to e^b0 /(1+e^b0) = mean(admitted))
+exp(m0.cf)/(1+exp(m0.cf))
+## Observed overall proportion of admitted 
 mean(berk_data_long$Admit == "Admitted")
-exp(m0$coefficients)/(1+exp(m0$coefficients))
-
 ```
 
 
@@ -191,16 +223,37 @@ Now let's include the information on gender.
 # Model 1: Effect of Gender on admission
 m1 <- glm(Admit ~ Gender, data = berk_data_long, family = "binomial")
 summary(m1)
-# Fitted coefficients for model 1
-coeffs_m1 <- m1$coefficients
-# For males, it is the first coefficient (they are the first level)
-as.numeric(1 - (1/(1+exp(coeffs_m1[1]))))
-# For women
-as.numeric(1 - (1/(1+exp(coeffs_m1[[1]] + coeffs_m1[2]))))
 ```
 
 Does it seem like there is a gender bias in acceptance rate? 
 What is the direction of the bias?
+
+Again, it might help to look at the probabilities of admmitance
+predicted by this model. To do this, we first calculate the linear
+predictors for men and women:
+
+
+```{r }
+# Fitted coefficients for model 1
+(m1.cf <- coef(m1))
+## Linear predictor for men
+# For males, it is the first coefficient (they are the first level)
+(m1.pM <- as.numeric(m1.cf[1]))
+## Linear predictor for women
+(m1.pW <- as.numeric(m1.cf[1] + m1.cf[2]))
+```
+
+These are the log of odds ratios of admmitance for each gender. And
+then we apply the inverse of the logistic function to express this
+numbers as admmitance probabilities:
+
+```{r }
+## For men
+exp(m1.pM) / (1 + exp(m1.pM))
+## For women
+exp(m1.pW) / (1 + exp(m1.pW))
+```
+
 
 #### M2: Probability of acceptance when considering both gender and department 
 
@@ -211,17 +264,28 @@ Now let' take a closer look and estimate the effect of both gender and departmen
 # Model 2: Effect of Gender and Department on Admissions
 m2 <- glm(Admit ~ Gender + Dept, data = berk_data_long, family = "binomial")
 summary(m2)
-# Fitted coefficients for model 2
-coeffs_m2 <- m2$coefficients
-# A women in Department A has a probability of acceptance 
-as.numeric(1 - (1 / (1 + exp(coeffs_m2[[1]] + coeffs_m2[2]))))
-# Men in Department A
-as.numeric(1 - (1/(1 + exp(coeffs_m2[[1]]))))
-# Probability of acceptance of a man in Department F
-as.numeric(1 - (1 / (1 + exp(coeffs_m2[7]))))
-# And for a woman in the same department F
-as.numeric(1 - (1/(1+exp(coeffs_m2[1] + coeffs_m2[2] + coeffs_m2[7]))))
 
+```
+
+This model predicts probabilities of being admmited for men and women
+in each department. For example, to get these probabilities for
+department "F" you can do that:
+
+
+```{r }
+# Fitted coefficients for model 2
+(m2.cf <- as.numeric(coef(m2)))
+
+## Expected log odss-ratios by gender in Department F
+## Men
+m2.pFM <- m2.cf[1] + m2.cf[7]
+## Women
+m2.pFW <- m2.cf[1] + m2.cf[1]+ m2.cf[7]
+## Predicted probabilities (inverse logit function)
+## Men
+exp(m2.pFM) / (1 + exp(m2.pFM))
+## Women
+exp(m2.pFW) / (1 + exp(m2.pFW))
 ```
 
 Explore probability of acceptance by the different departments.
@@ -281,19 +345,46 @@ Another way to look at the same data and fit models to explore patterns of
 ### Poisson regression #######
 # Model 0: Only intercept - Mean number of admitted students
 m0_poi <- glm(Freq ~ Admit, data = berk_data, family = "poisson")
-#  To interpret the coefficients we need the exponent as the Link function for Poisson is the log
-exp(sum(m0_poi$coefficients))
-# Mean number when filtering only the admitted students
+
+```
+
+This model predicts the overall number of admmited and rejected
+people. To get this expected values, calculate the linear predictors
+and then take the exponential, as the link function is log:
+
+
+```{r }
+m0_poi.cf <- as.numeric(coef(m0_poi))
+## Value fo linear predictors
+## Rejected
+m0_poi.R <- m0_poi.cf[1]
+## Admmited
+m0_poi.A <- m0_poi.cf[1] + m0_poi.cf[2]
+## Expected frequencies
+## Rejected
+exp(m0_poi.R)
+## Admmited
+exp(m0_poi.A)
+## Compare with the observed frequencies
+mean(subset(berk_data, Admit == "Rejected")$Freq)
 mean(subset(berk_data, Admit == "Admitted")$Freq)
 ```
 
 ### M1: Mean number of accepted students by gender
 
+
+
 ```{r UC_Berkeley_Poisson_m1}
 # Model 1: Effect of Gender on Admission
 m1_poi <- glm(Freq ~ Admit + Gender, data = berk_data, family = "poisson")
 summary(m1_poi)
-# Expected number of Women admitted
+
+```
+And the number of admmited women expected by this model in a single R command:
+
+
+```{r }
+## Expected number of Women rejected
 exp(sum(m1_poi$coefficients[1:3]))
 ```
 
@@ -323,9 +414,9 @@ Binomial Distribution. Our model can be written as:
 
 $$
 \begin{align}
-A_i \thicksim Binomial(N_i, \pi_i) \\
-logit(\pi_i) = \beta_{gender_{[i]}} \\
-\beta_{gender_{[i]}} \thicksim Normal(0, 1.5)
+A_i &\sim Binomial(N_i, \pi_i) \\
+logit(\pi_i) &= \beta_{gender_{[i]}} \\
+\beta_{gender_{[i]}} &\sim Normal(0, 1.5)
 \end{align}
 $$
 
@@ -425,10 +516,10 @@ In order to ask the second question, we estimate unique female and male
   
 $$
 \begin{align}
-A_i \thicksim Binomial(N_i, \pi_i) \\
-logit(\pi_i) = \beta_{gender_{[i]}} + \beta_{department_{[i]}}\\
-\beta_{gender_{[i]}} \thicksim Normal(0, 1.5) \\
-\beta_{department_{[i]}} \thicksim Normal(0, 1.5)
+A_i &\thicksim Binomial(N_i, \pi_i) \\
+logit(\pi_i) &= \beta_{gender_{[i]}} + \beta_{department_{[i]}}\\
+\beta_{gender_{[i]}} &\thicksim Normal(0, 1.5) \\
+\beta_{department_{[i]}} &\thicksim Normal(0, 1.5)
 \end{align}
 $$
 
