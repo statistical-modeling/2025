@@ -145,19 +145,29 @@ Novamente, vamos verificar usando simulações e então verificar as distribuiç
 
 ```{r, eval=FALSE }
 set.seed(2)
-library(rethinking)
 N = 200
 X = rnorm(N)
 Z = rnorm(N)
 b_yx = 1
 b_yz = 2
 Y = rnorm(N, b_yx * X + b_yz * Z)
-## Ajusta modelos sem e com confundidor como controle, e gera distribuições posteriores
-yx = lm(Y ~ X) |> extract.samples()
-yxz = lm(Y ~ X + Z) |> extract.samples()
-## Histograma de densidade das posteriores
-dens(yxz$X, lwd = 2, col = 2, xlim = c(0.4, 1.65), xlab = "b_yx")
-dens(yx$X, lwd = 2, col = 1, add =TRUE)
+## Ajusta modelos sem e com a variável Z como covariável
+m_yx = lm(Y ~ X) 
+m_yxz = lm(Y ~ X + Z) 
+
+# Intervalos de confiança do coeficiente de X
+confint(m_yx)["X",]
+confint(m_yxz)["X",]
+
+# Plot do intervalo de confiança do coeficiente de X nos dois modelos
+plot(1:2, c(coef(m_yx)["X"], coef(m_yxz)["X"]), 
+      ylim = c(-1, 3), xlim = c(0, 3), 
+      xlab = "Modelo", ylab = "Coeficiente de X", 
+      xaxt = "n", pch = 19, col = 2)
+arrows(1, confint(m_yx)["X",1], 1, confint(m_yx)["X",2], angle = 90, code = 3, length = 0.1)
+arrows(2, confint(m_yxz)["X",1], 2, confint(m_yxz)["X",2], angle = 90, code = 3, length = 0.1)
+axis(1, at = 1:2, labels = c("Sem Z", "Com Z"))
+
 ```
 
 As distribuições posteriores do coeficiente para X têm a mesma média, mas variâncias diferentes. Isso acontece porque adicionar a covariável remove parte da variação em Y que não está associada com X, o que diminui a variância do efeito estimado de X (ou aumenta sua precisão, que é a mesma coisa).

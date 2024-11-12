@@ -11,7 +11,7 @@
       ],
       "date": "2024-01-29",
       "contents": "\nSlides\n\n\n\n\n\nFurther reading\nQuantitative Reasoning in Ecology: Chapter 1 in Schneider,\nD. 2009. Quantitative Ecology: Measurement, Models, and\nScaling. New York, Academic Press, 2nd Ed.\n(Nice synthesis of\nstatistical analyses in the context of quantitative reasoning. It has\nalso many important highlights on quantities and measurements)\nAlternative views of scientific method and of modelling:\nChapter 2 in Hilborn, R & Mangel, M. 1997. The Ecological\nDetective - Confronting Models with Data. Princeton, Princeton\nUniversity Press.\n(The whole book is a true classic on\nthe use of statistical models in ecology. This chapter has a quick\nepistemological review and highlights the key distinction between\nmodels and hypothesis. It also brings a typology of models, and\nthe concept of model complexity.)\nThe statistician Galit Schmuéli researches the important\ndistinction between prediction and\nexplanation\nin statistics and in different disciplines of science. Also, see\nthe author’s article on the\nsubject.\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:43-03:00"
+      "last_modified": "2024-11-12T11:22:49-03:00"
     },
     {
       "path": "02_probability_distributions.html",
@@ -25,7 +25,7 @@
       ],
       "date": "2024-01-29",
       "contents": "\nSlides\n\n\n\n\n\nLab\nLab on Probability Distributions\nMore learning resources\nProbability distribution\nviewer, a\ninteractive app and web page to play with the parameters of\nprobability distributions. Check also this\nvideo in Portuguese about this resource.\nVideo lectures with more details on\nprobability distributions, from a more extensive Course on\nStatistical Models\nof the Graduate Program of Ecology at USP (in Portuguese):\nIntroduction to probability distributions\nDiscrete probability distributions\nIntroduction to continuous distributions\nContinuous distributions for time\nNormal, log-normal and uniform distributions\n\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:44-03:00"
+      "last_modified": "2024-11-12T11:22:50-03:00"
     },
     {
       "path": "03_linear_models.html",
@@ -39,7 +39,7 @@
       ],
       "date": "2024-01-31",
       "contents": "\nSlides\n\n\n\n\n\nLab\nSimple linear regression Lab\nReferences\nGotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.\nJames, G., Witten, D., Hastie, T., Tibshirani, R., 2013. An Introduction to Statistical Learning: with Applications in R, 1st ed. 2013. Corr. 4th printing 2014 edition. ed. Springer, New York, NY.\nMcElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:44-03:00"
+      "last_modified": "2024-11-12T11:22:50-03:00"
     },
     {
       "path": "04_multiple_regression.html",
@@ -53,7 +53,7 @@
       ],
       "date": "2024-01-31",
       "contents": "\nSlides\n\n\n\n\n\nLab\nMultiple linear regression Lab\nFurther reading\nCrawley. M.J. 2015. Statistics: an introduction using R. John Wiley & Sons Ltd.\nGotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.\nJames, G., Witten, D., Hastie, T., Tibshirani, R., 2013. An Introduction to Statistical Learning: with Applications in R, 1st ed. 2013. Corr. 4th printing 2014 edition. ed. Springer, New York, NY.\nMcElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.\nOther learning resources\nVideo lecture, from a more extensive Course on\nStatistical Models\nof the Graduate Program of Ecology at USP (in Portuguese):\nGaussian linear and non-linear regression\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:44-03:00"
+      "last_modified": "2024-11-12T11:22:50-03:00"
     },
     {
       "path": "05_maximum_likelihood.html",
@@ -67,7 +67,7 @@
       ],
       "date": "2024-02-02",
       "contents": "\nSlides\n\n\n\n\n\nLab\nMaximum likelihood fitting and inference\nTo know more\nFurther reading\nLikelihood and all that. chapter 6 in: Bolker, B.M. 2008\nEcological Models and Data in R Princeton: Princeton University\nPress.\nHobbs, N.T. & Hilborn, R. 2006. Alternatives to statistical\nhypothesis testing in ecology: A guide to self-teaching. Ecological\nApplications: 16(1): 5-19.\nThe Concept of Likelihood , chapter 2 in: Edwards, A.W.F., 1992\nLikelihood. Baltimore: John Hopkins University Press.\nIntroduction, and Information and likelihood theory. chapters 1-2\nin Burnham, K. P., & Anderson, D. R. (2002). Model Selection and\nMultimodel Inference: A Practical-Theoretic Approach, 2nd ed. New\nYork, Springer-Verlag.\nVignette of the package bbmle\nOther learning resources\nVideo lectures, from a more extensive Course on\nStatistical Models\nof the Graduate Program of Ecology at USP (in Portuguese):\nThe likelihood function\nMaximum likelihood method\nFitting distributions with the ML method\nFitting a linear Gaussian model with ML method\nInformation-based model selection\n\nJupyter\nnotebooks\nwith mathematical deductions of some simple MLEs, with sympy.\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:45-03:00"
+      "last_modified": "2024-11-12T11:22:51-03:00"
     },
     {
       "path": "06_bayesian_statistics.html",
@@ -81,7 +81,7 @@
       ],
       "date": "2024-02-05",
       "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\nSlides PDF\nLab\nBayesian model fitting and inference\nFurther reading\nJaynes, E.T., 2003. Probability theory: The logic of science. Cambridge University press.\nMcElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:45-03:00"
+      "last_modified": "2024-11-12T11:22:51-03:00"
     },
     {
       "path": "08_causal_thinking.html",
@@ -95,7 +95,7 @@
       ],
       "date": "2024-02-07",
       "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\nSlides PDF\nLab\nCausal model building lab\nFurther reading\nPearl, J., Glymour, M. & Jewell, N. P. Causal Inference in Statistics: A Primer. (John Wiley & Sons, 2016).\nScience Before Statistics: Causal Inference: https://www.youtube.com/watch?v=KNPYUVmY3NM\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:46-03:00"
+      "last_modified": "2024-11-12T11:22:52-03:00"
     },
     {
       "path": "09_glm.html",
@@ -109,7 +109,7 @@
       ],
       "date": "2024-02-08",
       "contents": "\nSlides\n\n\n\n\n\nLab\nGLM Lab\nReferences\nCrawley, M. J. (2012). The R book. John Wiley & Sons.\nDobson, A. J., & Barnett, A. G. (2018). An introduction to generalized linear models. CRC press.\nGeneralized linear models with examples in R (Vol. 53).\nDunn, P. K., & Smyth, G. K. (2018) New York: Springer.\n“Regression models for count data in R.” Zeileis, Achim, Christian Kleiber,\nand Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:46-03:00"
+      "last_modified": "2024-11-12T11:22:52-03:00"
     },
     {
       "path": "10_mixed_and_hierarchical_models.html",
@@ -123,14 +123,14 @@
       ],
       "date": "2024-02-09",
       "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\nSlides PDF\nLab\nHierachical Models Lab\nFurther reading\nBates, D., Mächler M., Bolker, B.M. and Walker, S.C.. 2015. Fitting Linear Mixed-Effects Models Using lme4. Journal of Statistical Software 67 (1): 1-48.\nBolker, B. M. et al. 2009. Generalized linear mixed models: a practical guide for ecology and evolution. Trends in ecology & evolution, 24(3): 127-135.\nThe Generalized Linear Mixed Models FAQ page: https://bbolker.github.io/mixedmodels-misc/glmmFAQ\nGelman, A., Hwang, J., & Vehtari, A. (2014). Understanding predictive information criteria for Bayesian models. Statistics and computing, 24(6), 997-1016.\nGelman, Andrew, and Jennifer Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge, England: Cambridge University Press.\nZuur, A et al. 2009. Mixed Effects Models and Extensions in Ecology with R. Springer.\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:47-03:00"
+      "last_modified": "2024-11-12T11:22:53-03:00"
     },
     {
       "path": "about.html",
       "title": "About us",
       "author": [],
       "contents": "\nSara Mortara\nDiogo Melo\nPaulo Inácio Prado\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:47-03:00"
+      "last_modified": "2024-11-12T11:22:53-03:00"
     },
     {
       "path": "index.html",
@@ -138,7 +138,7 @@
       "description": "Serrapilheira Training Program in Quantitative Ecology - 2024\n",
       "author": [],
       "contents": "\nWelcome to the Statistical Inference module of the\nSerrapilheira Training Program in Quantitative Biology and\nEcology 2024. Statistical models are a useful tool to bridge theory\nand data. Why do ecologists fit statistical models? There are three\nmain reasons: explore data, make inferences, and derive predictions.\nCheck here the 2023 course website\nGoal\nOur general goal is to provide appropriate conceptual foundations on\nstatistical thinking in ecology. We will teach you basic tools needed to connect\ntheory and hypothesis to data and show you additional paths you can\ntake to further explore more advanced topics. There are two main steps\nin this endeavor: (i) the construction and fit of statistical models;\nand (ii) the inferences that can be made with and about the models.\nInstructors\nSara Mortara re.green, ¡liibre!\nDiogo Melo, Princeton University\nPaulo Inácio Prado, Universidade de São Paulo\nInstuctors from previous courses\nAndrea Sánchez-Tapia, Universidade Federal do ABC, ¡liibre!\nPaula Lemos-Costa, The University of Chicago\nPreparing for the course\nBefore the course starts, follow these\ninstructions to install R  and\nthe necessary R packages in your computer, and also to recap the\nbasics on R we’ll need to start.\nCourse schedule\n\nDate\nTheme\nInstructor\n29/jan\nCourse presentation: statistical models link data to theory\nSara\n29/jan\nProbability distributions\nPaulo\n30/jan\nProbability distributions lab\nPaulo\n30/jan\nQ&A\ntodes\n31/jan\nLinear models\nSara\n31/jan\nMultiple regression and model comparison\nPaulo\n01/fev\nLinear models lab\nSara\n01/fev\nQ&A\ntodes\n02/fev\nMaximum likelihood fitting - I\nPaulo\n02/fev\nMaximum likelihood fitting lab\nPaulo/Diogo\n05/fev\nBayesian statistics - I\nDiogo\n05/fev\nBayesian statistics - II\nDiogo\n06/fev\nBayesian fitting lab\nSara\n06/fev\nQ&A\ntodes\n07/fev\nCausal thinking and model building\nDiogo\n07/fev\nCausal thinking Lab\nDiogo / PI\n08/fev\nGeneralized linear models\nSara\n08/fev\nQ&A\ntodes\n09/fev\nMixed and hierachical models\nDiogo\n09/fev\nMixed and hierachical models lab\nPI\nExtra\nGLM(M)s lab\nSara/PI\n\n\n\n\n",
-      "last_modified": "2024-11-12T10:58:48-03:00"
+      "last_modified": "2024-11-12T11:22:54-03:00"
     }
   ],
   "collections": []
