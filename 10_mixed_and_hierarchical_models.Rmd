@@ -27,7 +27,7 @@ xaringanExtra::embed_xaringan("10_mixed_models/slides/index.html")
 
 # Lab
 
-[Hierachical Models Lab](10_mixed_models/lad.html)
+[Hierachical Models Lab](10_mixed_models/lab.html)
 
 # Further reading
 
