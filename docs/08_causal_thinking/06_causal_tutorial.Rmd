@@ -26,8 +26,8 @@ predictor variables:
 
 $$
 \begin{aligned} 
-  y_i &\sim Normal(\mu, \sigma) \\
-  \mu_i &= \sum^J \beta_j x_{ij} \\
+  y_i &\sim Normal(\mu_i, \sigma) \\
+  \mu_i &= \sum_j \beta_j x_{ij} \\
 \end{aligned} 
 $$
 
