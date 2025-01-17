@@ -28,15 +28,15 @@ htmltools::tagList(
 
 # Simple linear models
 
-Linear regressions in R assume a linear relationship between one or more predictor variables $X_i$ and a response variable $Y$. 
+Linear regressions in R assume a linear relationship between one or more predictor variables $X_i$ and a response variable $y$. 
 
 $$y_i \sim Normal(\mu_i, \sigma) \\
-\mu_i = \beta_0 + \beta_1 x_i$$
+\mu_i = \alpha + \beta x_i$$
 
 The first element of this model describes how the response variable $Y$ can be modeled as a normal random variable with mean and standard deviation. 
 
 The second element of this model adds the effect of the predictor variable $X$ on $Y$, based on the causal relationship 
-$X \rightarrow Y$. In this simple case, the relationship is linear and can be described by the equation of a line with intercept $\beta_0$ and slope $\beta_1$.
+$X \rightarrow Y$. In this simple case, the relationship is linear and can be described by the equation of a line with intercept $\alpha$ and slope $\beta$.
 
 ## Generating the dataset
 
@@ -46,17 +46,18 @@ _The dataset itself was generated according to the specifications of the model a
 
 ```{r create_dataset}
 set.seed(4) #ensures the result is reproducible. The random number generation can vary between Operative systems so maybe there will be different datasets in the classroom
-x_i <- seq(1, 5, by = 0.5)
-n <- length(x_i)
-mu <- 1.2 + 3.5 * x_i
-y_i <- rnorm(n = 9, mean = mu, sd = 3)
-lm_data <- data.frame(x_i,  mu, y_i, res = y_i - mu)
+N = 30
+x <- runif(N, 0, 5)
+n <- length(x)
+mu <- 1.2 + 3.5 * x
+y <- rnorm(N, mean = mu, sd = 3)
+lm_data <- data.frame(x,  mu, y, res = y - mu)
 ```
 
 Create a plot for the dataset
 
 ```{r plot, fig.asp=1}
-plot(y_i ~ x_i)
+plot(y ~ x, pch = 19)
 ```
 
 
@@ -64,38 +65,34 @@ As you can see, plotting the data suggests a linear relationship between these t
 
 ## Regression coefficients
 
-Let's calculate the coefficients for the regression line according to the Ordinary Least Squares method: 
+We can calculate the correlation coefficients using several methods. The Ordinary Least Squares (OLS) method is the most common, and provides analitical solutions for the coefficients. The slope is the ratio of the covariance between $x$ and $y$ and the variance of $x$. The intercept is the mean of $y$ minus the product of the slope and the mean of $x$.
 
-$$\widehat{\beta_1}=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2}$$
+$$\widehat{\beta}= \frac{Cov(x, y)}{Var(y)} = \frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2}$$
 
 and 
 
 $$
-\hat{\beta_0} = \bar{y} - \hat{\beta_1}\bar{x} 
+\hat{\alpha} = \bar{y} - \hat{\beta}\bar{x} 
 $$
 
 
 ```{r beta0 and beta1}
-x <- x_i
-y <- y_i
-beta1_hat <- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x)) ^ 2)
-beta1_hat
+beta_hat <- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x)) ^ 2)
+beta_hat
 
 # This is just the ratio of the covariance between x and y and the variance of x
 cov(x, y) / var(x)
 
-# Since mu = beta0 + beta1(X): 
-beta0_hat <- mean(y) - beta1_hat * mean(x)
-beta0_hat
+# Since mu = alpha + beta*x: 
+alpha_hat <- mean(y) - beta_hat * mean(x)
+alpha_hat
 ```
-
 
 Add a regression line with the values of the coefficients you calculated
 
-
 ```{r OLS, fig.asp=1}
-plot(y ~ x)
-abline(a = beta0_hat, b = beta1_hat, col = "red")
+plot(y ~ x, pch = 19)
+abline(a = alpha_hat, b = beta_hat, col = 2, lwd = 2)
 ```
 
 ## The sample is not the population 
@@ -106,22 +103,22 @@ When we generated the dataset ([here](#generating-the-dataset)), $\mu$ was speci
 mu <- 1.2 + 3.5 * x_i
 ```
 
-This means $\beta_0 = 1.2$ and $\beta_1 = 3.5$. How do these values compare to the coefficients you just calculated? 
+This means $\alpha = 1.2$ and $\beta = 3.5$. How do these values compare to the coefficients you just calculated? 
 
 Add a population line to the plot you previously created by completing the code below: 
 
 ```r
-plot(y ~ x)
-abline(a = beta0_hat, b = beta1_hat, col = "red")
+plot(y ~ x, pch = 19)
+abline(a = alpha_hat, b = beta_hat, col = 2)
 abline(a = ..., b = ..., col = "blue")
 ```
 
 See the code by clicking __Show code__: 
 
 ```{r regression_line, code_folding = TRUE, fig.asp = 1}
-plot(y ~ x)
-abline(a = beta0_hat, b = beta1_hat, col = "red")
-abline(a = 1.2, b = 3.5, col = "blue")
+plot(y ~ x, pch = 19)
+abline(a = alpha_hat, b = beta_hat, col = 2, lwd = 2)
+abline(a = 1.2, b = 3.5, col = "blue", lwd = 2)
 ```
 
 ## Fitting a linear model in R
@@ -135,34 +132,6 @@ coef(mod)
 ```
 
 Compare this result with the calculations you did previously. 
-
-### Let's do the calculations for Sums of squares, residual sum of squares and Sums of squares of the regression
-
-$SS_y$, $RSS$, and $SS_{Reg}$
-
-$$RSS = \sum_{i=1}^{n}(y_i-\hat{y}_i)^2 $$
-
-
-
-$$SS_y = {\sum_{i=1}^{n}(y_i-\bar{y})^2}$$
-
-
-$$SS_Y = SS_{Reg} + RSS$$
-
-
-**Challenge:** Given that you have already learned that the $R^2$ of a model is the ratio between the sums of squares of the regression and the total sum of squares, calculate it and check the result comparing with the summary of the model. 
-
-```{r, code_folding=TRUE, eval = FALSE}
-pred <- predict(mod)
-RSS <- sum((y - pred) ^ 2)
-SSY <- sum((y - mean(y)) ^ 2)
-SSreg <- SSY - RSS
-
-SSreg / SSY
-
-summary(mod)
-
-```
 
 ## Model diagnostics
 
@@ -179,7 +148,6 @@ $$
 \begin{align}
 y_i & \sim Normal(\mu_i, \sigma) \\
 \mu_i & = \sum_{j=0}^{J} \beta_{j} x_{ij} \\
-\sigma & = C
 \end{align}
 $$
 
@@ -189,8 +157,6 @@ $$
 \begin{align}
 y_i & = \sum \beta_j x_ij + \epsilon \\
 \epsilon & \sim Normal(\mu, \sigma) \\
-\mu & = 0 \\
-\sigma & = C
 \end{align}
 $$
 

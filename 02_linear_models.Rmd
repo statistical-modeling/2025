@@ -20,20 +20,29 @@ knitr::opts_chunk$set(echo = FALSE)
 ```{r slides}
 xaringanExtra::embed_xaringan("02_linear_models/slides.html")
 ```
+[Open slides in new window](02_linear_models/slides.html)
+
+[Slides PDF](02_linear_models/SimpleLinearModels.pdf)
+
+```{r slides 2}
+xaringanExtra::embed_xaringan("03_extending_linear_models/slides.html")
+```
+
+[Open slides in new window](03_extending_linear_models/slides.html)
+
+[Slides PDF](03_extending_linear_models/ExtendingLinearModels.pdf)
 
 # Lab
 
 [Linear regression Lab](labs/LinearModels/lab.html)
 
-
-
 ## References
 
-+ Gotelli, N.J., Ellison, A.M., Ellison, S.E. and S.R.F.H.F.A.M., 2004. A Primer of Ecological Statistics. Sinauer Associates Publishers.
-
-+ James, G., Witten, D., Hastie, T., Tibshirani, R., 2013. An Introduction to Statistical Learning: with Applications in R, 1st ed. 2013. Corr. 4th printing 2014 edition. ed. Springer, New York, NY.
++ Gelman, A., Hill, J. & Vehtari, A. Regression and Other Stories. (Cambridge University Press, 2020).
 
 + McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
+
++ Bayesian Data Analysis, Third Edition, Andrew Gelman, John B. Carlin, Hal S. Stern, David B. Dunson, Aki Vehtari, Donald B. Rubin, Chapman and Hall/CRC, 2013.
 
 
 

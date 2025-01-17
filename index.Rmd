@@ -15,7 +15,11 @@ Ecology 2025. Statistical models are a useful tool to bridge theory
 and data. Why do ecologists fit statistical models? There are three
 main reasons: explore data, make inferences, and derive predictions.
 
-Check [here](https://statistical-inference.netlify.app/) the 2023 course website
+Previous year websites:
+
+  - [2023 course website](https://statistical-inference.netlify.app/)
+    - [Video lectures](https://www.youtube.com/results?search_query=QEco+Program%3A+Statistical+models)
+  - [2024 course website](https://statistical-modeling.github.io/2024/) 
 
 ## Goal
 

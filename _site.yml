@@ -25,6 +25,10 @@ navbar:
           href: 07_causal_thinking.html
         - text: "Mixed and hierarchical models"
           href: 08_mixed_and_hierarchical_models.html
+    - text: "Computer Labs"
+      menu:
+        - text: "Linear Models"
+          href: labs/LinearModels/lab.html
     - text: "About us"
       href: about.html
     - icon: fa fa-github
