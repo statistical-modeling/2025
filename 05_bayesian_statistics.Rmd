@@ -1,7 +1,7 @@
 ---
-title: "Bayesian Statistics - I and II"
+title: "Bayesian Statistics"
 description: |
-  Bayesian fitting method, priors, how to interpret/report results.
+  Bayesian thinking, likelihood and model fitting.
 author:
   - name: Diogo Melo
     url: 
