@@ -20,8 +20,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -32,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -90,7 +91,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_meta_tags-->
   <title>Statistical Modelling: Statistical models: linking data to theory</title>
 
-  <meta property="description" itemprop="description" content="Serrapilheira Training Program in Quantitative Ecology - 2024"/>
+  <meta property="description" itemprop="description" content="Serrapilheira Training Program in Quantitative Ecology - 2025"/>
 
   <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
 
@@ -98,20 +99,20 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="Statistical Modelling: Statistical models: linking data to theory"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="Serrapilheira Training Program in Quantitative Ecology - 2024"/>
+  <meta property="og:description" content="Serrapilheira Training Program in Quantitative Ecology - 2025"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Statistical Modelling"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
   <meta property="twitter:title" content="Statistical Modelling: Statistical models: linking data to theory"/>
-  <meta property="twitter:description" content="Serrapilheira Training Program in Quantitative Ecology - 2024"/>
+  <meta property="twitter:description" content="Serrapilheira Training Program in Quantitative Ecology - 2025"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site"]}},"value":[{"type":"character","attributes":{},"value":["Statistical models: linking data to theory"]},{"type":"character","attributes":{},"value":["Serrapilheira Training Program in Quantitative Ecology - 2024\n"]},{"type":"character","attributes":{},"value":["distill::distill_website"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site"]}},"value":[{"type":"character","attributes":{},"value":["Statistical models: linking data to theory"]},{"type":"character","attributes":{},"value":["Serrapilheira Training Program in Quantitative Ecology - 2025\n"]},{"type":"character","attributes":{},"value":["distill::distill_website"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2431,7 +2432,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Statistical models: linking data to theory","description":"Serrapilheira Training Program in Quantitative Ecology - 2024","authors":[]}
+{"title":"Statistical models: linking data to theory","description":"Serrapilheira Training Program in Quantitative Ecology - 2025","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2451,14 +2452,12 @@ Syllabus
 </button>
 <div class="nav-dropdown-content">
 <a href="01_presentation.html">Presentation</a>
-<a href="02_probability_distributions.html">Probability distributions</a>
-<a href="03_linear_models.html">Linear models</a>
-<a href="04_multiple_regression.html">Multiple regression and model comparison</a>
-<a href="05_maximum_likelihood.html">Maximum likelihood fitting</a>
-<a href="06_bayesian_statistics.html">Bayesian statistics - I and II</a>
-<a href="08_causal_thinking.html">Causal thinking</a>
-<a href="09_glm.html">Generalized linear models</a>
-<a href="10_mixed_and_hierarchical_models.html">Mixed and hierarchical models</a>
+<a href="02_linear_models.html">Linear models</a>
+<a href="03_glm.html">Generalized Linear Models</a>
+<a href="05_bayesian_statistics.html">Bayesian statistics</a>
+<a href="06_model_selection.html">Model selection</a>
+<a href="07_causal_thinking.html">Causal thinking</a>
+<a href="08_mixed_and_hierarchical_models.html">Mixed and hierarchical models</a>
 </div>
 </div>
 <a href="about.html">About us</a>
@@ -2478,14 +2477,14 @@ Syllabus
 
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>Serrapilheira Training Program in Quantitative Ecology - 2024</p></p>
+<p><p>Serrapilheira Training Program in Quantitative Ecology - 2025</p></p>
 </div>
 
 
 <div class="d-article">
 <p>Welcome to the Statistical Inference module of the
 Serrapilheira Training Program in Quantitative Biology and
-Ecology 2024. Statistical models are a useful tool to bridge theory
+Ecology 2025. Statistical models are a useful tool to bridge theory
 and data. Why do ecologists fit statistical models? There are three
 main reasons: explore data, make inferences, and derive predictions.</p>
 <p>Check <a href="https://statistical-inference.netlify.app/">here</a> the 2023 course website</p>
@@ -2499,26 +2498,27 @@ and (ii) the inferences that can be made with and about the models.</p>
 <h2 id="instructors">Instructors</h2>
 <ul>
 <li><a href="">Sara Mortara</a> re.green, <a href="https://liibre.netlify.app/">¡liibre!</a></li>
-<li><a href="https://damelo.net/">Diogo Melo</a>, Princeton University</li>
-<li><a href="http://ecologia.ib.usp.br/let/doku.php?id=engl:prado:start">Paulo Inácio Prado</a>, Universidade de São Paulo</li>
+<li><a href="https://damelo.net/">Diogo Melo</a>, <a href="https://www.ib.usp.br/telefones-ib/docentes-ib/656-diogo-amaral-r-melo.html">Universidade de São Paulo</a></li>
 </ul>
 <h3 id="instuctors-from-previous-courses">Instuctors from previous courses</h3>
 <ul>
 <li><a href="https://andreasancheztapia.netlify.app/">Andrea Sánchez-Tapia</a>, Universidade Federal do ABC, <a href="https://liibre.netlify.app/">¡liibre!</a></li>
 <li><a href="https://lemoscosta.weebly.com/">Paula Lemos-Costa</a>, The University of Chicago</li>
+<li><a href="http://ecologia.ib.usp.br/let/doku.php?id=engl:prado:start">Paulo Inácio Prado</a>, Universidade de São Paulo</li>
 </ul>
 <h2 id="preparing-for-the-course">Preparing for the course</h2>
 <p>Before the course starts, follow <a href="00_instructions.html">these
 instructions</a> to install R <!-- RStudio --> and
 the necessary R packages in your computer, and also to recap the
-basics on R we’ll need to start.</p>
+basics on R we’ll need to start. We will have a server to use during computer
+lab classes, which has all the packages and programs available.</p>
 <h2 id="course-schedule">Course schedule</h2>
 <div class="layout-chunk" data-layout="l-body">
 <table>
 <colgroup>
 <col style="width: 8%" />
-<col style="width: 75%" />
-<col style="width: 15%" />
+<col style="width: 76%" />
+<col style="width: 14%" />
 </colgroup>
 <thead>
 <tr>
@@ -2529,109 +2529,94 @@ basics on R we’ll need to start.</p>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">29/jan</td>
+<td style="text-align: left;">27/jan</td>
 <td style="text-align: left;">Course presentation: statistical models link data to theory</td>
 <td style="text-align: left;">Sara</td>
 </tr>
 <tr>
+<td style="text-align: left;">27/jan</td>
+<td style="text-align: left;">Simple Linear Models</td>
+<td style="text-align: left;">Diogo</td>
+</tr>
+<tr>
+<td style="text-align: left;">28/jan</td>
+<td style="text-align: left;">Extending Linear Models</td>
+<td style="text-align: left;">Diogo</td>
+</tr>
+<tr>
+<td style="text-align: left;">28/jan</td>
+<td style="text-align: left;">Linead Models Lab</td>
+<td style="text-align: left;">todes</td>
+</tr>
+<tr>
 <td style="text-align: left;">29/jan</td>
-<td style="text-align: left;">Probability distributions</td>
-<td style="text-align: left;">Paulo</td>
-</tr>
-<tr>
-<td style="text-align: left;">30/jan</td>
-<td style="text-align: left;">Probability distributions lab</td>
-<td style="text-align: left;">Paulo</td>
-</tr>
-<tr>
-<td style="text-align: left;">30/jan</td>
 <td style="text-align: left;">Q&amp;A</td>
+<td style="text-align: left;">todes</td>
+</tr>
+<tr>
+<td style="text-align: left;">29/jan</td>
+<td style="text-align: left;">Generalized Linear Models - 1</td>
+<td style="text-align: left;">Sara</td>
+</tr>
+<tr>
+<td style="text-align: left;">30/jan</td>
+<td style="text-align: left;">Generalized Linear Models - 2</td>
+<td style="text-align: left;">Sara</td>
+</tr>
+<tr>
+<td style="text-align: left;">30/jan</td>
+<td style="text-align: left;">GLM Lab</td>
 <td style="text-align: left;">todes</td>
 </tr>
 <tr>
 <td style="text-align: left;">31/jan</td>
-<td style="text-align: left;">Linear models</td>
-<td style="text-align: left;">Sara</td>
+<td style="text-align: left;">Bayesian Statistics Principles</td>
+<td style="text-align: left;">Diogo</td>
 </tr>
 <tr>
 <td style="text-align: left;">31/jan</td>
-<td style="text-align: left;">Multiple regression and model comparison</td>
-<td style="text-align: left;">Paulo</td>
-</tr>
-<tr>
-<td style="text-align: left;">01/fev</td>
-<td style="text-align: left;">Linear models lab</td>
-<td style="text-align: left;">Sara</td>
-</tr>
-<tr>
-<td style="text-align: left;">01/fev</td>
 <td style="text-align: left;">Q&amp;A</td>
 <td style="text-align: left;">todes</td>
 </tr>
 <tr>
-<td style="text-align: left;">02/fev</td>
-<td style="text-align: left;">Maximum likelihood fitting - I</td>
-<td style="text-align: left;">Paulo</td>
+<td style="text-align: left;">03/fev</td>
+<td style="text-align: left;">Model selection, prediction and overfitting</td>
+<td style="text-align: left;">Sara</td>
 </tr>
 <tr>
-<td style="text-align: left;">02/fev</td>
-<td style="text-align: left;">Maximum likelihood fitting lab</td>
-<td style="text-align: left;">Paulo/Diogo</td>
+<td style="text-align: left;">03/fev</td>
+<td style="text-align: left;">Bayesian statistics Lab</td>
+<td style="text-align: left;">todes</td>
 </tr>
 <tr>
-<td style="text-align: left;">05/fev</td>
-<td style="text-align: left;">Bayesian statistics - I</td>
+<td style="text-align: left;">04/fev</td>
+<td style="text-align: left;">Causal Thinking and model building</td>
 <td style="text-align: left;">Diogo</td>
 </tr>
 <tr>
 <td style="text-align: left;">05/fev</td>
-<td style="text-align: left;">Bayesian statistics - II</td>
-<td style="text-align: left;">Diogo</td>
+<td style="text-align: left;">Causal Thinking lab</td>
+<td style="text-align: left;">todes</td>
 </tr>
 <tr>
-<td style="text-align: left;">06/fev</td>
-<td style="text-align: left;">Bayesian fitting lab</td>
-<td style="text-align: left;">Sara</td>
-</tr>
-<tr>
-<td style="text-align: left;">06/fev</td>
+<td style="text-align: left;">05/fev</td>
 <td style="text-align: left;">Q&amp;A</td>
 <td style="text-align: left;">todes</td>
 </tr>
 <tr>
-<td style="text-align: left;">07/fev</td>
-<td style="text-align: left;">Causal thinking and model building</td>
-<td style="text-align: left;">Diogo</td>
-</tr>
-<tr>
-<td style="text-align: left;">07/fev</td>
-<td style="text-align: left;">Causal thinking Lab</td>
-<td style="text-align: left;">Diogo / PI</td>
-</tr>
-<tr>
-<td style="text-align: left;">08/fev</td>
-<td style="text-align: left;">Generalized linear models</td>
-<td style="text-align: left;">Sara</td>
-</tr>
-<tr>
-<td style="text-align: left;">08/fev</td>
-<td style="text-align: left;">Q&amp;A</td>
-<td style="text-align: left;">todes</td>
-</tr>
-<tr>
-<td style="text-align: left;">09/fev</td>
+<td style="text-align: left;">06/fev</td>
 <td style="text-align: left;">Mixed and hierachical models</td>
 <td style="text-align: left;">Diogo</td>
 </tr>
 <tr>
-<td style="text-align: left;">09/fev</td>
+<td style="text-align: left;">07/fev</td>
 <td style="text-align: left;">Mixed and hierachical models lab</td>
-<td style="text-align: left;">PI</td>
+<td style="text-align: left;">todes</td>
 </tr>
 <tr>
-<td style="text-align: left;">Extra</td>
-<td style="text-align: left;">GLM(M)s lab</td>
-<td style="text-align: left;">Sara/PI</td>
+<td style="text-align: left;">07/fev</td>
+<td style="text-align: left;">Final Q&amp;A</td>
+<td style="text-align: left;">todes</td>
 </tr>
 </tbody>
 </table>

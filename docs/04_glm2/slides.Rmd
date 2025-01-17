@@ -1,0 +1,764 @@
+---
+title: "Statistical models: linking data to theory"
+subtitle: "The Generalized Linear Model"  
+author: 
+  - "Sara Mortara"
+date: '07 Fev 2024'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+self-contained: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+options(servr.daemon = TRUE)#para que no bloquee la sesión
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+library(ggplot2)
+library(ggthemes)
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
+library(rethinking)
+
+xaringanExtra::use_share_again()
+xaringanExtra::use_fit_screen()
+xaringanExtra::use_tachyons()
+
+style_solarized_light(
+  title_slide_background_color = "#586e75",# base 3
+  header_color = "#586e75",
+  text_bold_color = "#cb4b16",
+  background_color = "#fdf6e3", # base 3
+  header_font_google = google_font("DM Sans"),
+  text_font_google = google_font("Roboto Condensed", "300", "300i"),
+  code_font_google = google_font("Fira Mono"), text_font_size = "28px"
+)
+# clipboard
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
+    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
+  ),
+  rmarkdown::html_dependency_font_awesome()
+  )
+## ggplot theme
+theme_Publication <- function(base_size = 14, base_family = "helvetica") {
+    (theme_foundation(base_size = base_size, base_family = base_family)
+        + theme(plot.title = element_text(face = "bold",
+                                          size = rel(1.2), hjust = 0.5),
+                text = element_text(),
+                panel.border = element_rect(colour = NA),
+                panel.background = element_rect(fill = 'transparent'),
+                plot.background = element_rect(fill = 'transparent', color = NA),
+                axis.title = element_text(face = "bold",size = rel(1)),
+                axis.title.y = element_text(angle=90,vjust =2),
+                axis.title.x = element_text(vjust = -0.2),
+                axis.text = element_text(), 
+                axis.line = element_line(colour="black"),
+                axis.ticks = element_line(),
+                panel.grid.major = element_line(colour=NA),
+                panel.grid.minor = element_blank(),
+                legend.key = element_rect(colour = NA),
+                legend.position = "bottom",
+                legend.direction = "horizontal",
+                legend.key.size= unit(0.2, "cm"),
+                ##legend.margin = unit(0, "cm"),
+                legend.spacing = unit(0.2, "cm"),
+                legend.title = element_text(face="italic"),
+                plot.margin = unit(c(10,5,5,5),"mm"),
+                strip.background = element_rect(colour = NA,fill = "transparent"),
+                strip.text = element_text(face="bold")
+                ))
+    
+}
+
+## Aux functions
+f.rib <- function(X, dpad = 5)
+    geom_ribbon(aes(ymin= y - X*dpad, ymax = y + X*dpad), fill = "blue", alpha = 0.01)
+
+make.q <- function(from, to, cfs, normal=TRUE, sig, size=100){
+    if(normal)
+        df <- data.frame(x = seq(from, to, length =size)) %>%
+            mutate(y = cfs[1]+cfs[2]*x,
+                   low.1 =  qnorm(0.05, size, mean = y, sd =sig),
+                   upp.1 =  qnorm(0.95, size, mean = y, sd =sig),
+                   low.2 =  qnorm(0.25, size, mean = y, sd =sig),
+                   upp.2 =  qnorm(0.75, size, mean = y, sd =sig))
+    else
+        df <- data.frame(x = seq(from, to, length =size)) %>%
+            mutate(y = cfs[1]+cfs[2]*x,
+                   low.1 =  qpois(0.05, size, lambda = y),
+                   upp.1 =  qpois(0.95, size, lambda = y),
+                   low.2 =  qpois(0.25, size, lambda = y),
+                   upp.2 =  qpois(0.75, size, lambda = y))
+} 
+
+plot.q <- function(df2, df1){
+    ggplot(df2, aes(x, y)) +
+        geom_line(col="navy") +
+        geom_ribbon(aes(ymin = low.1, ymax = upp.1), fill="blue", alpha =0.25) +
+        geom_ribbon(aes(ymin = low.2, ymax = upp.2), fill="blue", alpha =0.25) +
+        geom_point(data = df1, color ="red", size=1.25, stroke=1.25)  +
+        theme_Publication(18)
+    }
+```
+
+
+## Recap
+
+* The key interest in statistical analysis is to find a meaningful relationship 
+  between the __response__ variable (usually denoted by $y$) and one or 
+  more __explanatory__ variables $x_{i}$
+
+--
+
+* So far we have assumed the response variable $y$ changes continuously and 
+  errors are normally distributed around the mean, but this need not be the case
+
+
+--
+
+* The most extreme deviation of normality is when your response variable can 
+  only assume $0$ or $1$ values (binary data)
+
+--
+
+* Other deviations include categorical variables and count data and for these 
+  cases as well as situations that do not conform to some of the assumptions of 
+  a linear model   we use generalized linear models
+
+---
+## Breaking the assumptions of a linear model
+
+.pull-left[
+
+* When your response variable ( $y$ ) does not have support in the whole real 
+  line (e.g.: binary data, counts, only positive values)
+
+]
+
+.pull-right[
+```{r, include=FALSE}
+set.seed(1234)
+leaf_herbivory <- rexp(25)
+survival <- rbinom(25, 1, 1-leaf_herbivory/max(leaf_herbivory))
+```
+
+
+```{r, echo=FALSE, fig.height = 5.5, fig.width = 5.5}
+par(las=1, mar=c(7,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25, bg = "transparent", bty = "l")
+plot(survival ~ leaf_herbivory, pch = 19, 
+     xlab = "Leaf herbivory", 
+     ylab = "Survival")
+```
+]  
+
+
+
+---
+## Breaking the assumptions of a linear model
+
+.pull-left[
+
+
+* When your response variable ( $y$ ) does not have support in the whole real 
+  line (e.g.: binary data, counts, only positive values)
+
+* Errors are **not** normally distributed 
+]
+
+.pull-right[
+
+
+```{r, include=FALSE}
+set.seed(123)
+N      <- 100
+x      <- rnorm(N)
+beta   <- 0.7
+errors <- rlnorm(N, meanlog=0, sdlog=1.2)
+errors <- -1*errors   # this makes them left skewed
+errors <- errors - 1  # this centers the error distribution on 0
+y      <- 1 + x*beta + errors
+
+model <- lm(y ~ x)
+values_fit <- as.numeric(fitted(model))
+```
+
+```{r, echo=FALSE, fig.height = 5.5, fig.width = 5.5}
+par(las=1, mar=c(7,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25, 
+    bty = 'l', bg = "transparent")
+plot(values_fit, model$residuals,  main="residual plot", xlab="fitted", ylab="residuals")
+abline(0,0, col = "darkblue", lwd = 2)
+```
+
+
+]
+
+---
+## Breaking the assumptions of a linear model
+
+.pull-left[
+
+
+* When your response variable ( $y$ ) does not have support in the whole real 
+  line (e.g.: binary data, counts, only positive values)
+
+* Errors are **not** normally distributed 
+
+* There is a relationship between variance ( $\sigma$ ) and mean ( $\mu$ ), 
+  meaning variance changes with the mean (heteroscedasticity)
+]
+
+.pull-right[
+```{r, include=FALSE}
+set.seed(12)
+noise <- rnorm(n = 100, mean = 0, sd = 2*exp(abs(x)))
+y <- 1.2 + 2 * x + noise
+```
+```{r, echo=FALSE, fig.height = 5.5, fig.width = 5.5}
+par(las=1, mar=c(7,7,4,2)+0.1,
+    mgp=c(5,1,0),
+    cex.lab=2, cex.axis=1.8, cex.main = 2.25, 
+    bty = 'l', bg = "transparent")
+plot(abs(x), y, xlab = "x")
+```
+
+
+]
+---
+## Generalized Linear Models
+
+* The response variable is modeled by a distribution from the exponential family
+  (e.g. Gaussian, Gamma, Binomial, Poisson)
+
+--
+
+* Independent variables (or covariates) may be continuous, categorical
+  or a combination of both
+
+--
+
+* The link function linearizes the relationship between fitted values and the 
+  predictors
+
+--
+
+* Parameters are estimated through least squares algorithm
+
+---
+
+## Model Structure
+
+We need to determine three parts of the model:
+
+* __Random component__ entries of the response variable $Y$ are assumed to be 
+  independently drawn from a distribution of the exponential family 
+  (e.g. Poisson). It models the variation of the data about the mean
+  
+$$
+\begin{align}
+y_i &\sim \mathcal{Pois}(\lambda_i) \\
+\lambda_i & = e^{(\beta_0 + \beta_1 x_i)} \\
+\end{align}
+$$
+---
+
+## Model Structure
+
+We need to determine three parts of the model:
+
+* __Random component__ entries of the response variable $Y$ are assumed to be 
+  independently drawn from a distribution of the exponential family 
+  (e.g. Poisson). It models the variation of the data about the mean
+
+* __Systematic component__ explanatory variables $\left( x_1, x_2, \dots \right)$ 
+  are combined linearly to form a linear prediction 
+  (e.g: $\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots$). We want to know how the 
+  mean response changes as the explanatory variables change
+
+--
+
+* __Link function__ $g(u)$ specifies how the random and systematic components 
+  are connected
+
+---
+
+## A GLM consists of 3 steps
+
+1. Choose the __distribution__ for the response variable:
+
+  This choice should be made a priori based on available knowledge on the 
+  response variable
+
+--
+
+2. Define the __systematic__ part in terms of covariates
+
+--
+
+3. Specify the relationship (__link__) between the expected value of the response
+  variable and the systematic part
+
+
+---
+
+## Binary Data
+
+*-* It's an extreme departure from normality. Response variable assumes only 
+values $1$ or $0$ (no/yes, survived/deceased, presence/absence, lost/won)
+
+--
+
+A Bernoulli random variable can only assume values $1$ or $0$ and therefore 
+provides the __random component__ of the model. The Bernoulli distribution is a
+special case of the __Binomial distribution__ and can be expressed as:
+
+$$
+\begin{align}
+P(Y_i = y_i | \pi_i) = \pi_i^{y_i} (1-\pi_i)^{1-y_i}
+\end{align}
+$$
+--
+
+Saying that the probability $P(Y_i = 1) = \pi_i$ and $P(Y_i = 0) = (1-\pi_i)$
+
+--
+
+Now we want to relate the parameter $\pi_i$ to the __linear predictor__
+  $\left( x\right)$ choosing a __link function__
+
+---
+
+## Logistic Regression
+
+The most popular choice is to use the _Logit_ function as the link function
+
+--
+
+The basic Binomial (Logistic) Regression follows the form:
+
+$$
+\begin{align}
+y_i \thicksim Binomial(n, \pi_i) \\
+logit(\pi_i) = \beta_0 + \beta_1 x_i
+\end{align}
+$$
+
+where $y$ is some count variable, $n$ is the number of trials, and $\pi$ is the 
+probability a given trial was $1$. In our binary example, $n=1$ which means $y$ 
+will be a vector of 1's and 0's.
+
+--
+
+Now let's take a closer look at our link function
+
+$$
+\begin{align}
+Logit(\pi_i) = \beta_0 + \beta_1 x_i
+\end{align}
+$$
+
+---
+
+## Logistic Regression
+
+The function $Logit(\pi_i) = \beta_0 + \beta_1 x_i$ can be written as:
+
+$$
+\begin{align}
+Logit(\pi_i) = \log\left(\frac{\pi_i}{(1-\pi_i)}\right)    
+\end{align}
+$$
+--
+
+Practically this means:
+
+$$
+\begin{align}
+\pi_i = \frac{e^{\beta_0 + \beta_1 x_i}}{1+e^{\beta_0 + \beta_1 x_i}}
+\end{align}
+$$
+--
+
+when $\beta_0 + \beta_1 x_i = 0$ the probability $\pi_i = \frac{1}{2}$
+
+while the probability tends to one when $\beta_0 + \beta_1 x_i \to \infty$ and 
+  zero when $\beta_0 + \beta_1 x_i \to - \infty$
+
+---
+
+## Logistic Regression
+
+Now let's see how this looks like
+
+.pull-left[
+```{r}
+set.seed(123)
+# some random data
+X <- rnorm(100)
+beta_0 <- 0.35
+beta_1 <- -3.2
+
+linear_predictor <- beta_0 + beta_1 * X
+predicted_pi_i <- exp(linear_predictor) / 
+                (1 + exp(linear_predictor))
+```
+] 
+
+--
+
+.pull-right[
+```{r, echo=FALSE, fig.height = 5.5, fig.width = 5.5}
+ggplot(data = tibble(linear_predictor = linear_predictor, probability = predicted_pi_i)) + 
+  aes(x = linear_predictor, y = probability) + 
+  geom_point() + geom_line() +
+  theme_minimal()
+```
+]
+
+---
+
+## Logistic Regression
+
+Now let's see how this looks like
+
+.pull-left[
+```{r}
+set.seed(123)
+# some random data
+X <- rnorm(100)
+beta_0 <- 0.35
+beta_1 <- -3.2
+
+linear_predictor <- beta_0 + beta_1 * X
+predicted_pi_i <- exp(linear_predictor) / 
+                (1 + exp(linear_predictor))
+```
+
+This is a logistic curve. The parameters $\beta_0$ and $\beta_1$
+  control the location of the inflection point and the steepness of the curve, 
+  allowing you to model binary response variables
+
+]
+
+.pull-right[
+```{r, echo=FALSE, fig.height = 5.5, fig.width = 5.5}
+ggplot(data = tibble(linear_predictor = linear_predictor, probability = predicted_pi_i)) + 
+  aes(x = linear_predictor, y = probability) + 
+  geom_point() + geom_line() +
+  theme_minimal()
+```
+]
+
+---
+## The Titanic example
+
+.pull-left[
+
+```{r, echo = FALSE, fig.align='center'}
+knitr::include_graphics("figs/titanic.jpg")
+```
+
+]
+
+.pull-right[
+```{r}
+data("Titanic")
+Titanic[, , Age = "Child", ]
+```
+]
+
+
+
+---
+## The Titanic example
+
+
+Let's model the probability of survival according to class and gender. We can 
+  start with a null model where we assume all passengers have the same 
+  probability of survival
+  
+  $$y_i \sim Binomial(n, \pi_i)$$
+  
+  $$logit(\pi_i) = \beta_0$$
+  
+--
+
+
+```{r}
+library(titanic)
+# model 0: probability of survival in general
+# regress against an intercept
+model0 <- glm(Survived ~ 1, # only intercept
+              data = titanic_train, 
+              family = "binomial") # logistic 
+                                  # regression
+summary(model0)$coefficients[, -4]
+```
+
+
+
+---
+## The Titanic example: the null model
+
+
+$$
+\begin{align}
+\pi_i = \frac{e^{\beta_0 + \beta_1 x_i}}{1+e^{\beta_0 + \beta_1 x_i}}
+\end{align}
+$$
+
+
+```{r} 
+model0$coefficients
+# the best fitting (beta0) intercept should lead to 
+# e^beta0 / (1 + e^beta0) = mean(Survived)
+beta0 <- model0$coefficients
+exp(beta0) / (1 + exp(beta0))
+mean(titanic_train$Survived)
+```
+
+
+
+---
+
+# The Titanic example: the effect of gender
+
+Now let's include gender. What was the probability of surviving depending on gender?
+
+  $$y_i \sim Binomial(n, \pi_i)$$
+  
+  $$logit(\pi_i) = \beta_0 + \beta_1 * Sex$$
+  
+--
+
+```{r}
+model1 <- glm(Survived ~ Sex, # one sex as baseline
+              data = titanic_train,
+              family = "binomial")
+
+summary(model1)$coefficients[, -4]
+```
+
+
+
+---
+# The Titanic example: the effect of gender
+
+
+$$ p = \frac{1}{1 + e^{-logit(p)}}$$ 
+
+The calculation $\frac{1}{1 + odds}$ converts odds to probabilities
+
+```{r}
+# What is the best-fitting probability of 
+ # survival for male/female?
+coeffs <- as.numeric(model1$coefficients)
+
+# Probability of survival for women
+1 - 1 / (1 + exp(coeffs[1]))
+
+# Probability of survival for men
+1 - 1 / (1 + exp(coeffs[1] + coeffs[2]))
+
+```
+
+---
+
+# The Titanic example: the effect of gender and class
+
+Our data set also includes information on passenger's class. Let's incorporate 
+  that into our model
+
+
+  $$y_i \sim Binomial(n, \pi_i)$$
+  
+  $$logit(\pi_i) = \beta_0 + \beta_1 * Sex + \beta_2 * Class2 + \beta_3 * Class3$$
+  
+
+```{r}
+model2 <- glm(Survived ~ Sex + factor(Pclass), # combine Sex and Pclass
+              data = titanic_train,
+              family = "binomial")
+```
+
+
+---
+## The Titanic example: the effect of gender and class
+
+
+```{r}
+(coeffs <- model2$coefficients)
+# A woman in first class
+as.numeric(1 - 1 / (1 + exp(coeffs[1])))
+
+# A man in third class
+as.numeric(1 - 1 / (1 + exp(coeffs[1] + 
+                              coeffs[2] + 
+                              coeffs[4])))
+
+```
+
+---
+## Comparing estimates with the data
+
+```{r}
+library(dplyr)
+titanic_train %>% 
+  group_by(Sex, Pclass) %>% 
+  summarize(p = mean(Survived))
+
+```
+
+
+
+---
+## Count Data: Poisson Regression
+
+Suppose your response variables are non-negative integers. For example, counting
+  the number of eggs female lay as a function of their age, body size, etc. 
+  You could have the number of new cases of a disease as a function
+  of time. 
+
+--
+
+A possible model for this case is to think of the response variable as being 
+  sampled from a _Poisson_ distribution. One of the assumptions of this 
+  distribution is that the mean $\mu$ and variance $\sigma^2$ are the same and 
+  expressed as $\lambda$
+  
+---
+## Poisson Regression
+
+Defining the Poisson regression model:
+
+$$
+\begin{align}
+y_i \thicksim Poisson(\lambda)
+\end{align}
+$$
+
+--
+
+Since $\lambda$ is constrained to be positive, it is typical to use the _log_ 
+  as the __link__ function. With this we are assuming that the logarithm of the
+  parameter $\lambda_i$ depends linearly on the predictors: 
+  $\mathbb{E}[\lambda_i] = \mathbb{E}[log(Y_i|x_i)] = \beta_0 + \beta_1 x_i$
+The full model is:
+
+--
+
+$$
+\begin{align}
+y_i \thicksim Poisson(\lambda) \\
+log(\lambda_i) = \beta_0 + \beta_1 x_i
+\end{align}
+$$
+
+The logarithm as a link function transforms the relationship between fitted 
+  values and the predictors into a linear regression
+
+---
+## Underdispersed and overdispersed data
+
+The main feature of the Poisson distribution is that the mean and the variance
+are both equal to $\lambda$.
+
+--
+
+The fact that the variance equals the mean is a hard constraint, rarely matched 
+by real data
+
+--
+
+When you encounter over-dispersion (i.e., the variance in the data is much 
+larger than what assumed by Poisson), you need to choose a different model. 
+
+--
+
+This happens very often, and one of the solutions is to use is a __Generalized 
+Poisson distribution__ or alternatively __Negative Binomial Regression__ 
+(a negative binomial distribution can be thought of as a Poisson with a scaled 
+variance)
+
+
+---
+## Negative Binomial Regression
+
+Fitting a Negative binomial amounts to fitting:
+
+$$
+\begin{align}
+\mathbb{E}[\lambda_i] = \beta_0 + \beta_1 x_i
+\end{align}
+$$
+
+and 
+
+$$
+\begin{align}
+\mathbb{V[\lambda]} = \mathbb{E}[\lambda_i^2] - \mathbb{E}[\lambda_i]^2 = \phi \lambda 
+\end{align}
+$$
+where $\phi$ controls the dispersion of the data
+
+--
+
+A value $\phi > 1$ signals over-dispersion, while (the very rare case of) 
+$\phi<1$ under-dispersion. The Poisson regression is appropriate only
+when $\phi \approx 1$
+
+--
+
+A simple way to test for dispersion is to fit a _quasipoisson_ model, which 
+returns a dispersion parameter (anything larger than 1 means over-dispersion).
+
+---
+## Other GLMs
+
+Historically, GLMs have been defined for the canonical families:
+
+* __Gaussian__: linear regression
+* __Gamma and Inverse Gaussian__: Positive, continuous
+* __Poisson__: count data
+* __Negative Binomial__: count data (fit an ancillary parameter for over-dispersion)
+* __Binary/Binomial (logistic)__: binary responses; number of successes;
+  probabilities/proportions
+
+--
+
+There are also 'non-canonical' GLMs, that use the same general idea:
+
+* __Log-normal__: Positive, continuous
+* __Log-gamma__: survival models
+* __Probit__: binary
+
+---
+## Further reading
+
++ Generalized linear models with examples in R (Vol. 53). 
+  Dunn, P. K., & Smyth, G. K. (2018) New York: Springer.
+
++ "Regression models for count data in R." Zeileis, Achim, Christian Kleiber, 
+  and Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.
+  
++ "Statistical modeling of patterns in annual reproductive rates."
+  Brooks, Mollie E., et al. Ecology 100.7 (2019): e02706.
+  
+  

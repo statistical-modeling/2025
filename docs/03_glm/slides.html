@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistical models: linking data to theory</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sara Mortara" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <script src="libs/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistical models: linking data to theory
+]
+.subtitle[
+## The Generalized Linear Model
+]
+.author[
+### Sara Mortara
+]
+.date[
+### 07 Fev 2024
+]
+
+---
+
+
+
+
+
+
+
+## Recap
+
+* The key interest in statistical analysis is to find a meaningful relationship 
+  between the __response__ variable (usually denoted by `\(y\)`) and one or 
+  more __explanatory__ variables `\(x_{i}\)`
+
+--
+
+* So far we have assumed the response variable `\(y\)` changes continuously and 
+  errors are normally distributed around the mean, but this need not be the case
+
+
+--
+
+* The most extreme deviation of normality is when your response variable can 
+  only assume `\(0\)` or `\(1\)` values (binary data)
+
+--
+
+* Other deviations include categorical variables and count data and for these 
+  cases as well as situations that do not conform to some of the assumptions of 
+  a linear model   we use generalized linear models
+
+---
+## Breaking the assumptions of a linear model
+
+.pull-left[
+
+* When your response variable ( `\(y\)` ) does not have support in the whole real 
+  line (e.g.: binary data, counts, only positive values)
+
+]
+
+.pull-right[
+
+
+
+![](slides_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+]  
+
+
+
+---
+## Breaking the assumptions of a linear model
+
+.pull-left[
+
+
+* When your response variable ( `\(y\)` ) does not have support in the whole real 
+  line (e.g.: binary data, counts, only positive values)
+
+* Errors are **not** normally distributed 
+]
+
+.pull-right[
+
+
+
+
+![](slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+## Breaking the assumptions of a linear model
+
+.pull-left[
+
+
+* When your response variable ( `\(y\)` ) does not have support in the whole real 
+  line (e.g.: binary data, counts, only positive values)
+
+* Errors are **not** normally distributed 
+
+* There is a relationship between variance ( `\(\sigma\)` ) and mean ( `\(\mu\)` ), 
+  meaning variance changes with the mean (heteroscedasticity)
+]
+
+.pull-right[
+
+![](slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+
+]
+---
+## Generalized Linear Models
+
+* The response variable is modeled by a distribution from the exponential family
+  (e.g. Gaussian, Gamma, Binomial, Poisson)
+
+--
+
+* Independent variables (or covariates) may be continuous, categorical
+  or a combination of both
+
+--
+
+* The link function linearizes the relationship between fitted values and the 
+  predictors
+
+--
+
+* Parameters are estimated through least squares algorithm
+
+---
+
+## Model Structure
+
+We need to determine three parts of the model:
+
+* __Random component__ entries of the response variable `\(Y\)` are assumed to be 
+  independently drawn from a distribution of the exponential family 
+  (e.g. Poisson). It models the variation of the data about the mean
+  
+$$
+`\begin{align}
+y_i &amp;\sim \mathcal{Pois}(\lambda_i) \\
+\lambda_i &amp; = e^{(\beta_0 + \beta_1 x_i)} \\
+\end{align}`
+$$
+---
+
+## Model Structure
+
+We need to determine three parts of the model:
+
+* __Random component__ entries of the response variable `\(Y\)` are assumed to be 
+  independently drawn from a distribution of the exponential family 
+  (e.g. Poisson). It models the variation of the data about the mean
+
+* __Systematic component__ explanatory variables `\(\left( x_1, x_2, \dots \right)\)` 
+  are combined linearly to form a linear prediction 
+  (e.g: `\(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots\)`). We want to know how the 
+  mean response changes as the explanatory variables change
+
+--
+
+* __Link function__ `\(g(u)\)` specifies how the random and systematic components 
+  are connected
+
+---
+
+## A GLM consists of 3 steps
+
+1. Choose the __distribution__ for the response variable:
+
+  This choice should be made a priori based on available knowledge on the 
+  response variable
+
+--
+
+2. Define the __systematic__ part in terms of covariates
+
+--
+
+3. Specify the relationship (__link__) between the expected value of the response
+  variable and the systematic part
+
+
+---
+
+## Binary Data
+
+*-* It's an extreme departure from normality. Response variable assumes only 
+values `\(1\)` or `\(0\)` (no/yes, survived/deceased, presence/absence, lost/won)
+
+--
+
+A Bernoulli random variable can only assume values `\(1\)` or `\(0\)` and therefore 
+provides the __random component__ of the model. The Bernoulli distribution is a
+special case of the __Binomial distribution__ and can be expressed as:
+
+$$
+`\begin{align}
+P(Y_i = y_i | \pi_i) = \pi_i^{y_i} (1-\pi_i)^{1-y_i}
+\end{align}`
+$$
+--
+
+Saying that the probability `\(P(Y_i = 1) = \pi_i\)` and `\(P(Y_i = 0) = (1-\pi_i)\)`
+
+--
+
+Now we want to relate the parameter `\(\pi_i\)` to the __linear predictor__
+  `\(\left( x\right)\)` choosing a __link function__
+
+---
+
+## Logistic Regression
+
+The most popular choice is to use the _Logit_ function as the link function
+
+--
+
+The basic Binomial (Logistic) Regression follows the form:
+
+$$
+`\begin{align}
+y_i \thicksim Binomial(n, \pi_i) \\
+logit(\pi_i) = \beta_0 + \beta_1 x_i
+\end{align}`
+$$
+
+where `\(y\)` is some count variable, `\(n\)` is the number of trials, and `\(\pi\)` is the 
+probability a given trial was `\(1\)`. In our binary example, `\(n=1\)` which means `\(y\)` 
+will be a vector of 1's and 0's.
+
+--
+
+Now let's take a closer look at our link function
+
+$$
+`\begin{align}
+Logit(\pi_i) = \beta_0 + \beta_1 x_i
+\end{align}`
+$$
+
+---
+
+## Logistic Regression
+
+The function `\(Logit(\pi_i) = \beta_0 + \beta_1 x_i\)` can be written as:
+
+$$
+`\begin{align}
+Logit(\pi_i) = \log\left(\frac{\pi_i}{(1-\pi_i)}\right)    
+\end{align}`
+$$
+--
+
+Practically this means:
+
+$$
+`\begin{align}
+\pi_i = \frac{e^{\beta_0 + \beta_1 x_i}}{1+e^{\beta_0 + \beta_1 x_i}}
+\end{align}`
+$$
+--
+
+when `\(\beta_0 + \beta_1 x_i = 0\)` the probability `\(\pi_i = \frac{1}{2}\)`
+
+while the probability tends to one when `\(\beta_0 + \beta_1 x_i \to \infty\)` and 
+  zero when `\(\beta_0 + \beta_1 x_i \to - \infty\)`
+
+---
+
+## Logistic Regression
+
+Now let's see how this looks like
+
+.pull-left[
+
+```r
+set.seed(123)
+# some random data
+X &lt;- rnorm(100)
+beta_0 &lt;- 0.35
+beta_1 &lt;- -3.2
+
+linear_predictor &lt;- beta_0 + beta_1 * X
+predicted_pi_i &lt;- exp(linear_predictor) / 
+                (1 + exp(linear_predictor))
+```
+] 
+
+--
+
+.pull-right[
+![](slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+]
+
+---
+
+## Logistic Regression
+
+Now let's see how this looks like
+
+.pull-left[
+
+```r
+set.seed(123)
+# some random data
+X &lt;- rnorm(100)
+beta_0 &lt;- 0.35
+beta_1 &lt;- -3.2
+
+linear_predictor &lt;- beta_0 + beta_1 * X
+predicted_pi_i &lt;- exp(linear_predictor) / 
+                (1 + exp(linear_predictor))
+```
+
+This is a logistic curve. The parameters `\(\beta_0\)` and `\(\beta_1\)`
+  control the location of the inflection point and the steepness of the curve, 
+  allowing you to model binary response variables
+
+]
+
+.pull-right[
+![](slides_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+]
+
+---
+## The Titanic example
+
+.pull-left[
+
+&lt;img src="figs/titanic.jpg" width="1971" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+```r
+data("Titanic")
+Titanic[, , Age = "Child", ]
+```
+
+```
+## , , Survived = No
+## 
+##       Sex
+## Class  Male Female
+##   1st     0      0
+##   2nd     0      0
+##   3rd    35     17
+##   Crew    0      0
+## 
+## , , Survived = Yes
+## 
+##       Sex
+## Class  Male Female
+##   1st     5      1
+##   2nd    11     13
+##   3rd    13     14
+##   Crew    0      0
+```
+]
+
+
+
+---
+## The Titanic example
+
+
+Let's model the probability of survival according to class and gender. We can 
+  start with a null model where we assume all passengers have the same 
+  probability of survival
+  
+  `$$y_i \sim Binomial(n, \pi_i)$$`
+  
+  `$$logit(\pi_i) = \beta_0$$`
+  
+--
+
+
+
+```r
+library(titanic)
+# model 0: probability of survival in general
+# regress against an intercept
+model0 &lt;- glm(Survived ~ 1, # only intercept
+              data = titanic_train, 
+              family = "binomial") # logistic 
+                                  # regression
+summary(model0)$coefficients[, -4]
+```
+
+```
+##    Estimate  Std. Error     z value 
+## -0.47328770  0.06888737 -6.87045663
+```
+
+
+
+---
+## The Titanic example: the null model
+
+
+$$
+`\begin{align}
+\pi_i = \frac{e^{\beta_0 + \beta_1 x_i}}{1+e^{\beta_0 + \beta_1 x_i}}
+\end{align}`
+$$
+
+
+
+```r
+model0$coefficients
+```
+
+```
+## (Intercept) 
+##  -0.4732877
+```
+
+```r
+# the best fitting (beta0) intercept should lead to 
+# e^beta0 / (1 + e^beta0) = mean(Survived)
+beta0 &lt;- model0$coefficients
+exp(beta0) / (1 + exp(beta0))
+```
+
+```
+## (Intercept) 
+##   0.3838384
+```
+
+```r
+mean(titanic_train$Survived)
+```
+
+```
+## [1] 0.3838384
+```
+
+
+
+---
+
+# The Titanic example: the effect of gender
+
+Now let's include gender. What was the probability of surviving depending on gender?
+
+  `$$y_i \sim Binomial(n, \pi_i)$$`
+  
+  `$$logit(\pi_i) = \beta_0 + \beta_1 * Sex$$`
+  
+--
+
+
+```r
+model1 &lt;- glm(Survived ~ Sex, # one sex as baseline
+              data = titanic_train,
+              family = "binomial")
+
+summary(model1)$coefficients[, -4]
+```
+
+```
+##              Estimate Std. Error    z value
+## (Intercept)  1.056589  0.1289864   8.191477
+## Sexmale     -2.513710  0.1671782 -15.036107
+```
+
+
+
+---
+# The Titanic example: the effect of gender
+
+
+$$ p = \frac{1}{1 + e^{-logit(p)}}$$ 
+
+The calculation `\(\frac{1}{1 + odds}\)` converts odds to probabilities
+
+
+```r
+# What is the best-fitting probability of 
+ # survival for male/female?
+coeffs &lt;- as.numeric(model1$coefficients)
+
+# Probability of survival for women
+1 - 1 / (1 + exp(coeffs[1]))
+```
+
+```
+## [1] 0.7420382
+```
+
+```r
+# Probability of survival for men
+1 - 1 / (1 + exp(coeffs[1] + coeffs[2]))
+```
+
+```
+## [1] 0.1889081
+```
+
+---
+
+# The Titanic example: the effect of gender and class
+
+Our data set also includes information on passenger's class. Let's incorporate 
+  that into our model
+
+
+  `$$y_i \sim Binomial(n, \pi_i)$$`
+  
+  `$$logit(\pi_i) = \beta_0 + \beta_1 * Sex + \beta_2 * Class2 + \beta_3 * Class3$$`
+  
+
+
+```r
+model2 &lt;- glm(Survived ~ Sex + factor(Pclass), # combine Sex and Pclass
+              data = titanic_train,
+              family = "binomial")
+```
+
+
+---
+## The Titanic example: the effect of gender and class
+
+
+
+```r
+(coeffs &lt;- model2$coefficients)
+```
+
+```
+##     (Intercept)         Sexmale factor(Pclass)2 factor(Pclass)3 
+##       2.2971232      -2.6418754      -0.8379523      -1.9054951
+```
+
+```r
+# A woman in first class
+as.numeric(1 - 1 / (1 + exp(coeffs[1])))
+```
+
+```
+## [1] 0.9086385
+```
+
+```r
+# A man in third class
+as.numeric(1 - 1 / (1 + exp(coeffs[1] + 
+                              coeffs[2] + 
+                              coeffs[4])))
+```
+
+```
+## [1] 0.09532814
+```
+
+---
+## Comparing estimates with the data
+
+
+```r
+library(dplyr)
+titanic_train %&gt;% 
+  group_by(Sex, Pclass) %&gt;% 
+  summarize(p = mean(Survived))
+```
+
+```
+## `summarise()` has grouped output by 'Sex'. You can override using the `.groups`
+## argument.
+```
+
+```
+## # A tibble: 6 × 3
+## # Groups:   Sex [2]
+##   Sex    Pclass     p
+##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
+## 1 female      1 0.968
+## 2 female      2 0.921
+## 3 female      3 0.5  
+## 4 male        1 0.369
+## 5 male        2 0.157
+## 6 male        3 0.135
+```
+
+
+
+---
+## Count Data: Poisson Regression
+
+Suppose your response variables are non-negative integers. For example, counting
+  the number of eggs female lay as a function of their age, body size, etc. 
+  You could have the number of new cases of a disease as a function
+  of time. 
+
+--
+
+A possible model for this case is to think of the response variable as being 
+  sampled from a _Poisson_ distribution. One of the assumptions of this 
+  distribution is that the mean `\(\mu\)` and variance `\(\sigma^2\)` are the same and 
+  expressed as `\(\lambda\)`
+  
+---
+## Poisson Regression
+
+Defining the Poisson regression model:
+
+$$
+`\begin{align}
+y_i \thicksim Poisson(\lambda)
+\end{align}`
+$$
+
+--
+
+Since `\(\lambda\)` is constrained to be positive, it is typical to use the _log_ 
+  as the __link__ function. With this we are assuming that the logarithm of the
+  parameter `\(\lambda_i\)` depends linearly on the predictors: 
+  `\(\mathbb{E}[\lambda_i] = \mathbb{E}[log(Y_i|x_i)] = \beta_0 + \beta_1 x_i\)`
+The full model is:
+
+--
+
+$$
+`\begin{align}
+y_i \thicksim Poisson(\lambda) \\
+log(\lambda_i) = \beta_0 + \beta_1 x_i
+\end{align}`
+$$
+
+The logarithm as a link function transforms the relationship between fitted 
+  values and the predictors into a linear regression
+
+---
+## Underdispersed and overdispersed data
+
+The main feature of the Poisson distribution is that the mean and the variance
+are both equal to `\(\lambda\)`.
+
+--
+
+The fact that the variance equals the mean is a hard constraint, rarely matched 
+by real data
+
+--
+
+When you encounter over-dispersion (i.e., the variance in the data is much 
+larger than what assumed by Poisson), you need to choose a different model. 
+
+--
+
+This happens very often, and one of the solutions is to use is a __Generalized 
+Poisson distribution__ or alternatively __Negative Binomial Regression__ 
+(a negative binomial distribution can be thought of as a Poisson with a scaled 
+variance)
+
+
+---
+## Negative Binomial Regression
+
+Fitting a Negative binomial amounts to fitting:
+
+$$
+`\begin{align}
+\mathbb{E}[\lambda_i] = \beta_0 + \beta_1 x_i
+\end{align}`
+$$
+
+and 
+
+$$
+`\begin{align}
+\mathbb{V[\lambda]} = \mathbb{E}[\lambda_i^2] - \mathbb{E}[\lambda_i]^2 = \phi \lambda 
+\end{align}`
+$$
+where `\(\phi\)` controls the dispersion of the data
+
+--
+
+A value `\(\phi &gt; 1\)` signals over-dispersion, while (the very rare case of) 
+`\(\phi&lt;1\)` under-dispersion. The Poisson regression is appropriate only
+when `\(\phi \approx 1\)`
+
+--
+
+A simple way to test for dispersion is to fit a _quasipoisson_ model, which 
+returns a dispersion parameter (anything larger than 1 means over-dispersion).
+
+---
+## Other GLMs
+
+Historically, GLMs have been defined for the canonical families:
+
+* __Gaussian__: linear regression
+* __Gamma and Inverse Gaussian__: Positive, continuous
+* __Poisson__: count data
+* __Negative Binomial__: count data (fit an ancillary parameter for over-dispersion)
+* __Binary/Binomial (logistic)__: binary responses; number of successes;
+  probabilities/proportions
+
+--
+
+There are also 'non-canonical' GLMs, that use the same general idea:
+
+* __Log-normal__: Positive, continuous
+* __Log-gamma__: survival models
+* __Probit__: binary
+
+---
+## Further reading
+
++ Generalized linear models with examples in R (Vol. 53). 
+  Dunn, P. K., &amp; Smyth, G. K. (2018) New York: Springer.
+
++ "Regression models for count data in R." Zeileis, Achim, Christian Kleiber, 
+  and Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.
+  
++ "Statistical modeling of patterns in annual reproductive rates."
+  Brooks, Mollie E., et al. Ecology 100.7 (2019): e02706.
+  
+  
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
