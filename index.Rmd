@@ -32,7 +32,7 @@ and (ii) the inferences that can be made with and about the models.
 
 ## Instructors
 
-* [Sara Mortara]() re.green, [¡liibre!](https://liibre.netlify.app/)
+* Sara Mortara, [re.green](re.green), [¡liibre!](https://liibre.netlify.app/)
 * [Diogo Melo](https://damelo.net/), [Universidade de São Paulo](https://www.ib.usp.br/telefones-ib/docentes-ib/656-diogo-amaral-r-melo.html)
 
 ### Instuctors from previous courses
