@@ -1,0 +1,42 @@
+---
+title: "Course presentation: statistical models link data to theory"
+date: "2024-01-29" 
+author:
+  - name: Sara Mortara & Diogo Melo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Slides
+
+```{r slides}
+#| eval: true
+xaringanExtra::embed_xaringan("01_presentation/slides.html")
+```
+
+# Further reading
+
+ 1. **Quantitative Reasoning in Ecology**: Chapter 1 in Schneider,
+    D. 2009. Quantitative Ecology: Measurement, Models, and
+    Scaling. New York, Academic Press, 2nd Ed. 
+	*(Nice synthesis of
+    statistical analyses in the context of quantitative reasoning. It has
+    also many important highlights on quantities and measurements)*
+ 2. **Alternative views of scientific method and of modelling**:
+    Chapter 2 in Hilborn, R & Mangel, M. 1997. The Ecological
+    Detective - Confronting Models with Data. Princeton, Princeton
+    University Press. 
+	*(The whole book is a [true classic](https://books.google.com.br/books?id=pQabBQAAQBAJ&pg=PA3&hl=pt-BR&source=gbs_toc_r&cad=3#v=onepage&q&f=false) on
+    the use of statistical models in ecology. This chapter has a quick
+    epistemological review and highlights the key distinction between
+    models and hypothesis. It also brings a typology of models, and
+    the concept of model complexity.)*
+ 3. The statistician Galit Schmuéli researches the important
+    distinction between [prediction and
+    explanation](http://www.galitshmueli.com/content/explain-or-predict)
+    in statistics and in different disciplines of science. Also, see
+    the author's [article](https://arxiv.org/pdf/1101.0891.pdf) on the
+    subject.
+

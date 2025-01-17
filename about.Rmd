@@ -1,0 +1,21 @@
+---
+title: "About us"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Sara Mortara
+
+
+
+## Diogo Melo  
+
+```{r, echo=FALSE, out.width='50%'}
+knitr::include_graphics("figures/FXH13898.jpg")
+```
+
+Diogo’s main research interest is understanding the evolution of genetic architecture, especially how genetic architecture can restrict and alter evolutionary trajectories, and how selection can shape these restrictions. Most of his work is computational, but he has also worked with data from large quantitative genetics experiments, trying to link theoretical knowledge on genetic effects to what is seen in real populations. His work is centered on the evolution of genetic correlations, a topic he explores using several different approaches, including QTL mapping, experimental evolution, computer simulations, and comparative data. Diogo has an undergraduate degree in biology from the University of São Paulo, where he also obtained a master's degree and a Ph.D. in genetics and evolutionary biology. From 2020 to 2024, he joined Princeton University as an Associate Research Scholar at the Ayroles Lab and lecturer in the Ecology and Evolution Department. He is now 
+and assistant professor at the Biology Institute of the University of São Paulo.

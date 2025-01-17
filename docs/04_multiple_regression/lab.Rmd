@@ -1,0 +1,407 @@
+---
+title: "Multiple linear regression Lab"
+author:
+ - "Andrea Sánchez-Tapia"
+ - "Paulo Inácio Prado"
+date: "2024-02-01"
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---
+
+```{r setup, echo=FALSE}
+library(rmarkdown)
+knitr::opts_chunk$set(eval = FALSE, fig.asp = 1)
+# clipboard
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
+    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
+  ),
+  rmarkdown::html_dependency_font_awesome()
+  )
+
+```
+
+
+# Introduction 
+
+We can extend the simple linear regression model to accommodate
+multiple predictors. These are the **multiple linear regression**
+models, of which the simple linear regression is just a particular
+case with a single predictor variable.
+
+
+In the next sections we will show how to fit multiple regression
+models with the least square methods in R, and how to interpret the
+model coefficients.
+
+# Additive multiple linear model
+
+In an additive multiple linear regression, the expected value of the
+response $\mu$ is the sum of multiple predictor variables
+$X_i$, each one weighted by its own coefficient
+$\beta_i$ :
+
+
+$$
+\begin{align}
+y_i &\sim Normal(\mu_i, \sigma) \\
+\mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij} \\
+\sigma & = C
+\end{align}
+$$
+
+The expression for the predicted value in this model can be written in the compact form:
+
+$$\mu_i = \sum_{j=0}^{J} \beta_{j} x_{ij}$$
+
+Where $J$ is the number of predictor variables. This is called the **linear predictor**.
+
+## Fitting
+
+We will use a data set of an experiment done with the biennial plant
+*Ipomopsis aggregata*^[Crawley 2007. The R Book, Wiley]. Forty plants
+were assigned at random to two treatments: unprotected from grazing by
+rabbits and protect from grazing by fences. The fruit yield of each
+plant (dry mass in mg) was measured at the end of the experiment. To
+take into account the effect of the size of the plant on fruit
+production, the diameter of the top of rootstock (mm) was also
+recorded. Copy the following commands and paste in your R console to
+read and prepare this data for the analyses:
+
+```{r data, eval=TRUE}
+## Data reading and preparation
+ipomopsis <- read.csv("https://raw.githubusercontent.com/lmmx/crawley-r-statistics-book-notes/master/code/ipomopsis.csv")
+## More proper names
+names(ipomopsis) <-  c("diameter","fruit.w","treatment")
+## Convert treatment to a factor variable
+ipomopsis$treatment <- factor(ipomopsis$treatment,
+                              labels = c("Control", "Fenced"))
+```
+
+Let's start with a plot of the response variable as function of both
+predictors:
+
+
+```{r plot}
+plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
+     ylab = "Fruit dry weight (mg)",
+     xlab = "Rootstock diameter (mm)")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Fenced")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Control", pch=2, col ="red")
+legend("topleft", c("Fenced", "Control"), pch=c(1,2),
+       col =c("black", "red"), bty="n")
+```
+
+Larger plants tend to produce larger dry biomass of fruits. It also
+seems that if we control for size, non-fenced plants had larger fruit
+yields. We can check this hypothesis by fitting a linear regression
+with the additive effect of both plant size and treatment:
+
+
+```{r  lm, eval=TRUE}
+ipo_m1 <- lm(fruit.w ~ diameter + treatment, data = ipomopsis)
+```
+
+Use the function `coef` to store the coefficients ($\beta_i$) of this
+fitting in a object:
+
+
+```{r coef, eval=TRUE, fig.asp = T}
+(ipo_cf1 <- coef(ipo_m1))
+```
+
+The predictor variable "treatment" is a factor with two levels
+(control/fenced). The default in R is to create dummy variables for
+each level of the factor, except the first one in alphabetical
+order. This means that the model has a variable *"treatmentFenced"*,
+that has value one for fenced plants, and value zero otherwise. So,
+fruit yield predicted ($\widehat{Y}$) by this model for control plants is:
+
+$$\widehat{Y}_{\text{non-fenced}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 0$$
+
+While for fenced plants we have:
+
+$$\widehat{Y}_{\text{fenced}} = \beta_0 + \beta_1 \text{diameter} + \beta_2 \times 1$$
+
+
+To add the line of expected yield for fenced plants we can use the
+function `abline`, that draws a straight line with a given intercept and slope:
+
+```{r plot2}
+## Make the plot again
+plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
+     ylab = "Fruit dry weight (mg)",
+     xlab = "Rootstock diameter (mm)")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Fenced")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Control", pch=2, col ="red")
+legend("topleft", c("Fenced", "Control"), pch=c(1,2),
+       col =c("black", "red"), bty="n")
+## Adds the predicted line for fenced plants
+## check the function help to use it
+abline( a = ipo_cf1[1] + ipo_cf1[3], b = ipo_cf1[2], col = "black")
+```
+
+**Challenge:** now add to the plot a black line for the expected yield for
+non-fenced plants. Your plot should look like this:
+
+
+```{r plot3, echo = FALSE, eval =TRUE}
+## Make the plot again
+plot(fruit.w ~ diameter, data = ipomopsis, type ="n",
+     ylab = "Fruit dry weight (mg)",
+     xlab = "Rootstock diameter (mm)")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Fenced")
+points(fruit.w ~ diameter, data = ipomopsis,
+       subset = treatment == "Control", pch=2, col ="red")
+legend("topleft", c("Fenced", "Control"), pch=c(1,2),
+       col =c("black", "red"), bty="n")
+## Adds the predicted line for fenced plants
+## check the function help to use it
+abline( a = ipo_cf1[1], b = ipo_cf1[2], col = "red")
+abline( a = ipo_cf1[1]+ipo_cf1[3], b = ipo_cf1[2])
+```
+
+From the plot above, we can see that the difference between the
+yield of plants of the same size is a constant, that corresponds to
+the value of the coefficient of the variable *"treatmentNon-Fenced"*.
+Thus, the fitted model estimates that non-fenced plants had on average
+more `r round(ipo_cf1[3])` mg of fruit yield, if we control for plant
+size.
+
+**Final Challenge** 
+
+What if we had not controlled for plant size? Fit a
+model only with the treatment and interpret the coefficients. 
+
+Hint: it
+is good practice to do exploratory data analyses before any model
+fitting. In this case a box plot can help, try: 
+
+```{r boxplot}
+boxplot(fruit.w ~ treatment, data=ipomopsis)
+```
+
+
+# Adding interactions to the model
+
+
+In this example, beds of tulips grown in greenhouses are subjected to
+different soil moisture and light conditions. The response variable is
+the size of blooms under these varying conditions.
+
+
+
+```{r tulips, eval = T}
+library(rethinking)
+data(tulips)
+str(tulips)
+```
+
+The variable `water` indicates one of three ordered levels of soil
+moisture, from low (1) to high (3). The variable `shade` indicates one
+of three ordered levels of light exposure, from high (1) to low (3).
+
+Both predictor factors are crucial for plant growth. In simple
+regression settings, we would expect a positive response of bloom size
+to increases in soil moisture and light (in this case a negative slope
+for `shade`).
+
+However, how these two variables interact to affect plant growth is
+also interesting. Higher soil moisture in the absence of light limits
+photosynthesis, that requires both. Likewise, in the absence of water,
+higher luminosity does not contribute to plant growth.
+
+The mutual dependency of how predictor variables affect the response can be modeled as an
+__interaction__.
+
+The model with interaction has the following notation: 
+
+$$
+\begin{align}
+y_i & \sim Normal(\mu_i, \sigma) \\
+\mu_i & = \beta_0 \, + \, \beta_1 x_{i1} \, + \, \beta_2 x_{i2} \, + \,  \beta_3 x_{i1}  x_{i2}\\
+\sigma & =  C
+\end{align}
+$$ 
+
+Where:
+
+$y_i$ is each value of the response variable *blooms*
+
+$x_{i1}$ is each value of the predictor variable *water*
+
+$x_{i2}$ is each value of the predictor variable *shade*
+
+$x_{i1} \dot x_{i2}$ is the product of the two explanatory variables, or the **interaction term**.
+
+$\beta_j$ are the model coefficients.
+
+
+Thus, model with interaction adds a third parameter $\beta_3$ to account
+for the interaction between the level of watering and shading.
+
+
+```{r center, echo = F, eval = F}
+#Let's center the data:
+blooms <- tulips$blooms / max(tulips$blooms) 
+water <- tulips$water - mean(tulips$water) 
+shade <- tulips$shade - mean(tulips$shade)
+```
+
+Let's plot the data: 
+
+```{r plot_tulip}
+color <- c("black", "red", "blue")
+plot(blooms ~ water, 
+     data = tulips, 
+     type = "n",
+     ylab = "Bloom numbers",
+     xlab = "Water level")
+for (s in 1:3) {
+points(blooms ~ water, 
+       data = tulips,
+       subset = shade == s, pch = s, col = color[s])
+}
+legend("topleft",
+       c("Shade 1", "Shade 2", "Shade 3"),
+       pch = c(1, 2, 3), 
+       col =c("black", "red", "blue"), bty = "n")
+
+```
+
+
+
+```{r plot_three, fig.asp = 0.6, echo = F, eval = F}
+#Let's plot three panels for this dataset: 
+color <- c("black", "red", "blue")
+par(mfrow = c(1, 3))
+ #just to plot
+for (s in 1:3) {
+  index <- which(tulips$shade == s)
+ plot(blooms ~ water, data = tulips[index,], type = "n",
+     ylab = "Bloom numbers",
+     xlab = "Water level")
+points(blooms ~ water, data = tulips[index,],
+       subset = shade == s,
+       pch = s, col = color[s])
+title(paste("Shade", s))
+}
+
+```
+
+
+Let's fit the model with the interaction between the effects of shade
+and water, and extract its coefficients. The R syntax to include an
+interaction in a model formula is *"variable1:variable2"*.
+
+```{r interactions}
+tulip_int <- lm(blooms ~ water + shade +
+                  water:shade, data = tulips)
+(tul_cf2 <- coef(tulip_int))
+```
+
+Unlike the additive model, the slopes of the regression model with the
+interaction factor can vary between groups.
+
+In this example, the interacting (or moderator) variable `shade` has
+only three values (1, 2, 3).  We could treat both variable as factors
+with three levels, but for learning purporses we will use it here as a
+continuous value. Thus the predicted values for the lower levels of
+water (*water = 1*) for any value of shade is:
+
+$$\begin{align}
+\widehat{Y}_{[\text{water=1}]} & = \beta_0 \; + \; \beta_1 \times 1 \; + \; \beta_2 \times \text{shade} \; +  \; \beta_3 \times 1 \times \text{shade} \\
+& = (\beta_0 + \beta_1) \; + \; (\beta_2 + \beta_3) \times \text{shade}
+\end{align}
+$$
+
+That is, if the value of the variable is one, the intercept of the
+linear predictor is increased in $\beta_1$, and the slope of is
+increased in $\beta_3$.
+
+The predicted values for *water = 2* are:
+
+$$\begin{align}
+\widehat{Y}_{[\text{water=2}]} & = \beta_0 \; + \; \beta_1 \times 2 \; + \; \beta_2 \times \text{shade} \; +  \; \beta_3 \times 2 \times \text{shade} \\
+& = (\beta_0 + 2 \beta_1) \; + \; (\beta_2 + 2 \beta_3) \times \text{shade}
+\end{align}
+$$
+
+And so on. Therefore, in a model with interaction, the *effect* of one
+predictor variable (that is, how much its increase affects the
+response), depends of the value of some other predictor variable. In
+this example, the effect of increasing or decreasing shading depends
+on how moits are the plant beds.
+
+Let's calculate conditional slopes for the different values of shade
+(1, 2, and 3). A handy way to do that is:
+
+```{r calculations}
+s <- 1:3 #values of shade
+intercepts <- tul_cf2[1] + tul_cf2[3] * s
+slopes <- tul_cf2[2] + tul_cf2[4] * s
+```
+
+And now we can plot again the dataset and add lines according to these values. 
+
+```{r plotagain}
+color <- c("black", "red", "blue")
+plot(blooms ~ water, 
+     data = tulips, 
+     type = "n",
+     ylab = "Bloom numbers",
+     xlab = "Water level")
+for (s in 1:3) {
+points(blooms ~ water, 
+       data = tulips,
+       subset = shade == s, pch = s, col = color[s])
+  abline(a = intercepts[s], slopes[s], col = color[s])
+}
+legend("topleft",
+       c("Shade 1", "Shade 2", "Shade 3"),
+       pch = c(1, 2, 3), 
+       col = c("black", "red", "blue"), bty = "n")
+
+```
+
+As you can see, the effect of more soil humidity is steep when there
+is more light, and it decreases with increasing values of shade.
+
+__Extra:__ 
+
++ Run the diagnostic plots for this model 
+
++ Fit and compare the model with only additive effects for this dataset:
+
+$$
+\begin{align}
+y_i & \sim Normal(\mu_i, \sigma) \\
+\mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2}\\
+\sigma & =  C
+\end{align}
+$$ 
+
++ Fit the model after scalling the predictors so they are centered at zero:
+
+```{r}
+tulips_centered = within(tulips,{
+  water = water - mean(water)
+  shade = shade - mean(shade)})
+```
+
+What happens with the coefficients? What happens with the predicted values?
+
+# References
+
++ McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.
+
+

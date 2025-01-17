@@ -1,0 +1,33 @@
+name: "2024_serrapilheira_ICTP"
+title: "Statistical Modelling"
+theme: theme.css
+description: |
+  Statistical Inference
+creative_commons: CC BY
+output_dir: "docs"
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "Syllabus"
+      menu:
+        - text: "Presentation"
+          href: 01_presentation.html
+        - text: "Linear models"
+          href: 02_linear_models.html
+        - text: "Generalized Linear Models"
+          href: 03_glm.html
+        - text: "Bayesian statistics"
+          href: 05_bayesian_statistics.html
+        - text: "Model selection"
+          href: 06_model_selection.html
+        - text: "Causal thinking"
+          href: 07_causal_thinking.html
+        - text: "Mixed and hierarchical models"
+          href: 08_mixed_and_hierarchical_models.html
+    - text: "About us"
+      href: about.html
+    - icon: fa fa-github
+      href: https://github.com/statistical-modeling-qeco/2024_website
+output: distill::distill_article
+
