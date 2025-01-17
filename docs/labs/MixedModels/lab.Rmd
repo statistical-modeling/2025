@@ -1,0 +1,712 @@
+---
+title: "Mixed-effects and hierarchical models lab"
+author:
+ - "Paulo Inácio Prado"
+ - "Diogo Melo"
+date: "2024-02-09"
+output:
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+---
+
+```{r setup, echo=FALSE}
+library(rmarkdown)
+knitr::opts_chunk$set(eval = FALSE, fig.asp = 1)
+# clipboard
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "Copy code <i class=\"fa fa-clipboard\"></i>",
+    success_text = "Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"></i>",
+    error_text = "Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"></i>"
+  ),
+  rmarkdown::html_dependency_font_awesome()
+  )
+```
+
+
+-<!-- 
+Tadpoles rethinkg: proporcoes de sobrevivencia, sem random intercept e com random intercept: shrinkage de estimativas pooled e non-pooled. Usar lme4:glmer . Ver graficos shrinkage do Rethinking
+desafio : alguma interpretação do efeito do tamanho do tanque sobre o shrikage
+
+https://blogs.rstudio.com/ai/posts/2019-05-06-tadpoles-on-tensorflow/
+https://github.com/waldronlab/Statistical-Rethinking/blob/master/2018-05-23%20Multilevel%20Models.Rpres=
+
+
+Especie-area de varios arquipélagos: modelo logS x logA com slopes variados, com e sem efeito fixo do tipo de arquipélago. começar mostrando as regressões para cada arquipélago. Usar quap
+
+Notação: ver slides Ogro
+
+The commands below uses [tidyverse](https://www.tidyverse.org/) syntax
+to select only data for insular systems^[that is, excludes data for
+"islands" thata are actually habitat patches], and archipelagoes with
+at least five islands. After that, we calculate the logarithms of the
+area and number of species of each island, and then standardize the
+logarithm of areas^[by subtracting the mean of log area from each
+value and then by dividing by the standard deviation of the value of
+log area], and center the logarithm of number of species^[by
+subtracting the mean of log species richness from each value]. The
+code also creates a numeric index for each study site (archipelago).
+
+-->
+
+
+# Introduction
+
+
+We will use a data set with the number of species of ants recorded in
+islands in different archipelagoes. Our goal is to fit linear models
+to the relationship of the number of species as a function of island
+area, in log scale.
+
+
+Start loading the required libraries and the data (which is
+available in the supplementary material in Ohyama *et al.* 2021):
+
+
+```{r}
+## load required libraries
+library(tidyverse)
+library(rethinking)
+library(lme4)
+library(bbmle)
+## all data sets compiled by Ohyama et al
+raw <- read.csv("https://github.com/piLaboratory/bie5781/raw/master/data/jbi14149-sup-0003-appendixs3.csv")
+```
+
+The commands below use [tidyverse](https://www.tidyverse.org/) syntax
+to select only data for oceanic islands. After that, we calculate the
+logarithms of the area and number of species of each island, and then
+standardize the logarithm of areas^[by subtracting the mean of log
+area from each value and then by dividing by the standard deviation of
+the value of log area], and center the logarithm of number of
+species^[by subtracting the mean of log species richness from each
+value]. The code also creates a numeric index for each study site
+(archipelago).
+
+```{r , eval =TRUE}
+
+## Data set for oceanic islands
+## and transformed area and richness
+islands <-
+    dplyr::filter(raw, Island.Type== "Oceanic") %>%
+    mutate(l_area = log(Island_area),
+           l_S = log(Species.Richness),
+           ls_area = (l_area - mean(l_area))/sd(l_area),
+           lc_S = l_S - mean(l_S),
+           site_fac= factor(Study.location),
+           site = as.integer(site_fac),
+           site_id = factor(site))
+
+```
+
+Tidyverse provides ggplot2 package, that allows to make a quick plot
+of the species-area relationship at each study site:
+
+
+```{r }
+p2 <-
+    islands %>%
+    ggplot(aes(x = ls_area, y = lc_S)) +
+    geom_point() +
+    facet_wrap(~ site_fac) +
+    xlab("Standardized ln Island Area (m2)") +
+    ylab("Centered ln Species Richness") +
+    theme_bw()
+
+p2
+```
+
+In the following sections we will fit and compare three alternative
+models to this data, assuming that the response follows a Gaussian
+distribution:
+
+**Single slope and intercept:** a simple linear regression, that
+estimates a single slope and a single intercept for the expected
+linear relationship between the response and predictor:
+
+$$
+\begin{aligned} 
+  y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+  \mu_i &= \alpha + \beta x_i
+\end{aligned} 
+$$
+
+Where $y_i$ is the centered value of the logarithm of species
+richness, and $x_i$ is the standardized value of the logarithm of
+island area, for each island $i$
+
+**Independent slopes and intercepts for each site:** this model
+corresponds to fit a separate linear regression for each archipelago
+(study site). Thus, there is a independent intercept and slope for the
+linear predictor at each site:
+
+$$
+\begin{aligned}
+  y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+  \mu_i &= \alpha_{\text{site[i]}} + \beta_{\text{site[i]}} \, x_i
+\end{aligned}
+$$
+
+Where $\alpha_{\text{site[i]}}$ and $\beta_{\text{site[i]}}$ are the
+intercept and slope for the site of the observation $i$.
+
+**Pooled slopes and intercepts across sites:** there is a different
+slope and intercept for the linear predictor for each site, but pooled
+in a assumed distribution. This is an hierarchical model, where slopes
+and intercepts for each site follow each one some theoretical
+distribution, usually a Gaussian distribution.
+
+$$
+\begin{aligned}
+  y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+  \mu_i &= \alpha_{\text{site[i]}} + \beta_{\text{site[i]}} \, x_i \\
+  \alpha_{\text{site}} &\sim \text{Normal}(\mu_\alpha, \sigma_\alpha) \\
+  \beta_{\text{site}} &\sim \text{Normal}(\mu_\beta, \sigma_\beta) \\
+\end{aligned}
+$$
+
+By pooling the parameters in the same distribution we assume that
+there is some dependence among them.
+
+In the next sections we will show how to fit and compare these three
+models using the Bayesian and Maximum Likelihood approaches.
+
+## The Bayesian way
+
+
+### Single slope and intercept
+
+We need the values of the response and predictor variable for
+each island, as shown in the first lines of the data set below:
+
+```{r }
+head(islands[, c("ls_area", "lc_S")])
+```
+
+We need also to define prior distributions for the three parameters of the
+model. Here we use a log-normal prior for the slope, as we know that
+the species-area relationship is positive. The chosen log-normal prior assigns a
+low probability (p<0.05) to slopes larger than 1.5. The priors for the
+intercept and standard deviation are less informative:
+
+$$
+\begin{aligned} 
+  y_i & \sim \text{Normal}(\mu_i, \sigma) \\
+  \mu_i &= \alpha + \beta x_i \\
+  \alpha & \sim \text{Normal}(\mu = 0, \sigma = 2)\\
+  \beta & \sim \text{Log-normal}(\mu = 0, \sigma = 0.7)\\
+  \sigma & \sim \text{Exponential}(\lambda = 1)
+\end{aligned} 
+$$
+
+And here is the code to fit this model using the *rethinking* package:
+
+```{r }
+m0 <- ulam(
+    alist(
+        lc_S ~ dnorm( mu, sigma ) ,
+        mu <- alpha + beta * ls_area,
+        alpha ~ dnorm(0, 2),
+        beta ~ dlnorm(0, 0.7), 
+        sigma ~ dexp(1)
+    ) , data = islands[, c("ls_area", "lc_S")] , chains=4 , cores=4 , log_lik=TRUE )
+```
+
+You get a summary of the posterior distributions of the parameters with:
+
+
+```{r }
+(m0.cf <- precis(m0, digits =3))
+```
+
+And we can use the mean of the posterior distributions of the intercept
+and slope to draw the regression line on the data for each site:
+
+
+```{r }
+p2 +
+    geom_abline(aes(intercept = m0.cf["alpha", 1], slope = m0.cf["beta",1]))
+```
+
+Assuming the same regression line for every site is a huge
+underfitting.
+
+### Different slopes and intercepts for each site
+
+Clearly we need a model with more parameters to describe the
+variations of the species-area relationship we see across study
+sites. Thus, we can try to allow different intercepts and slopes for
+each of the sites. Now we will need a third variable, a numeric index
+that codes the site:
+
+```{r }
+head(islands[, c("ls_area", "lc_S", "site")])
+tail(islands[, c("ls_area", "lc_S", "site")])
+```
+
+And we will call $\alpha_{\text{site[i]}}$ the intercept for each
+observation $i$ for each site. The same applies to the slope
+$\beta_{\text{site[i]}}$. As we have `r max(islands$site)` sites, we
+have to specify `r max(islands$site)` priors for each intercept and 
+`r max(islands$site)` priors for each slope. Using the notation
+$\theta_{\text{site}} \sim \text{distribution()}$ as shorthand
+for this bunch of priors, we can write the model as:
+
+$$
+\begin{aligned}
+  y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+  \mu_i &= \alpha_{\text{site[i]}} + \beta_{\text{site[i]}} \, x_i \\
+  \alpha_{\text{site}} & \sim \text{Normal}(\mu = 0, \sigma = 2)\\
+  \beta_{\text{site}} & \sim \text{Log-normal}(\mu = 0, \sigma = 0.7)\\
+  \sigma & \sim \text{Exponential}(\lambda = 1)
+\end{aligned}
+$$
+
+For all intercepts and slopes we choose the same priors used for the
+single intercept and slope of the previous model. We also kept the
+same prior for single parameter $\sigma$ .
+
+We can fit this model with:
+
+
+```{r }
+m1 <- ulam(
+    alist(
+        lc_S ~ dnorm( mu, sigma ) ,
+        mu <- a[site] + b[site] * ls_area,
+        a[site] ~ dnorm(0, 2),
+        b[site] ~ dlnorm(0, 0.7),
+        sigma ~ dexp(1)
+    ) , data = islands[, c("ls_area", "lc_S", "site")] , chains=4 , cores=4 , log_lik=TRUE )
+```
+
+To show the summary of the posteriors of all parameters use the
+argument *depth = 2* of function *precis*:
+
+```{r }
+(m1.cf <- precis(m1, digits =3, depth =2))
+```
+
+The code below arranges the posterior means of the intercept of slope
+for each site as columns of a data frame, and adds the site name for
+each one. We can then use this data frame to add the regression lines
+ to the scatter plots for each site:
+ 
+ 
+```{r }
+nsites <- max(islands$site)
+## Data frame with linear parameters and site name
+m1.ab <- data.frame(
+    site = 1:nsites,
+    site_fac = levels(islands$site_fac),
+    intercept = m1.cf[1:nsites,1],
+    slope = m1.cf[(nsites+1):(2*nsites),1])
+## Scatter plots + posterior regression lines
+p2 +
+    geom_abline(data = m1.ab,
+                aes(intercept = intercept, slope = slope),
+                col="navy")
+```
+
+As we would expect, the fit improved very much, but at the cost of
+adding `r nrow(m1.cf) - nrow(m0.cf)` parameters to the model. We
+switched from underfitting to a possible overfitting. 
+
+### Pooled intercepts and slopes
+
+A  possible middle-ground is to
+allow varying parameters across sites, but pooling them in a
+distribution. Thus, now we have **hyperparameters**, which are the
+parameters of the distributions of the parameters of the linear
+predictor. We thus have to assign priors for the hyperparameters:
+
+
+$$
+\begin{aligned}
+  y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+  \mu_i &= \alpha_{\text{site[i]}} + \beta_{\text{site[i]}} \, x_i \\
+  \alpha_{\text{site}} & \sim \text{Normal}(\mu_\alpha, \sigma_\alpha)\\
+  \beta_{\text{site}} & \sim \text{Normal}(\mu_\beta, \sigma_\beta)\\
+  \mu_\alpha & \sim \text{Normal}(\mu = 0, \sigma = 2)\\
+  \mu_\beta & \sim \text{Log-normal}(\mu = 0, \sigma = 0.7)\\
+  \sigma_\alpha & \sim \text{Exponential}(\lambda = 1)\\
+  \sigma_\beta & \sim \text{Exponential}(\lambda = 0.25)\\
+  \sigma & \sim \text{Exponential}(\lambda = 1)\\
+\end{aligned}
+$$
+
+Here is the code to fit this model:
+
+
+```{r }
+m2 <- ulam(
+    alist(
+        lc_S ~ dnorm( mu, sigma ) ,
+        mu <- a[site] + b[site] * ls_area,
+        a[site] ~ dnorm(mu_a, sigma_a),
+        b[site] ~ dnorm(mu_b, sigma_b),
+        ##prior
+        sigma ~ dexp(1),
+        ## hyper-priors
+        mu_a ~ dnorm(0, 2),
+        mu_b~ dlnorm(0, 0.7),
+        sigma_a ~ dexp(1),
+        sigma_b ~ dexp(0.25)
+    ) , data = islands[, c("ls_area", "lc_S", "site")] , chains=4 , cores=4 , log_lik=TRUE )
+```
+
+Again, we get the summaries of the posterior distributions of the
+parameters, and assemble their posterior means in a data frame:
+
+
+```{r }
+## Posterior summaries
+(m2.cf <- precis(m2, depth = 2, digits=3))
+## Data-frame with posterior means of slope and intercept
+## for each site
+m2.ab <- data.frame(
+    site = 1:nsites,
+    site_fac = levels(islands$site_fac),
+    intercept = m2.cf[1:nsites,1],
+    slope = m2.cf[(nsites+1):(2*nsites),1])
+```
+
+And them we can add the regression lines of this model and the of the
+previous one to the scatter plots:
+
+
+```{r }
+p2 +
+    geom_abline(data = m1.ab,
+                 aes(intercept = intercept, slope = slope),
+                col="navy") +
+     geom_abline(data = m2.ab,
+                 aes(intercept = intercept, slope = slope),
+                col="red")
+```
+
+Pooled slopes (red lines) are less variable, because the fit to each
+site uses information from the other sites. Thus, the parameters
+shrink towards a common mean:
+
+```{r }
+plot(m1.ab$slope, rep(1,nrow(m1.ab)),
+     ylim = c(0.5, 2.5),
+     xlab = "Mean posterior slopes",
+     yaxt="n", ylab="" , cex.axis=2,
+     cex.lab = 2, pch = 19)
+points(m2.ab$slope, rep(2,nrow(m2.ab)), pch =19)
+segments(y0 = rep(1,nrow(m1.ab)), x0 = m1.ab$slope,
+         y1 = rep(2,nrow(m1.ab)), x1 = m2.ab$slope,
+         lty =2)
+axis(2, at = c(1, 2), labels = c("M1", "M2"), cex.axis=2, adj = 1, las = 2)       
+```
+
+This common mean is the hyperparameter $\mu_\beta$. Add the Bayesian
+confidence interval of this parameter to the plot above:
+
+
+```{r }
+segments(x0 = m2.cf["mu_b","5.5%"],
+         y0 = 2.2,
+         x1 = m2.cf["mu_b","94.5%"],
+         y1 = 2.2, lwd=2, col ="blue")
+```
+
+This model assumes a normal distribution for the slopes of the
+regression, which is the parameter of interest in an analysis of
+species-area relationships. 
+
+How variable would be these slopes among archipelagoes, if our model
+provides a good prediction? We can assess this by simulating the
+posterior distributions of the slopes. To do that, we first take 
+samples from the posterior distributions of the mean and standard
+deviations of the normal that describe the distribution of slopes. To
+simulate an archipelago taken at random, we then simulate a sample,
+from a normal using these parameters. By repeating this many times we
+can approximate the posterior distribution of the slopes. For
+reference, we added also the prior distributions of this slopes used
+in the fit:
+
+```{r }
+## Sample posteriors of mean and standard deviation of slope distributions
+m2.samp <- extract.samples(m2, pars = c("mu_b", "sigma_b"))
+## Simulate normal samples using the parameter sampled above
+sim.slopes <- rnorm(length(m2.samp$mu_b), mean = m2.samp$mu_b, sd = m2.samp$sigma_b)
+## Simulate prior of slopes
+m2.priors <- data.frame(mu_b = rlnorm(1e4, meanlog = 0, sdlog = 0.7),
+                        sigma_b = rexp(1e4, rate =1))
+sim.prior.slopes <- rnorm(length(m2.priors$mu_b), mean = m2.priors$mu_b, sd = m2.priors$sigma_b)
+## Densities of the simulated prior and posterior
+plot(density(sim.slopes),
+     xlab = "Slopes", main ="",
+     xlim = c(-2,5))
+lines(density(sim.prior.slopes), col ="blue")
+legend("topleft", legend = c("Prior", "Posterior"),
+       lty =1, col=c("blue","black"), bty = "n")
+```
+
+### Model comparison
+
+The package *rethinking* has the handy function
+[compare](https://rdrr.io/github/rmcelreath/rethinking/man/compare.html)
+that returns a model selection table using WAIC (Gelman *et al.*
+2013). As for any information-based criteria, the model with best
+predictive information (or with the smaller loss of information of the
+data-generating process) has the smaller value of WAIC:
+
+```{r }
+compare(m0, m1, m2)
+```
+
+The WAIC tells us that the model with polled intercepts and slopes is
+as good to predict future observations as the model with independent
+slopes and intercepts. This suggests that the former may be overfitted.
+
+
+## The maximum likelihood way
+
+There are functions and libraries in R with efficient routines to fit
+many classes of models with the maximum likelihood method. Most of these functions use
+the [model formula
+syntax](https://www.ucd.ie/ecomodel/Resources/R_formulae_WebVersion.html),
+which expresses the structure of the linear (or non-linear) predictor.
+
+
+### Single slope an intercept
+
+This is the simple linear regression. As we [have seen already](https://statistical-inference.netlify.app/03_linear_models.html), we fit
+this model by the ML method with the function`lm`:
+
+
+```{r }
+m0.ML <- lm(lc_S ~ ls_area, data = islands)
+```
+
+And here are the estimates and confidence intervals of the estimated
+parameters of the linear predictors:
+
+```{r }
+## Intercept and slopes estimates and CI
+coef(m0.ML)
+confint(m0.ML)
+```
+
+The estimate of the residual standard deviation $\sigma$ is returned by
+
+
+```{r }
+sigma(m0.ML)
+```
+
+To get the limits of the frequentist 95% confidence interval for
+$\widehat{\sigma}$ of this model we apply the expression:
+
+$$
+\left(\,  \sqrt{ \frac{\text{RSS}}{\chi^2_{0.975,n-2}}} \; , \; \sqrt{ \frac{\text{RSS}}{\chi^2_{0.025,n-2}}} \, \right)
+$$
+
+Where $\text{RSS}$ is the sum of squared residuals, $n$ is the number
+of observations and $\chi^2_{p,n-2}$ is the quantile of the
+Chi-square distribution for a probability of $p$ and $n-2$ degrees of
+freedom^[in this case, the degrees of freedom of the sum of squared residuals is the number of observations minus the number of parameters of the linear predictor].
+
+Here is how to calculate the CI for $\hat{\sigma}$ in R:
+
+
+```{r }
+RSS <- sum(residuals(m0.ML)^2)
+N <- nrow(islands)
+## Lower CI limit
+sqrt( RSS / qchisq(0.975, df = N -2))
+## Upper CI limit
+sqrt( RSS / qchisq(0.025, df = N -2))
+```
+
+**Question:** do the parameter estimates and their confidence intervals of the ML and Bayesian fitting match?
+
+
+### Different slopes and intercepts for each site
+
+This is multiple linear regression, with island area and the site
+identity as predictor variables. Site identity is a categorical factor
+with as many levels as sites:
+
+
+```{r }
+## site id with sites names as labels
+levels(islands$site_fac)
+## site id with numeric labels (the same)
+levels(islands$site_id)
+```
+
+By including an additive effect of site id in the model you allow for
+different intercepts^[that is, the mean log richness differ among
+sites]. And by including an interaction between island area and site
+id you allow for different slopes for each site^[that is, the effect
+of island area varies between sites]:
+
+
+```{r }
+m1.ML <- lm(lc_S ~ ls_area + site_id + ls_area:site_id, data=islands)
+```
+
+And then you get the estimated coefficients with:
+
+```{r }
+(m1.ML.cf <- coef(m1.ML))
+```
+
+The default structure of the linear predictor for a multiple
+regression with categorical variables like that in R is
+
+$$mu_i = \alpha_0 + \alpha_{site[i]} + (\beta_0 + \beta_{site[i]}) \, \text{ls_area}$$
+
+Where $\alpha_0$ is the intercept for the first level of the
+categorical variable (the site coded as #1), $\beta_0$ is the slope
+also for the first level of the categorical variable. And thus
+$\alpha_{site[i]}$ are the **differences between intercepts** for
+observations at the level 1 of the categorical predictor and level
+$i$. In the same way, $\beta_{site[i]}$ are the differences between
+the slopes for level 1 and level $i$.
+
+Therefore, in our model the coefficients labeled as *"(Intercept)"*
+and *"ls_area"* are the intercept and slopes estimated for the study
+site 1. You can get the estimates of intercepts for sites 2 to `r nsites` with:
+
+
+```{r }
+m1.ML.cf[1] + m1.ML.cf[3:(nsites+1)] 
+```
+
+**Question:** Calculate the estimated slopes for each site and compare
+with the corresponding estimates by the Bayesian fit. Do they match?
+After making your comparisons, click below to unfold a code to draw
+the regression lines from the Bayesian (blue) and Ml (red) fittings.
+
+```{r code_folding=TRUE}
+## Assembles a data-frame with intercepts and slopes
+## for the ML fitting
+m1.ML.ab <- data.frame(
+    site = 1:nsites,
+    site_fac = levels(islands$site_fac),
+    intercept = NA,
+    slope = NA)
+m1.ML.ab$intercept[1] <- m1.ML.cf[1]
+m1.ML.ab$slope[1] <- m1.ML.cf[2]
+m1.ML.ab$intercept[2:nsites] <- m1.ML.cf[3:(nsites+1)]+m1.ML.cf[1]
+m1.ML.ab$slope[2:nsites] <- m1.ML.cf[(nsites+2):(2*nsites)]+m1.ML.cf[2]
+## Adds the lines for both fitting methods to the scatter-plot
+p2 +
+    geom_abline(data = m1.ab,
+                aes(intercept = intercept, slope = slope),
+                col="navy") +
+    geom_abline(data = m1.ML.ab,
+                aes(intercept = intercept, slope = slope),
+                col="red")
+```
+
+### Pooled intercepts and slopes
+
+In the approach of ML methods, this is a **mixed effects** linear model, which is specified as:
+
+$$
+\begin{aligned}
+  y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+  \mu_i &= \alpha + a_{\text{site[i]}} + (\beta + b_{\text{site[i]}}) \, x_i \\
+  a_{\text{site}} & \sim \text{Normal}(0, \sigma_a)\\
+  b_{\text{site}} & \sim \text{Normal}(0, \sigma_b)
+\end{aligned}
+$$
+
+Where $\alpha$ and $\beta$ are called **fixed effects** and express
+the average intercept and slope for all observations. There is a
+parameter $a_{\text{site}}$ for each site, that follows a normal
+distribution with zero mean. These are the **random effects** of site
+on the intercept, that are centered at the value of $\alpha$, and
+change the fixed intercept by a given amount, for each
+site. Accordingly, the parameters $b_{\text{site}}$ are the random
+effects of site on the slopes. 
+
+The reference package to fit mixed-effects models by the ML methods is
+[lme4](http://cran.nexr.com/web/packages/lme4/vignettes/lmer.pdf). The
+function `lmer` fits Gaussian linear mixed models. To fit the model
+with random effects on intercepts and slopes use:
+
+
+```{r }
+m2.ML <- lmer(lc_S ~ ls_area + (ls_area|site_fac), data = islands, REML=FALSE)
+```
+
+In the syntax of `lmer`, the term `(ls_area|site_fac)` means that site
+is a random effect for the fixed linear predictor on `ls_area`. This
+term thus adds random effects to the intercept and to the slope of the
+linear predictor^[actually the term *(ls_area|site_fac)*  is a
+shorthand for *(1|site_fac) + (ls_area|site_fac)*, which explicitly
+indicates a random effect for the intercept and other random effect
+for the slope. Thus a model with random effects only in the slope
+would include only the term *(1|site_fac)*].
+
+A summary of the model shows the estimates of the variance of the
+random effects (parameters $\sigma_a$ and $\sigma_b$), and the
+estimates for the fixed effects (parameters $\alpha$ and $\beta$),
+and some more important figures:
+
+```{r }
+summary(m2.ML)
+```
+
+**Question:** compare the estimated standard deviations of the random
+effects with those estimated by the Bayesian fit of the corresponding
+model. Do they match?  **Hint:** The call `precis(m2)` will show you a
+summary of the posteriors that you need.
+
+
+The estimates for the coefficients for each site are returned by:
+
+
+```{r }
+(m2.ML.cf <- coef(m2.ML)$site_fac)
+```
+
+We can easily add to this data frame the site names and then use this
+to compare the regression lines for each site fitted by ML (green) and
+by the Bayesian (red) way:
+
+
+```{r }
+## Adds a factor with the name of sites
+m2.ML.cf$site_fac <- factor(rownames(m2.ML.cf))
+## Change columns names to fit to the ggplot call
+names(m2.ML.cf)[1:2] <- c("intercept", "slope")
+## Call the plot and add lines
+p2 +
+    geom_abline(data = m2.ML.cf,
+                 aes(intercept = intercept, slope = slope),
+                col="green") +
+     geom_abline(data = m2.ab,
+                 aes(intercept = intercept, slope = slope),
+                col="red")
+```
+
+**Questions:** why the lines do not match exactly? Why some match more than others?
+
+### Model comparison
+
+Use the `bbmle::AICctab` function to build a model selection table using AIC corrected for small samples:
+
+
+```{r }
+AICctab(m0.ML, m1.ML, m2.ML, nobs=nrow(islands))
+```
+According to this model selection, fitting independent intercepts and slopes is definitely overfitting.
+
+
+# References
+
+* Gelman, A., Hwang, J., & Vehtari, A. (2014). Understanding predictive information criteria for Bayesian models. Statistics and computing, 24(6), 997-1016.
+
+* Ohyama, L., Holt, R. D., Matthews, T. J., & Lucky, A. (2021). The
+  species–area relationship in ant ecology. Journal of Biogeography,
+  48(8), 1824-1841.
