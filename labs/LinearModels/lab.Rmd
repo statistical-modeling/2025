@@ -226,7 +226,9 @@ first, lets fit the model using the OLS method:
 ```{r fit_ols}
 mod_ols <- lm(y ~ x, data = data)
 
-# The summary function provides a lot of information about the model, including estimates, standard errors, p-values for the coefficients, and residual standard deviation (sigma)
+# The summary function provides a lot of information about the model, 
+# including estimates, standard errors, p-values for the coefficients, 
+# and residual standard deviation (sigma)
 summary(mod_ols)
 ```
 
