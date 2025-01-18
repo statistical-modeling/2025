@@ -121,7 +121,7 @@ abline(a = alpha_hat, b = beta_hat, col = 2, lwd = 2)
 abline(a = 1.2, b = 3.5, col = "blue", lwd = 2)
 ```
 
-## Fitting a linear model in R
+## Fitting a OLS linear model in R
 
 Function `lm()` fits regression models using Ordinary Least Squares. 
 The values of the coefficients can be found using function `coef()`.
@@ -189,4 +189,120 @@ You can find an excellent explanation of these and other diagnostic
 plots for linear regression
 [here](https://data.library.virginia.edu/diagnostic-plots/)
 
+# Fitting models using Bayesian methods
 
+In the previous section, we fitted a linear model using the OLS method.
+Now, we are going to fit the same model using a Bayesian approach.
+
+The Bayesian approach to linear regression is based on the posterior
+distribution of the parameters $\alpha$ and $\beta$. This posterior
+distribution is proportional to the product of the likelihood of the
+data given the parameters and the prior distribution of the parameters.
+
+The likelihood of the data given the parameters is the same as the one
+used in the OLS method. The prior distribution of the parameters is 
+usually a normal distribution with mean zero and a fixed standard deviation.
+
+We will generate a new data set with known parameters to illustrate some differences between the OLS and Bayesian methods.
+
+```{r create_dataset2}
+set.seed(4) 
+
+x = runif(50, 50, 100)
+y = 1000 + 150 * x + rnorm(50, 0, 1000)
+data = data.frame(x, y)
+```
+
+Always visualize your data before fitting a model
+
+```{r plot2}
+plot(y ~ x, data = data)
+```
+
+
+
+first, lets fit the model using the OLS method:
+
+```{r fit_ols}
+mod_ols <- lm(y ~ x, data = data)
+
+# The summary function provides a lot of information about the model, including estimates, standard errors, p-values for the coefficients, and residual standard deviation (sigma)
+summary(mod_ols)
+```
+
+Now, let's fit the model using the rstanarm package, which fits Bayesian models using the Stan language and provides a nice set of standard weekly informative priors.
+
+```{r fit_bayesian, messages=FALSE, eval=FALSE}
+suppressPackageStartupMessages(library(rstanarm))
+mod_bayesian <- stan_glm(y ~ x, data = data)
+
+summary(mod_bayesian)
+```
+
+Let's compare the coefficient estimates of the two methods.
+
+```{r compare, eval=FALSE}
+coef(mod_ols)
+coef(mod_bayesian)
+
+library(ggplot2)
+
+ggplot(data, aes(x, y)) + 
+  geom_point() +
+  geom_abline(intercept = coef(mod_ols)[1], slope = coef(mod_ols)[2], color = "red") +
+  geom_abline(intercept = coef(mod_bayesian)[1], slope = coef(mod_bayesian)[2], color = "blue") + theme_bw()
+```
+
+How similar are the estimates of the two methods?
+
+### Explicit model in the rethinking package
+
+Now, let's use the rethinking package to fit the model using some standard priors we used in class.
+
+```{r fit_rethinking, message=FALSE, eval=FALSE}
+suppressPackageStartupMessages(library(rethinking))
+
+mod_rethinking = ulam(
+  alist(
+    y ~ normal(mu, sigma),
+    mu <- a + b * x,
+    a ~ normal(0, 1),
+    b ~ normal(0, 1),
+    sigma ~ exponential(1)
+  ),
+  data = data, chains = 4, cores = 4
+)
+precis(mod_rethinking)
+```
+
+How are the estimates now? Awful!! 
+
+What is happening is that the default priors in the rethinking code are too far away from the true values of the parameters. One way to avoid this type of problem is to scale the variables before fitting the model.
+
+```{r scale, eval=FALSE}
+data$x_scaled = scale(data$x)
+data$y_scaled = scale(data$y)
+
+mod_rethinking_scaled = ulam(
+  alist(
+    y_scaled ~ normal(mu, sigma),
+    mu <- a + b * x_scaled,
+    a ~ normal(0, 1),
+    b ~ normal(0, 1),
+    sigma ~ exponential(1)
+  ),
+  data = data, chains = 4, cores = 4
+)
+mod_stanarm_scaled = stan_glm(y_scaled ~ x_scaled, data = data)
+mod_ols_scaled = lm(y_scaled ~ x_scaled, data = data)
+```
+
+Now, let's compare the estimates of the two models.
+
+```{r compare_scaled, eval=FALSE}
+coef(mod_ols_scaled)
+coef(mod_stanarm_scaled)
+coef(mod_rethinking_scaled)
+```
+
+Scalling variables is a good practice when fitting models with Bayesian methods. It improves computational efficiency and make defining reasonable priors easier.
