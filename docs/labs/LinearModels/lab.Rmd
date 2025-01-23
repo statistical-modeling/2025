@@ -4,7 +4,8 @@ author:
  - "Andrea Sánchez-Tapia"
  - "Paulinha Lemos-Costa"
  - "Sara Mortara"
-date: "2024-02-01"
+ - "Diogo Melo"
+date: "2025-01-28"
 output:
     distill::distill_article:
       toc: true
@@ -308,3 +309,7 @@ coef(mod_rethinking_scaled)
 ```
 
 Scalling variables is a good practice when fitting models with Bayesian methods. It improves computational efficiency and make defining reasonable priors easier.
+
+### Next lab
+
+Move on to the [multiple regression lab](lab2.html), where we go over the two examples shown in class.
