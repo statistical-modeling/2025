@@ -371,6 +371,6 @@ abline(v = 1, col = 2)
 **Challenge**: What if B was unobserved? How would you estimate the effect of X on Y in this case?
 
 ```{r, eval=FALSE }
-# Make B unboserved
+# Make B unobserved
 df_noB = data.frame(X, Y, W, A, Z)
 ```
