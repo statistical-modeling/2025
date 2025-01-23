@@ -2,8 +2,8 @@
 title: "Statistical models : linking data to theory"
 subtitle: "Presentation - a brief tour on statistical models"
 author: 
-  - "Sara Mortara & PI"
-date: '29 Jan 2024'
+  - "Sara Mortara"
+date: '27 Jan 2025'
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -22,16 +22,10 @@ editor_options:
 options(htmltools.dir.version = FALSE)
 options(servr.daemon = TRUE)#para que no bloquee la sesión
 
-area <- c(321000, 290000, 144000, 70000, 48000, 25000, 4500, 8870, 18000, 4600)
-species <- c(540, 420, 368, 220, 337, 232, 111, 143, 137, 108)
-island <- c("New \nGuinea", "Borneo", "Phillipines", "Celebes", 
-            "Java", "Ceylon", "Palawan", "Flores", "Timor", "Sumba")
-
-
-df <- data.frame(area = area, 
-                 species = species, 
-                 island = island)
-
+library(rethinking)
+df <- read.csv("../01_presentation/BiomassDataset.csv",
+                   sep = ";", dec = ",")
+data <- df
 
 ```
 
@@ -43,6 +37,7 @@ library(knitr)
 library(kableExtra)
 library(dplyr)
 library(tidyr)
+
 
 xaringanExtra::use_share_again()
 xaringanExtra::use_fit_screen()
@@ -100,7 +95,8 @@ theme_Publication <- function(base_size = 14, base_family = "helvetica") {
 ```
 
 ## Who we are (in order of appearance)
-### A bunch of biologists ...
+
+#### Biologists trying to help you to learn statistical modelling faster and easier than we did 
 
 <center>
 
@@ -115,22 +111,6 @@ knitr::include_graphics("figs/sara.jpg")
 
 
 .pull-left[
-```{r pi, out.width= "40%", echo=FALSE}
-knitr::include_graphics("figs/PI.jpg")
-```
-
-**PI**, Paulo Inácio Prado (he/him)
-]
-
-
-
----
-## Who we are (in order of appearance)
-
-<center>
-
-.pull-left[
-
 ```{r ogro, out.width= "50%", echo=FALSE}
 knitr::include_graphics("figs/diogo.jpg")
 ```
@@ -138,11 +118,6 @@ knitr::include_graphics("figs/diogo.jpg")
 **Diogro**, Diogo Melo (he/him)
 ]
 
-.pull-right[
-
-### ... trying to help you to learn statistical modelling faster and easier than we did 
-
-]
 
 
 ---
@@ -151,22 +126,30 @@ knitr::include_graphics("figs/diogo.jpg")
 
 <center>
 
-
 .pull-left[
-```{r paulinha,  out.width= "50%", echo=FALSE}
+```{r andre, out.width= "25%", echo=FALSE}
+knitr::include_graphics("figs/andrea.jpg")
+```
+
+**Andrea**, Andrea Sanchez Tapia (she/her)
+
+
+```{r paulinha,  out.width= "25%", echo=FALSE}
 knitr::include_graphics("figs/paulinha.jpg")
 ```
 
 **Paulinha**, Paula Lemos da Costa (she/her)
+
 ]
 
 
 .pull-right[
-```{r andre, out.width= "50%", echo=FALSE}
-knitr::include_graphics("figs/andrea.jpg")
+```{r pi, out.width="25%", echo=FALSE}
+knitr::include_graphics("figs/PI.jpg")
 ```
 
-**Andrea**, Andrea Sánchez-Tapia (she/her)
+**PI**, Paulo Inácio Prado (he/him)
+
 ]
 
 
@@ -175,6 +158,8 @@ knitr::include_graphics("figs/andrea.jpg")
 
  - To help you to be good users of statistical models in ecological research
  
+- Kindness and persistence
+
  - To make you learn this faster and easier than we did
  
  - In doing that, to improve our own knowledge on statistical models
@@ -192,6 +177,35 @@ knitr::include_graphics("figs/Painel.Paulo.Freire_cropped.JPG")
 > "Ninguém educa ninguém, ninguém educa a si mesmo, os homens se educam entre si, mediatizados pelo mundo"
 >
 > Paulo Freire
+]
+
+
+
+---
+## Emphasis on rethinking
+### broader lens to view aspects of statistical modeling
+
+
+
+.pull-left[
+
+<center>
+
+```{r rt, out.width="50%", echo=FALSE}
+knitr::include_graphics("figs/rethinking_.jpg")
+```
+
+]
+
+.pull-right[
+- emphasize the interplay between data, theory, and uncertainty
+
+- incorporate prior knowledge and domain expertise
+
+- tools for reasoning about model uncertainty and predictive accuracy
+
+- we avoid significance testing -> we aim statistical clarity ([sensu Dushoff et al 2019](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13159))
+
 ]
 
 
@@ -253,9 +267,9 @@ digraph nicegraph {
 
 }
 
-[1]: c('Presentation', 'Probability distributions', 'Bayesian statistics I')
+[1]: c('Presentation', 'Probability distributions', 'Bayesian statistics principles')
 [2]: c('Linear models', 'Multiple regression', 'Generalized linear models', 'Mixed and hierarchical models')
-[3]: c('Bayesian statistics II', 'Causal thinking')
+[3]: c('Model selection and prediction', 'Causal thinking')
 
 
 ", width = 1280*0.8)
@@ -274,14 +288,17 @@ digraph nicegraph {
 - Lectures and computer labs
  
 - Labs: tutorials in R language
+
+- RStudio server available for the course
  
 - Q&A (in your preferred language)
 
 - Office hours if possible (and if interest you)
  
-- All resources at https://statistical-modeling.github.io/2024
+- All resources at https://statistical-modeling.github.io/2025
  
 - Learning resources will be available as we progress
+
 
 ]
  
@@ -298,11 +315,13 @@ include_graphics("figs/autonomia.jpg")
 ## Course schedule
 
 ```{r shedule, echo=FALSE}
-schedule <- read.delim("../schedule.txt") %>% 
+schedule <- read.delim("../schedule2.txt") %>% 
   filter(Week %in% 1:2) %>% 
   select(-N, -Instructor, -Date) %>% 
-  mutate(Time = rep(c("09:00-10:30", "11:00-12:30"), 10), 
-         Day = rep(rep(c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"), each = 2), 2))
+  mutate(Time = c(rep(c("09:00-10:30", "11:00-12:30"), 5), 
+                  rep(c("14:00-15:30", "16:00-17:30"), 5)), 
+         Day = rep(rep(c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"), each = 2), 2)
+  )
 schedule[1, 2] <- "Course presentation"
 dt <- pivot_wider(schedule, names_from = Day, values_from = Theme)
 
@@ -350,21 +369,22 @@ How do we address ecological problems characterized by complexity and uncertaint
 
 ---
 ## Use a model to simplify
+### Darwin's theory of coral atolls
 
 
 .pull-left[
 
-### Darwin's theory of coral atolls
 
 ```{r atoll, echo=FALSE}
 include_graphics("figs/Atoll_Formation.png")
 ```
 
+**Hypothesis**: Atolls represent a sequential stage in the lifecycle of coral reefs influenced by the interplay of island subsidence and coral growth.
 ]
 
 .pull-right[
 ```{r atoll2, echo=FALSE, out.width="95%"}
-include_graphics("figs/atoll_new.jpg")
+include_graphics("figs/atol_das_rocas.jpg")
 ```
 
 ]
@@ -380,24 +400,33 @@ include_graphics("figs/Tredennick_etal.png")
 
 
 ---
-## What is the relation of species number to area?
+## What is the relation between photosynthesis and forest growth?
 
+.pull-left[
 
-```{r archipel, echo=FALSE, out.width="50%", fig.align='center'}
-include_graphics("figs/archipel-stockholm.jpg")
+```{r key-processes1, echo=FALSE, out.width="90%", fig.align='center'}
+include_graphics("figs/amazon-edited_orig.jpeg")
 ```
 
-> Both for the plant-geographer and the ecologist it is of great importance to know if an area or a district is rich or poor from the point of view of vegetation
-
-O. Arrhenius 1921. **Species and area**
-
-
----
-## What is the relation of species number to area?
-
-```{r schneider, echo=FALSE, out.width="65%", fig.align='center'}
-include_graphics("figs/Schneider_Fig1_2.png")
+```{r verbal-model, echo=FALSE, out.width="80%", fig.align='center'}
+include_graphics("figs/Schneider_Fig1_1.png")
 ```
+
+]
+
+.pull-right[
+
+### Carbon cycle of forests 
+
+- Relationship between photosynthesis, productivity, and biomass  
+
+- From early naturalists: assumptions that tall, majestic forests must be more productive that shorter forests
+
+- Recent ecosystem theory: causal linking chain linking Gross Primary Productivity (GPP) to biomass -> Verbal model
+
+]
+
+
 
 ---
 
@@ -421,45 +450,76 @@ theoretical quantities]
 ---
 ## What we expect from theory?
 
+### Carbon cycle of forests
+
 .pull-left[
-### MacArthur & Wilson 
-- Large areas support larger population sizes of all resident species than do small islands
 
-- Probability of stochastic extinction is reduced on large islands
-
-- Island area > Number of individuals > Species number
-]
-
-.pull.right[
-
-```{r theory, echo = FALSE, out.width = '50%', fig.align='center'}
-include_graphics("figs/theory.png")
+```{r key-processes, echo=FALSE, out.width="70%", fig.align='center'}
+include_graphics("figs/Malhi_key_processes.png")
 ```
 
-
+Malhi and collaborators 2012; 2015
 ]
+
+.pull-right[
+- __GPP__: total photosynthetic carbon fixation by the forest canopy
+- __Autotrophic Respiration__: the fraction of GPP used for metabolic processes
+- __NPP__: remaining carbon allocated to biomass production
+- __Mortality and residence time__: high productivity forests show higher turnover and lower biomass residence times
+- __Biomass Accumulation__: results from the interplay between productivity, allocation, and mortality
+]
+
 
 
 ---
 ## What we expect from theory?
+### Biomass in old-growth Amazonian forests
+[Malhi et al 2006 GCB](https://onlinelibrary.wiley.com/doi/10.1111/j.1365-2486.2006.01120.x)
+
 
 
 .pull-left[
-### Birds of the East Indies
+<center>
 
-Preston 1961
-
-```{r bird, echo = FALSE, warning=FALSE, out.width='60%'}
-include_graphics("figs/1-Lesser.jpeg")
+```{r key, echo = FALSE, warning=FALSE, out.width='60%'}
+include_graphics("figs/Malhi_key_processes2.png")
 ```
 
 
 ]
 
 .pull-right[
+<center>
 
-```{r expect, echo = FALSE, warning=FALSE, message=FALSE, out.width='90%'}
-include_graphics("figs/expect.png")
+```{r expect, echo = FALSE, warning=FALSE, message=FALSE, out.width='60%'}
+include_graphics("figs/theory1.png")
+```
+
+]
+
+
+
+---
+## What we expect from theory?
+### Biomass in old-growth Amazonian forests
+[Malhi et al 2006 GCB](https://onlinelibrary.wiley.com/doi/10.1111/j.1365-2486.2006.01120.x)
+
+
+.pull-left[
+<center>
+
+```{r key2, echo = FALSE, warning=FALSE, out.width='60%'}
+include_graphics("figs/Malhi_key_processes2.png")
+```
+
+
+]
+
+.pull-right[
+<center>
+
+```{r expect2, echo = FALSE, warning=FALSE, message=FALSE, out.width='60%'}
+include_graphics("figs/theory2.png")
 ```
 
 ]
@@ -467,20 +527,11 @@ include_graphics("figs/expect.png")
 ---
 ## What the data shows
 
+<center>
 
-.pull-left[
-```{r databird, echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='90%'}
+```{r datac, echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='40%'}
 include_graphics("figs/data_plot.png")
 ```
-
-]
-
-.pull-right[
-```{r databird2, echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='90%'}
-include_graphics("figs/data_plot2.png")
-```
-
-]
 
 ---
 class: middle
@@ -491,12 +542,11 @@ class: middle
 
 * We can never control all sources of variation that affect our measurements or counts
 
-* Thus, any measurement or count done in a scientific research has some degree of **uncertaintity**
+* Thus, any measurement or count done in a scientific research has some degree of **uncertainty**
 
 * In other words, any quantitative data of scientific interest is a **random variable** 
 
 ]
-
 
 ---
 ### From the mathematical to the statistical model
@@ -581,20 +631,18 @@ include_graphics("figs/dnorm2.png")
 
 $$ 
 \begin{aligned}
-Y(i)^* & \sim \mathcal{N}(\mu, \sigma) \\[1em]
-log(\mu) & =  log(cA^z) \\[1em]
-log(\mu) & = log(c) + zlog(A) \\[1em] 
-\mu^* & = c^* + zA^* \\[1em] 
-\sigma & = C
+Y_i & \sim \mathcal{N}(\mu, \sigma) \\[1em]
+\mu & =  \alpha + \beta * AGCWP \\[1em]
+\sigma & \sim \mathcal{N}(0, 1)
 \end{aligned}
 $$
 ]
 
 .pull-right[
 
-$S = cA^z$
 
-**Which reads:** "The log of the number of species at each island $Y(i)$ follows a normal distribution with expected value $\mu$ that is a function of area $A_i$, and with a standard deviation $\sigma$ of constant value $C$"
+**Which means:** 
+This model assumes that biomass per basal area $Y_i$ is normally distributed around a mean value $\mu$ that is linearly related to above ground course wood productivity (AGCWP), and with a standard deviation $\sigma$ following a normal distribution. The slope $\beta$ quantifies how productivity affects biomass, while the intercept $\alpha$ represents the baseline biomass when AGCWP is zero.
 
 ]
 
@@ -660,35 +708,38 @@ or **independent variables**)
 
 $$ 
 \begin{aligned}
-Y(i) & \sim \mathcal{N}(\mu, \sigma) \\[1em]
-log(\mu) & =  log(cA^z) \\[1em]
-log(\mu) & = log(c) + zlog(A) \\[1em] 
-\mu^* & = c^* + zA^* \\[1em] 
-\sigma & = C
+Y_i & \sim \mathcal{N}(\mu, \sigma) \\[1em]
+\mu & =  \alpha + \beta \times AGCWP \\[1em]
+\sigma & \sim \mathcal{N}(0, 1)
 \end{aligned}
 $$
-The log of species richness is a linear function of the log of island area
+The biomass is a linear function of the woody productivity, and the slope would
+depend on the effect of mortality
 
 ]
 
 .pull-right[
 
 ```{r theory2, echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='90%'}
-include_graphics("figs/theory_log.png")
+include_graphics("figs/theory3.png")
 ```
 
 
 ]
 
 ---
-## Which data do we need? $S = cA^z$
+## Which data do we need?
 
-- The log of the number of species per island ( $S$ ) -> **response variable**
+- The biomass in a forest plot, e.g. biomass per basal area -> **response variable**
 --
 
 
-- The log of the area of each island ( $A$ ) -> **predictor variable**
+- Wood productivity, e.g. aboveground coarse wood productivity -> **predictor variable**
 --
+
+```{r}
+head(df)
+```
 
 
 ---
@@ -700,70 +751,70 @@ include_graphics("figs/theory_log.png")
 
 $$ 
 \begin{aligned}
-Y(i) & \sim \mathcal{N}(\mu, \sigma) \\[1em]
-\mu^* & = c^* + zA^* \\[1em] 
-\sigma & = C
+Y_i & \sim \mathcal{N}(\mu, \sigma) \\[1em]
+\mu & =  \alpha + \beta \times AGCWP \\[1em]
+\sigma & \sim \mathcal{N}(0, 1)
 \end{aligned}
 $$
 
 *Which reads:*
-The log of species richness across islands $Y(i)$ follows a normal distribution with expected value $\mu$ that is a linear function of the log of island area, with a standard deviation $\sigma$ of constant value $C$
+The biomass per basal area across plots $Y(i)$ follows a normal distribution with expected value $\mu$ that is a linear function of the coarse woody productivity of each plot, with a standard deviation $\sigma$ following a normal distribution
 
 ]
 
 .pull-right[
 
 ```{r theory3, echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='90%'}
-include_graphics("figs/theory3.png")
+include_graphics("figs/expect_variation3.png")
 ```
 
 
 ]
 
 ---
-### What the fit shows
+## Implementing the model
 
-.pull-left[
+
+### Define the model 
 ```{r}
-# Fit of the linear model of the log of 
-# species as a linear function of the 
-# log of area
-lm(log(species) ~ log(area), 
-   data = df)
+# Define a linear model of the biomass as a 
+# linear function of the WP
+model <- alist(
+  Biomass ~ dnorm(mu, sigma),
+  mu <- a + b * AGCWP,
+  a ~ dnorm(10, 5),  # Prior for intercept
+  b ~ dnorm(0, 1),   # Prior for slope
+  sigma ~ dnorm(0, 1)    # Prior for residual SD
+)
 ```
 
-]
-
-
-.pull.right[
-
-```{r fit, echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='40%'}
-include_graphics("figs/fit.png")
+--
+### Fit the model
+```{r}
+fit <- quap(
+  model,
+  data = df
+)
 ```
-
-]
 
 ---
-## Estimated parameters $S = cA^z$
+## Estimated parameters 
 
 .pull-left[
 
 
 
 ```{r coef, out.width="50%"}
-
-mod <- lm(log(species) ~ log(area), data = df)
-coef(mod)
+summary(fit)
 ```
 
-$c = \exp(1.75)$ 
+$\alpha = 13.14$ 
 
-$z = 0.35$
+$\beta = -0.89$
 
-$S = 5.75 \times 8870 ^ {0.35}$
+$Y_i = 13.14 + (-0.89 \times 3)$
 
-$S = 138.4972$
-
+$Y_i = 10.47$
 
 ]
 
@@ -776,6 +827,7 @@ include_graphics("figs/fit.png")
 
 ]
 
+
 ---
 ## Where we are and what is next?
 
@@ -783,6 +835,13 @@ include_graphics("figs/fit.png")
 ```{r roadmap2, echo=FALSE, fig.align='center', out.width='80%'}
 include_graphics("figs/roadmap.png")
 ```
+
+
+---
+## Computational resources
+
+
+
 
 ---
 
@@ -801,3 +860,7 @@ include_graphics("figs/roadmap.png")
 * **Approaches to ecological modelling**: Chapter 1 in Ovaskeinen 
     et al. 2016. Quantitative Ecology and Evolutionary Biology. 
     Oxford, Oxford University Press.
+    
+* **The golem of prague**: Chapter 1 in McElreath. Statistical rethinking. 
+    Boca Ratol, FL, CRC Press.
+
