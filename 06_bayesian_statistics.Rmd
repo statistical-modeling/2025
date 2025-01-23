@@ -19,15 +19,15 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-xaringanExtra::embed_xaringan("05_bayesian_statistics/slides.html")
+xaringanExtra::embed_xaringan("06_bayesian_statistics/slides.html")
 ```
-[Open slides in new window](05_bayesian_statistics/slides.html)
+[Open slides in new window](06_bayesian_statistics/slides.html)
 
-[Slides PDF](05_bayesian_statistics/bayesian_statistics.pdf)
+[Slides PDF](06_bayesian_statistics/bayesian_statistics.pdf)
 
 # Lab
 
-[Bayesian model fitting and inference](06_bayesian_statistics/ModelFittingTutorial.html)
+[Bayesian model fitting and inference](labs/BayesianStatistics/lab.html)
 
 
 # Further reading

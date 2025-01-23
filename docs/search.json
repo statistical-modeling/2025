@@ -11,7 +11,7 @@
       ],
       "date": "2024-01-29",
       "contents": "\nSlides\n\n\n\n\n\nFurther reading\nQuantitative Reasoning in Ecology: Chapter 1 in Schneider,\nD. 2009. Quantitative Ecology: Measurement, Models, and\nScaling. New York, Academic Press, 2nd Ed.\n(Nice synthesis of\nstatistical analyses in the context of quantitative reasoning. It has\nalso many important highlights on quantities and measurements)\nAlternative views of scientific method and of modelling:\nChapter 2 in Hilborn, R & Mangel, M. 1997. The Ecological\nDetective - Confronting Models with Data. Princeton, Princeton\nUniversity Press.\n(The whole book is a true classic on\nthe use of statistical models in ecology. This chapter has a quick\nepistemological review and highlights the key distinction between\nmodels and hypothesis. It also brings a typology of models, and\nthe concept of model complexity.)\nThe statistician Galit Schmuéli researches the important\ndistinction between prediction and\nexplanation\nin statistics and in different disciplines of science. Also, see\nthe author’s article on the\nsubject.\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:34-03:00"
+      "last_modified": "2025-01-23T16:14:51-03:00"
     },
     {
       "path": "02_linear_models.html",
@@ -25,7 +25,7 @@
       ],
       "date": "2025-01-27",
       "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\nSlides PDF\n\n\n\n\n\nOpen slides in new window\nSlides PDF\nLab\nLinear regression Lab\nReferences\nGelman, A., Hill, J. & Vehtari, A. Regression and Other Stories. (Cambridge University Press, 2020).\nMcElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.\nBayesian Data Analysis, Third Edition, Andrew Gelman, John B. Carlin, Hal S. Stern, David B. Dunson, Aki Vehtari, Donald B. Rubin, Chapman and Hall/CRC, 2013.\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:35-03:00"
+      "last_modified": "2025-01-23T16:14:52-03:00"
     },
     {
       "path": "04_glm.html",
@@ -39,7 +39,7 @@
       ],
       "date": "2025-01-29",
       "contents": "\nSlides\n\n\n\n\n\nLab\nGLM Lab\nReferences\nCrawley, M. J. (2012). The R book. John Wiley & Sons.\nDobson, A. J., & Barnett, A. G. (2018). An introduction to generalized linear models. CRC press.\nGeneralized linear models with examples in R (Vol. 53).\nDunn, P. K., & Smyth, G. K. (2018) New York: Springer.\n“Regression models for count data in R.” Zeileis, Achim, Christian Kleiber,\nand Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:35-03:00"
+      "last_modified": "2025-01-23T16:14:52-03:00"
     },
     {
       "path": "05_glm.html",
@@ -53,7 +53,7 @@
       ],
       "date": "2025-01-29",
       "contents": "\nSlides\n\n\n\n\n\nLab\nGLM Lab\nReferences\nCrawley, M. J. (2012). The R book. John Wiley & Sons.\nDobson, A. J., & Barnett, A. G. (2018). An introduction to generalized linear models. CRC press.\nGeneralized linear models with examples in R (Vol. 53).\nDunn, P. K., & Smyth, G. K. (2018) New York: Springer.\n“Regression models for count data in R.” Zeileis, Achim, Christian Kleiber,\nand Simon Jackman. Journal of statistical software 27.8 (2008): 1-25.\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:35-03:00"
+      "last_modified": "2025-01-23T16:14:52-03:00"
     },
     {
       "path": "06_bayesian_statistics.html",
@@ -67,7 +67,7 @@
       ],
       "date": "2025-01-31",
       "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\nSlides PDF\nLab\nBayesian model fitting and inference\nFurther reading\nJaynes, E.T., 2003. Probability theory: The logic of science. Cambridge University press.\nMcElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:36-03:00"
+      "last_modified": "2025-01-23T16:14:53-03:00"
     },
     {
       "path": "07_Model_Selection.html",
@@ -80,8 +80,8 @@
         }
       ],
       "date": "2025-02-03",
-      "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\nSlides PDF\nFurther reading\nMcElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.\nhttps://bookdown.org/ajkurz/Statistical_Rethinking_recoded/overfitting-regularization-and-information-criteria.html\n\nUsing the loo package (version >= 2.0.0)\nhttps://mc-stan.org/loo/articles/loo2-example.html\n\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:36-03:00"
+      "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\n\nFurther reading\nMcElreath, R., 2018. Statistical Rethinking: A Bayesian Course with Examples in R and Stan, 2nd ed. CRC Press.\nhttps://bookdown.org/ajkurz/Statistical_Rethinking_recoded/overfitting-regularization-and-information-criteria.html\n\nUsing the loo package (version >= 2.0.0)\nhttps://mc-stan.org/loo/articles/loo2-example.html\n\n\n\n\n",
+      "last_modified": "2025-01-23T16:14:53-03:00"
     },
     {
       "path": "08_causal_thinking.html",
@@ -95,7 +95,7 @@
       ],
       "date": "2024-02-07",
       "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\nSlides PDF\nLab\nCausal model building lab\nFurther reading\nPearl, J., Glymour, M. & Jewell, N. P. Causal Inference in Statistics: A Primer. (John Wiley & Sons, 2016).\nScience Before Statistics: Causal Inference: https://www.youtube.com/watch?v=KNPYUVmY3NM\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:37-03:00"
+      "last_modified": "2025-01-23T16:14:54-03:00"
     },
     {
       "path": "09_mixed_and_hierarchical_models.html",
@@ -109,14 +109,14 @@
       ],
       "date": "2024-02-09",
       "contents": "\nSlides\n\n\n\n\n\nOpen slides in new window\nSlides PDF\nLab\nHierachical Models Lab\nFurther reading\nBates, D., Mächler M., Bolker, B.M. and Walker, S.C.. 2015. Fitting Linear Mixed-Effects Models Using lme4. Journal of Statistical Software 67 (1): 1-48.\nBolker, B. M. et al. 2009. Generalized linear mixed models: a practical guide for ecology and evolution. Trends in ecology & evolution, 24(3): 127-135.\nThe Generalized Linear Mixed Models FAQ page: https://bbolker.github.io/mixedmodels-misc/glmmFAQ\nGelman, A., Hwang, J., & Vehtari, A. (2014). Understanding predictive information criteria for Bayesian models. Statistics and computing, 24(6), 997-1016.\nGelman, Andrew, and Jennifer Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge, England: Cambridge University Press.\nZuur, A et al. 2009. Mixed Effects Models and Extensions in Ecology with R. Springer.\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:37-03:00"
+      "last_modified": "2025-01-23T16:14:54-03:00"
     },
     {
       "path": "about.html",
       "title": "About us",
       "author": [],
       "contents": "\nSara Mortara\nSara’s main research interest lies in the structure and dynamics of tropical forests, particularly within the context of ecological restoration. Her work focuses on integrating data from ecological experiments with landscape-level models to support data- and science-driven decision-making, unlocking the potential for restoration at scale. Sara is a biologist with a degree from Escola Superior de Agricultura Luiz de Queiroz (ESALQ), Universidade de São Paulo. She holds a master’s degree in Ecology and Conservation from the Universidade Estadual de Santa Cruz (UESC) and a Ph.D. in Ecology from the University of São Paulo. From 2019 to 2020, she worked as a postdoctoral researcher at the Instituto de Pesquisas Jardim Botânico do Rio de Janeiro, applying ecological niche models to restoration projects and teaching R programming in the graduate program. Currently, Sara is a researcher at re.green, a company pioneering large-scale ecological restoration efforts in the Atlantic and Amazon Forests. At re.green, she combines ecological models, experimental data, and multidisciplinary approaches to advance restoration science and practice, contributing to scalable, data-driven restoration solutions.\nDiogo Melo\n\n\n\nDiogo’s main research interest is understanding the evolution of genetic architecture, especially how genetic architecture can restrict and alter evolutionary trajectories, and how selection can shape these restrictions. Most of his work is computational, but he has also worked with data from large quantitative genetics experiments, trying to link theoretical knowledge on genetic effects to what is seen in real populations. His work is centered on the evolution of genetic correlations, a topic he explores using several different approaches, including QTL mapping, experimental evolution, computer simulations, and comparative data. Diogo has an undergraduate degree in biology from the University of São Paulo, where he also obtained a master’s degree and a Ph.D. in genetics and evolutionary biology. From 2020 to 2024, he joined Princeton University as an Associate Research Scholar at the Ayroles Lab and lecturer in the Ecology and Evolution Department. He is now\nand assistant professor at the Biology Institute of the University of São Paulo.\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:37-03:00"
+      "last_modified": "2025-01-23T16:14:54-03:00"
     },
     {
       "path": "index.html",
@@ -124,7 +124,7 @@
       "description": "Serrapilheira Training Program in Quantitative Ecology - 2025\n",
       "author": [],
       "contents": "\nWelcome to the Statistical Inference module of the\nSerrapilheira Training Program in Quantitative Biology and\nEcology 2025. Statistical models are a useful tool to bridge theory\nand data. Why do ecologists fit statistical models? There are three\nmain reasons: explore data, make inferences, and derive predictions.\nPrevious years sites:\n2023 course website\nVideo lectures\n\n2024 course website\nGoal\nOur general goal is to provide appropriate conceptual foundations on\nstatistical thinking in ecology. We will teach you basic tools needed to connect\ntheory and hypothesis to data and show you additional paths you can\ntake to further explore more advanced topics. There are two main steps\nin this endeavor: (i) the construction and fit of statistical models;\nand (ii) the inferences that can be made with and about the models.\nInstructors\nSara Mortara, re.green, ¡liibre!\nDiogo Melo, Universidade de São Paulo\nInstructors from previous courses\nAndrea Sánchez-Tapia, Universidade Federal do ABC, ¡liibre!\nPaula Lemos-Costa, The University of Chicago\nPaulo Inácio Prado, Universidade de São Paulo\nPreparing for the course\nBefore the course starts, follow these\ninstructions to install R  and\nthe necessary R packages in your computer, and also to recap the\nbasics on R we’ll need to start. We will have a server to use during computer\nlab classes, which has all the packages and programs available.\nCourse schedule\n\nDate\nTheme\nInstructor\n27/jan\nCourse presentation: statistical models link data to theory\nSara\n27/jan\nSimple Linear Models\nDiogo\n28/jan\nExtending Linear Models\nDiogo\n28/jan\nLinead Models Lab\ntodes\n29/jan\nQ&A\ntodes\n29/jan\nGeneralized Linear Models - 1\nSara\n30/jan\nGeneralized Linear Models - 2\nSara\n30/jan\nGLM Lab\ntodes\n31/jan\nBayesian Statistics Principles\nDiogo\n31/jan\nQ&A\ntodes\n03/fev\nModel selection, prediction and overfitting\nSara\n03/fev\nBayesian statistics Lab\ntodes\n04/fev\nCausal Thinking and model building\nDiogo\n05/fev\nCausal Thinking lab\ntodes\n05/fev\nQ&A\ntodes\n06/fev\nMixed and hierachical models\nDiogo\n07/fev\nMixed and hierachical models lab\ntodes\n07/fev\nFinal Q&A\ntodes\n\n\n\n\n",
-      "last_modified": "2025-01-23T15:48:38-03:00"
+      "last_modified": "2025-01-23T16:14:55-03:00"
     }
   ],
   "collections": []

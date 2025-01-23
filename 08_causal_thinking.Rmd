@@ -19,12 +19,12 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-xaringanExtra::embed_xaringan("07_causal_thinking/slides.html")
+xaringanExtra::embed_xaringan("08_causal_thinking/slides.html")
 ```
 
-[Open slides in new window](07_causal_thinking/slides.html)
+[Open slides in new window](08_causal_thinking/slides.html)
 
-[Slides PDF](07_causal_thinking/CausalThinking.pdf)
+[Slides PDF](08_causal_thinking/CausalThinking.pdf)
 
 # Lab
 

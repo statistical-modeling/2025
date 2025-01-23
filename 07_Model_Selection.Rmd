@@ -23,7 +23,7 @@ xaringanExtra::embed_xaringan("06_model_selection/slides.html")
 
 [Open slides in new window](06_model_selection/slides.html)
 
-[Slides PDF](06_model_selection/10_MixedModels.pdf)
+<!-- [Slides PDF](06_model_selection/slides.pdf) -->
 
 # Further reading
 
