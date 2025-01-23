@@ -88,27 +88,34 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>Statistical Modelling: About us</title>
+  <title>Statistical Modelling: Mixed-effects linear models</title>
 
+  <meta property="description" itemprop="description" content="Linear models that mix random and fixed effects."/>
 
   <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
 
+  <!--  https://schema.org/Article -->
+  <meta property="article:published" itemprop="datePublished" content="2024-02-09"/>
+  <meta property="article:created" itemprop="dateCreated" content="2024-02-09"/>
+  <meta name="article:author" content="Diogo Melo"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Statistical Modelling: About us"/>
+  <meta property="og:title" content="Statistical Modelling: Mixed-effects linear models"/>
   <meta property="og:type" content="article"/>
+  <meta property="og:description" content="Linear models that mix random and fixed effects."/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Statistical Modelling"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Statistical Modelling: About us"/>
+  <meta property="twitter:title" content="Statistical Modelling: Mixed-effects linear models"/>
+  <meta property="twitter:description" content="Linear models that mix random and fixed effects."/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title"]}},"value":[{"type":"character","attributes":{},"value":["About us"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output"]}},"value":[{"type":"character","attributes":{},"value":["Mixed-effects linear models"]},{"type":"character","attributes":{},"value":["Linear models that mix random and fixed effects.\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url","affiliation","affiliation_url"]}},"value":[{"type":"character","attributes":{},"value":["Diogo Melo"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"}]}]},{"type":"character","attributes":{},"value":["2024-02-09"]},{"type":"character","attributes":{},"value":["distill::distill_article"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2409,6 +2416,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   }</style>
   <!--/radix_placeholder_distill-->
   <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+  <script src="site_libs/fitvids-2.1.1/fitvids.min.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2428,7 +2436,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"About us","authors":[]}
+{"title":"Mixed-effects linear models","description":"Linear models that mix random and fixed effects.","authors":[{"author":"Diogo Melo","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2024-02-09T00:00:00.000-03:00","citationText":"Melo, 2024"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2479,23 +2487,40 @@ Computer Labs
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>About us</h1>
+<h1>Mixed-effects linear models</h1>
 
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-
+<p><p>Linear models that mix random and fixed effects.</p></p>
 </div>
 
+<div class="d-byline">
+  Diogo Melo  
+  
+<br/>2024-02-09
+</div>
 
 <div class="d-article">
-<h2 id="sara-mortara">Sara Mortara</h2>
-<p>Sara’s main research interest lies in the structure and dynamics of tropical forests, particularly within the context of ecological restoration. Her work focuses on integrating data from ecological experiments with landscape-level models to support data- and science-driven decision-making, unlocking the potential for restoration at scale. Sara is a biologist with a degree from Escola Superior de Agricultura Luiz de Queiroz (ESALQ), Universidade de São Paulo. She holds a master’s degree in Ecology and Conservation from the Universidade Estadual de Santa Cruz (UESC) and a Ph.D. in Ecology from the University of São Paulo. From 2019 to 2020, she worked as a postdoctoral researcher at the Instituto de Pesquisas Jardim Botânico do Rio de Janeiro, applying ecological niche models to restoration projects and teaching R programming in the graduate program. Currently, Sara is a researcher at re.green, a company pioneering large-scale ecological restoration efforts in the Atlantic and Amazon Forests. At re.green, she combines ecological models, experimental data, and multidisciplinary approaches to advance restoration science and practice, contributing to scalable, data-driven restoration solutions.</p>
-<h2 id="diogo-melo">Diogo Melo</h2>
+<h1 id="slides">Slides</h1>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="figures/FXH13898.jpg" width="50%" /></p>
+<div class="shareagain" style="min-width:300px;margin:1em auto;" data-exeternal="1">
+<iframe src="08_mixed_models/slides.html" width="1600" height="900" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+<script>fitvids('.shareagain', {players: 'iframe'});</script>
 </div>
-<p>Diogo’s main research interest is understanding the evolution of genetic architecture, especially how genetic architecture can restrict and alter evolutionary trajectories, and how selection can shape these restrictions. Most of his work is computational, but he has also worked with data from large quantitative genetics experiments, trying to link theoretical knowledge on genetic effects to what is seen in real populations. His work is centered on the evolution of genetic correlations, a topic he explores using several different approaches, including QTL mapping, experimental evolution, computer simulations, and comparative data. Diogo has an undergraduate degree in biology from the University of São Paulo, where he also obtained a master’s degree and a Ph.D. in genetics and evolutionary biology. From 2020 to 2024, he joined Princeton University as an Associate Research Scholar at the Ayroles Lab and lecturer in the Ecology and Evolution Department. He is now
-and assistant professor at the Biology Institute of the University of São Paulo.</p>
+</div>
+<p><a href="08_mixed_models/slides.html">Open slides in new window</a></p>
+<p><a href="08_mixed_models/MixedModels.pdf">Slides PDF</a></p>
+<h1 id="lab">Lab</h1>
+<p><a href="labs/MixedModels/lab.html">Hierachical Models Lab</a></p>
+<h1 id="further-reading">Further reading</h1>
+<ul>
+<li><p>Bates, D., Mächler M., Bolker, B.M. and Walker, S.C.. 2015. Fitting Linear Mixed-Effects Models Using lme4. Journal of Statistical Software 67 (1): 1-48.</p></li>
+<li><p>Bolker, B. M. et al. 2009. Generalized linear mixed models: a practical guide for ecology and evolution. Trends in ecology &amp; evolution, 24(3): 127-135.</p></li>
+<li><p>The Generalized Linear Mixed Models FAQ page: <a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ" class="uri">https://bbolker.github.io/mixedmodels-misc/glmmFAQ</a></p></li>
+<li><p>Gelman, A., Hwang, J., &amp; Vehtari, A. (2014). Understanding predictive information criteria for Bayesian models. Statistics and computing, 24(6), 997-1016.</p></li>
+<li><p>Gelman, Andrew, and Jennifer Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge, England: Cambridge University Press.</p></li>
+<li><p>Zuur, A et al. 2009. Mixed Effects Models and Extensions in Ecology with R. Springer.</p></li>
+</ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

@@ -16,7 +16,7 @@ navbar:
         - text: "Linear models"
           href: 02_linear_models.html
         - text: "Generalized Linear Models"
-          href: 03_glm.html
+          href: 04_glm.html
         - text: "Bayesian statistics"
           href: 05_bayesian_statistics.html
         - text: "Model selection"

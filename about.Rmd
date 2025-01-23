@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Sara Mortara
 
-
+Sara's main research interest lies in the structure and dynamics of tropical forests, particularly within the context of ecological restoration. Her work focuses on integrating data from ecological experiments with landscape-level models to support data- and science-driven decision-making, unlocking the potential for restoration at scale. Sara is a biologist with a degree from Escola Superior de Agricultura Luiz de Queiroz (ESALQ), Universidade de São Paulo. She holds a master's degree in Ecology and Conservation from the Universidade Estadual de Santa Cruz (UESC) and a Ph.D. in Ecology from the University of São Paulo. From 2019 to 2020, she worked as a postdoctoral researcher at the Instituto de Pesquisas Jardim Botânico do Rio de Janeiro, applying ecological niche models to restoration projects and teaching R programming in the graduate program. Currently, Sara is a researcher at re.green, a company pioneering large-scale ecological restoration efforts in the Atlantic and Amazon Forests. At re.green, she combines ecological models, experimental data, and multidisciplinary approaches to advance restoration science and practice, contributing to scalable, data-driven restoration solutions. 
 
 ## Diogo Melo  
 
