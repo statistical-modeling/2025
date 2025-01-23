@@ -1,0 +1,21 @@
+Week	Date	N	Theme	Instructor
+1	27/jan	1	Course presentation: statistical models link data to theory	Sara
+1	27/jan	2	Simple Linear Models	Diogo
+1	28/jan	3	Extending Linear Models	Diogo
+1	28/jan	4	Linead Models Lab	todes
+1	29/jan	5	Q&A	todes
+1	29/jan	6	Generalized Linear Models - 1	Sara
+1	30/jan	7	Generalized Linear Models - 2	Sara
+1	30/jan	8	GLM Lab	todes
+1	31/jan	9	Bayesian Statistics Principles	Diogo
+1	31/jan	10	Q&A	todes
+2	03/fev	11	Model selection, prediction and overfitting	Sara
+2	03/fev	12	Bayesian statistics Lab	todes
+2	04/fev	13	Causal Thinking and model building	Diogo
+2	04/fev  NA  -
+2	05/fev	14	Causal Thinking lab	todes
+2	05/fev	15	Q&A	todes
+2	06/fev	16	Mixed and hierachical models	Diogo
+2	06/fev  NA  -
+2	07/fev	17	Mixed and hierachical models lab	todes
+2	07/fev	18	Final Q&A	todes

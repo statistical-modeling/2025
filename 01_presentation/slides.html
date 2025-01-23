@@ -3,8 +3,8 @@
   <head>
     <title>Statistical models : linking data to theory</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Sara Mortara &amp; PI" />
-    <meta name="date" content="2024-01-29" />
+    <meta name="author" content="Sara Mortara" />
+    <meta name="date" content="2025-01-27" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <script src="libs/clipboard/clipboard.min.js"></script>
     <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
@@ -37,10 +37,10 @@ class: center, middle, inverse, title-slide
 ## Presentation - a brief tour on statistical models
 ]
 .author[
-### Sara Mortara &amp; PI
+### Sara Mortara
 ]
 .date[
-### 29 Jan 2024
+### 27 Jan 2025
 ]
 
 ---
@@ -51,7 +51,8 @@ class: center, middle, inverse, title-slide
 
 
 ## Who we are (in order of appearance)
-### A bunch of biologists ...
+
+#### Biologists trying to help you to learn statistical modelling faster and easier than we did 
 
 &lt;center&gt;
 
@@ -64,30 +65,11 @@ class: center, middle, inverse, title-slide
 
 
 .pull-left[
-&lt;img src="figs/PI.jpg" width="40%" /&gt;
-
-**PI**, Paulo Inácio Prado (he/him)
-]
-
-
-
----
-## Who we are (in order of appearance)
-
-&lt;center&gt;
-
-.pull-left[
-
 &lt;img src="figs/diogo.jpg" width="50%" /&gt;
 
 **Diogro**, Diogo Melo (he/him)
 ]
 
-.pull-right[
-
-### ... trying to help you to learn statistical modelling faster and easier than we did 
-
-]
 
 
 ---
@@ -96,18 +78,24 @@ class: center, middle, inverse, title-slide
 
 &lt;center&gt;
 
-
 .pull-left[
-&lt;img src="figs/paulinha.jpg" width="50%" /&gt;
+&lt;img src="figs/andrea.jpg" width="25%" /&gt;
+
+**Andrea**, Andrea Sanchez Tapia (she/her)
+
+
+&lt;img src="figs/paulinha.jpg" width="25%" /&gt;
 
 **Paulinha**, Paula Lemos da Costa (she/her)
+
 ]
 
 
 .pull-right[
-&lt;img src="figs/andrea.jpg" width="50%" /&gt;
+&lt;img src="figs/PI.jpg" width="25%" /&gt;
 
-**Andrea**, Andrea Sánchez-Tapia (she/her)
+**PI**, Paulo Inácio Prado (he/him)
+
 ]
 
 
@@ -116,6 +104,8 @@ class: center, middle, inverse, title-slide
 
  - To help you to be good users of statistical models in ecological research
  
+- Kindness and persistence
+
  - To make you learn this faster and easier than we did
  
  - In doing that, to improve our own knowledge on statistical models
@@ -134,6 +124,33 @@ class: center, middle, inverse, title-slide
 ]
 
 
+
+---
+## Emphasis on rethinking
+### broader lens to view aspects of statistical modeling
+
+
+
+.pull-left[
+
+&lt;center&gt;
+
+&lt;img src="figs/rethinking_.jpg" width="50%" /&gt;
+
+]
+
+.pull-right[
+- emphasize the interplay between data, theory, and uncertainty
+
+- incorporate prior knowledge and domain expertise
+
+- tools for reasoning about model uncertainty and predictive accuracy
+
+- we avoid significance testing -&gt; we aim statistical clarity ([sensu Dushoff et al 2019](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13159))
+
+]
+
+
 ---
 
 ## Course overview
@@ -142,8 +159,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div id="htmlwidget-332fdb39362a3d7ea53d" style="width:1024px;height:504px;" class="grViz html-widget "></div>
-<script type="application/json" data-for="htmlwidget-332fdb39362a3d7ea53d">{"x":{"diagram":"\ndigraph nicegraph {\n\n  bgcolor = \"#fdf6e3\"\n\n  # graph, node, and edge definitions\n  graph [compound = true, nodesep = .5, ranksep = .25,\n         color = \"#dc322f\"]\n\n  node [fontname = Helvetica, fontcolor = darkslategray,\n        shape = rectangle, fixedsize = false, \n        color = \"#586e75\", fontsize = 30]\n\n  edge [color = grey, arrowhead = none, arrowtail = none]\n\n  # subgraph for fondation\n  subgraph cluster0 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Presentation\" -> \"Probability distributions\" -> \"Bayesian statistics I\" \n  }\n\n  # subgraph for tools\n  subgraph cluster1 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Linear models\" -> \"Multiple regression\" -> \"Generalized linear models\" -> \"Mixed and hierarchical models\" \n  }\n  \n    # subgraph inference\n  subgraph cluster2 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Bayesian statistics II\" -> \"Causal thinking\"\n  }\n\n\n  \"Statistical modeling\"             [width = 5, fontsize = 30, height = 0.75, style = filled, fillcolor = \"#cb4b16\", fontcolor = \"#fdf6e3\"]\n  \"Foundation\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Fitting\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Inference\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.5, height = 0.6]\n\n  \"Statistical modeling\" -> \"Foundation\" \n  \"Statistical modeling\" -> \"Fitting\"\n  \"Statistical modeling\" ->   \"Inference\" \n  \"Foundation\" -> \"Presentation\"            [lhead = cluster0]\n  \"Fitting\" -> \"Linear models\"        [lhead = cluster1]\n  \"Inference\" -> \"Bayesian statistics II\"        [lhead = cluster2]\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-914550597787a5ba2c15" style="width:1024px;height:504px;" class="grViz html-widget "></div>
+<script type="application/json" data-for="htmlwidget-914550597787a5ba2c15">{"x":{"diagram":"\ndigraph nicegraph {\n\n  bgcolor = \"#fdf6e3\"\n\n  # graph, node, and edge definitions\n  graph [compound = true, nodesep = .5, ranksep = .25,\n         color = \"#dc322f\"]\n\n  node [fontname = Helvetica, fontcolor = darkslategray,\n        shape = rectangle, fixedsize = false, \n        color = \"#586e75\", fontsize = 30]\n\n  edge [color = grey, arrowhead = none, arrowtail = none]\n\n  # subgraph for fondation\n  subgraph cluster0 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Presentation\" -> \"Probability distributions\" -> \"Bayesian statistics principles\" \n  }\n\n  # subgraph for tools\n  subgraph cluster1 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Linear models\" -> \"Multiple regression\" -> \"Generalized linear models\" -> \"Mixed and hierarchical models\" \n  }\n  \n    # subgraph inference\n  subgraph cluster2 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Model selection and prediction\" -> \"Causal thinking\"\n  }\n\n\n  \"Statistical modeling\"             [width = 5, fontsize = 30, height = 0.75, style = filled, fillcolor = \"#cb4b16\", fontcolor = \"#fdf6e3\"]\n  \"Foundation\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Fitting\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Inference\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.5, height = 0.6]\n\n  \"Statistical modeling\" -> \"Foundation\" \n  \"Statistical modeling\" -> \"Fitting\"\n  \"Statistical modeling\" ->   \"Inference\" \n  \"Foundation\" -> \"Presentation\"            [lhead = cluster0]\n  \"Fitting\" -> \"Linear models\"        [lhead = cluster1]\n  \"Inference\" -> \"Model selection and prediction\"        [lhead = cluster2]\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 &lt;/center&gt;
 
@@ -158,15 +175,17 @@ class: center, middle, inverse, title-slide
 - Lectures and computer labs
  
 - Labs: tutorials in R language
-  - Virtual machine: [http://34.139.106.91:8787/]()
+
+- RStudio server available for the course
  
 - Q&amp;A (in your preferred language)
 
 - Office hours if possible (and if interest you)
  
-- All resources at https://statistical-modeling.github.io/2024
+- All resources at https://statistical-modeling.github.io/2025
  
 - Learning resources will be available as we progress
+
 
 ]
  
@@ -197,37 +216,37 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; 09:00-10:30 &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Course presentation &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Probability distributions lab &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Linear models &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Linear models lab &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Maximum likelihood fitting - I &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Extending Linear Models &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Q&amp;amp;A &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Generalized Linear Models - 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bayesian Statistics Principles &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; 11:00-12:30 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Probability distributions &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Simple Linear Models &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Linead Models Lab &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Generalized Linear Models - 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; GLM Lab &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Q&amp;amp;A &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Multiple regression and model comparison &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Q&amp;amp;A &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Maximum likelihood fitting lab &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; 09:00-10:30 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Bayesian statistics - I &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Bayesian fitting lab &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Causal thinking and model building &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Generalized linear models &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 14:00-15:30 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Model selection, prediction and overfitting &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Causal Thinking and model building &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Causal Thinking lab &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Mixed and hierachical models &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mixed and hierachical models lab &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; 11:00-12:30 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Bayesian statistics - II &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 16:00-17:30 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bayesian statistics Lab &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Q&amp;amp;A &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Causal thinking Lab &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Q&amp;amp;A &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Mixed and hierachical models lab &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Final Q&amp;amp;A &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -267,18 +286,19 @@ How do we address ecological problems characterized by complexity and uncertaint
 
 ---
 ## Use a model to simplify
+### Darwin's theory of coral atolls
 
 
 .pull-left[
 
-### Darwin's theory of coral atolls
 
 &lt;img src="figs/Atoll_Formation.png" width="1067" /&gt;
 
+**Hypothesis**: Atolls represent a sequential stage in the lifecycle of coral reefs influenced by the interplay of island subsidence and coral growth.
 ]
 
 .pull-right[
-&lt;img src="figs/atoll_new.jpg" width="95%" /&gt;
+&lt;img src="figs/atol_das_rocas.jpg" width="95%" /&gt;
 
 ]
 
@@ -291,20 +311,29 @@ How do we address ecological problems characterized by complexity and uncertaint
 
 
 ---
-## What is the relation of species number to area?
+## What is the relation between photosynthesis and forest growth?
+
+.pull-left[
+
+&lt;img src="figs/amazon-edited_orig.jpeg" width="90%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="figs/Schneider_Fig1_1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+### Carbon cycle of forests 
+
+- Relationship between photosynthesis, productivity, and biomass  
+
+- From early naturalists: assumptions that tall, majestic forests must be more productive that shorter forests
+
+- Recent ecosystem theory: causal linking chain linking Gross Primary Productivity (GPP) to biomass -&gt; Verbal model
+
+]
 
 
-&lt;img src="figs/archipel-stockholm.jpg" width="50%" style="display: block; margin: auto;" /&gt;
-
-&gt; Both for the plant-geographer and the ecologist it is of great importance to know if an area or a district is rich or poor from the point of view of vegetation
-
-O. Arrhenius 1921. **Species and area**
-
-
----
-## What is the relation of species number to area?
-
-&lt;img src="figs/Schneider_Fig1_2.png" width="65%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -328,56 +357,76 @@ theoretical quantities]
 ---
 ## What we expect from theory?
 
+### Carbon cycle of forests
+
 .pull-left[
-### MacArthur &amp; Wilson 
-- Large areas support larger population sizes of all resident species than do small islands
 
-- Probability of stochastic extinction is reduced on large islands
+&lt;img src="figs/Malhi_key_processes.png" width="70%" style="display: block; margin: auto;" /&gt;
 
-- Island area &gt; Number of individuals &gt; Species number
+Malhi and collaborators 2012; 2015
 ]
 
-.pull.right[
-
-&lt;img src="figs/theory.png" width="50%" style="display: block; margin: auto;" /&gt;
-
-
+.pull-right[
+- __GPP__: total photosynthetic carbon fixation by the forest canopy
+- __Autotrophic Respiration__: the fraction of GPP used for metabolic processes
+- __NPP__: remaining carbon allocated to biomass production
+- __Mortality and residence time__: high productivity forests show higher turnover and lower biomass residence times
+- __Biomass Accumulation__: results from the interplay between productivity, allocation, and mortality
 ]
+
 
 
 ---
 ## What we expect from theory?
+### Biomass in old-growth Amazonian forests
+[Malhi et al 2006 GCB](https://onlinelibrary.wiley.com/doi/10.1111/j.1365-2486.2006.01120.x)
+
 
 
 .pull-left[
-### Birds of the East Indies
+&lt;center&gt;
 
-Preston 1961
-
-&lt;img src="figs/1-Lesser.jpeg" width="60%" /&gt;
+&lt;img src="figs/Malhi_key_processes2.png" width="60%" /&gt;
 
 
 ]
 
 .pull-right[
+&lt;center&gt;
 
-&lt;img src="figs/expect.png" width="90%" /&gt;
+&lt;img src="figs/theory1.png" width="60%" /&gt;
+
+]
+
+
+
+---
+## What we expect from theory?
+### Biomass in old-growth Amazonian forests
+[Malhi et al 2006 GCB](https://onlinelibrary.wiley.com/doi/10.1111/j.1365-2486.2006.01120.x)
+
+
+.pull-left[
+&lt;center&gt;
+
+&lt;img src="figs/Malhi_key_processes2.png" width="60%" /&gt;
+
+
+]
+
+.pull-right[
+&lt;center&gt;
+
+&lt;img src="figs/theory2.png" width="60%" /&gt;
 
 ]
 
 ---
 ## What the data shows
 
+&lt;center&gt;
 
-.pull-left[
-&lt;img src="figs/data_plot.png" width="90%" style="display: block; margin: auto;" /&gt;
-
-]
-
-.pull-right[
-&lt;img src="figs/data_plot2.png" width="90%" style="display: block; margin: auto;" /&gt;
-
-]
+&lt;img src="figs/data_plot.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: middle
@@ -388,12 +437,11 @@ class: middle
 
 * We can never control all sources of variation that affect our measurements or counts
 
-* Thus, any measurement or count done in a scientific research has some degree of **uncertaintity**
+* Thus, any measurement or count done in a scientific research has some degree of **uncertainty**
 
 * In other words, any quantitative data of scientific interest is a **random variable** 
 
 ]
-
 
 ---
 ### From the mathematical to the statistical model
@@ -471,20 +519,18 @@ $$\mathcal{N}(\mu, \sigma) = \frac{1}{\sigma \sqrt{2\pi}}\;e^{-\frac{1}{2}\left(
 
 $$ 
 `\begin{aligned}
-Y(i)^* &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
-log(\mu) &amp; =  log(cA^z) \\[1em]
-log(\mu) &amp; = log(c) + zlog(A) \\[1em] 
-\mu^* &amp; = c^* + zA^* \\[1em] 
-\sigma &amp; = C
+Y_i &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
+\mu &amp; =  \alpha + \beta * AGCWP \\[1em]
+\sigma &amp; \sim \mathcal{N}(0, 1)
 \end{aligned}`
 $$
 ]
 
 .pull-right[
 
-`\(S = cA^z\)`
 
-**Which reads:** "The log of the number of species at each island `\(Y(i)\)` follows a normal distribution with expected value `\(\mu\)` that is a function of area `\(A_i\)`, and with a standard deviation `\(\sigma\)` of constant value `\(C\)`"
+**Which means:** 
+This model assumes that biomass per basal area `\(Y_i\)` is normally distributed around a mean value `\(\mu\)` that is linearly related to above ground course wood productivity (AGCWP), and with a standard deviation `\(\sigma\)` following a normal distribution. The slope `\(\beta\)` quantifies how productivity affects biomass, while the intercept `\(\alpha\)` represents the baseline biomass when AGCWP is zero.
 
 ]
 
@@ -547,52 +593,13 @@ or **independent variables**)
 
 $$ 
 `\begin{aligned}
-Y(i) &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
-log(\mu) &amp; =  log(cA^z) \\[1em]
-log(\mu) &amp; = log(c) + zlog(A) \\[1em] 
-\mu^* &amp; = c^* + zA^* \\[1em] 
-\sigma &amp; = C
+Y_i &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
+\mu &amp; =  \alpha + \beta \times AGCWP \\[1em]
+\sigma &amp; \sim \mathcal{N}(0, 1)
 \end{aligned}`
 $$
-The log of species richness is a linear function of the log of island area
-
-]
-
-.pull-right[
-
-&lt;img src="figs/theory_log.png" width="90%" style="display: block; margin: auto;" /&gt;
-
-
-]
-
----
-## Which data do we need? `\(S = cA^z\)`
-
-- The log of the number of species per island ( `\(S\)` ) -&gt; **response variable**
---
-
-
-- The log of the area of each island ( `\(A\)` ) -&gt; **predictor variable**
---
-
-
----
-## The linear regression model
-
-.pull-left[
-
-*Our model:*
-
-$$ 
-`\begin{aligned}
-Y(i) &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
-\mu^* &amp; = c^* + zA^* \\[1em] 
-\sigma &amp; = C
-\end{aligned}`
-$$
-
-*Which reads:*
-The log of species richness across islands `\(Y(i)\)` follows a normal distribution with expected value `\(\mu\)` that is a linear function of the log of island area, with a standard deviation `\(\sigma\)` of constant value `\(C\)`
+The biomass is a linear function of the woody productivity, and the slope would
+depend on the effect of mortality
 
 ]
 
@@ -604,39 +611,88 @@ The log of species richness across islands `\(Y(i)\)` follows a normal distribut
 ]
 
 ---
-### What the fit shows
+## Which data do we need?
+
+- The biomass in a forest plot, e.g. biomass per basal area -&gt; **response variable**
+--
+
+
+- Wood productivity, e.g. aboveground coarse wood productivity -&gt; **predictor variable**
+--
+
+
+```r
+head(df)
+```
+
+```
+##      AGCWP  Biomass
+## 1 1.678107 11.58105
+## 2 1.864691 11.82921
+## 3 1.870414 11.96556
+## 4 2.095071 12.07726
+## 5 2.205525 12.60637
+## 6 2.193376 11.94865
+```
+
+
+---
+## The linear regression model
 
 .pull-left[
 
-```r
-# Fit of the linear model of the log of 
-# species as a linear function of the 
-# log of area
-lm(log(species) ~ log(area), 
-   data = df)
-```
+*Our model:*
 
-```
-## 
-## Call:
-## lm(formula = log(species) ~ log(area), data = df)
-## 
-## Coefficients:
-## (Intercept)    log(area)  
-##      1.7467       0.3498
-```
+$$ 
+`\begin{aligned}
+Y_i &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
+\mu &amp; =  \alpha + \beta \times AGCWP \\[1em]
+\sigma &amp; \sim \mathcal{N}(0, 1)
+\end{aligned}`
+$$
+
+*Which reads:*
+The biomass per basal area across plots `\(Y(i)\)` follows a normal distribution with expected value `\(\mu\)` that is a linear function of the coarse woody productivity of each plot, with a standard deviation `\(\sigma\)` following a normal distribution
 
 ]
 
+.pull-right[
 
-.pull.right[
+&lt;img src="figs/expect_variation3.png" width="90%" style="display: block; margin: auto;" /&gt;
 
-&lt;img src="figs/fit.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 ]
 
 ---
-## Estimated parameters `\(S = cA^z\)`
+## Implementing the model
+
+
+### Define the model 
+
+```r
+# Define a linear model of the biomass as a 
+# linear function of the WP
+model &lt;- alist(
+  Biomass ~ dnorm(mu, sigma),
+  mu &lt;- a + b * AGCWP,
+  a ~ dnorm(10, 5),  # Prior for intercept
+  b ~ dnorm(0, 1),   # Prior for slope
+  sigma ~ dnorm(0, 1)    # Prior for residual SD
+)
+```
+
+--
+### Fit the model
+
+```r
+fit &lt;- quap(
+  model,
+  data = df
+)
+```
+
+---
+## Estimated parameters 
 
 .pull-left[
 
@@ -644,23 +700,23 @@ lm(log(species) ~ log(area),
 
 
 ```r
-mod &lt;- lm(log(species) ~ log(area), data = df)
-coef(mod)
+summary(fit)
 ```
 
 ```
-## (Intercept)   log(area) 
-##   1.7467150   0.3498288
+##             mean         sd       5.5%      94.5%
+## a     13.1442543 0.41558406 12.4800707 13.8084379
+## b     -0.8853548 0.13283954 -1.0976581 -0.6730516
+## sigma  0.7538398 0.07387445  0.6357742  0.8719055
 ```
 
-`\(c = \exp(1.75)\)` 
+`\(\alpha = 13.14\)` 
 
-`\(z = 0.35\)`
+`\(\beta = -0.89\)`
 
-`\(S = 5.75 \times 8870 ^ {0.35}\)`
+`\(Y_i = 13.14 + (-0.89 \times 3)\)`
 
-`\(S = 138.4972\)`
-
+`\(Y_i = 10.47\)`
 
 ]
 
@@ -670,12 +726,20 @@ coef(mod)
 &lt;img src="figs/fit.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 ]
+
 
 ---
 ## Where we are and what is next?
 
 
 &lt;img src="figs/roadmap.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Computational resources
+
+
+
 
 ---
 
@@ -694,6 +758,10 @@ coef(mod)
 * **Approaches to ecological modelling**: Chapter 1 in Ovaskeinen 
     et al. 2016. Quantitative Ecology and Evolutionary Biology. 
     Oxford, Oxford University Press.
+    
+* **The golem of prague**: Chapter 1 in McElreath. Statistical rethinking. 
+    Boca Ratol, FL, CRC Press.
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
