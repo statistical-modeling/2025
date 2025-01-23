@@ -15,16 +15,18 @@ navbar:
           href: 01_presentation.html
         - text: "Linear models"
           href: 02_linear_models.html
-        - text: "Generalized Linear Models"
+        - text: "Generalized Linear Models - I"
           href: 04_glm.html
+        - text: "Generalized Linear Models - II"
+          href: 05_glm.html
         - text: "Bayesian statistics"
-          href: 05_bayesian_statistics.html
+          href: 06_bayesian_statistics.html
         - text: "Model selection"
-          href: 06_model_selection.html
+          href: 07_model_selection.html
         - text: "Causal thinking"
-          href: 07_causal_thinking.html
+          href: 08_causal_thinking.html
         - text: "Mixed and hierarchical models"
-          href: 08_mixed_and_hierarchical_models.html
+          href: 09_mixed_and_hierarchical_models.html
     - text: "Computer Labs"
       menu:
         - text: "Linear Models"
