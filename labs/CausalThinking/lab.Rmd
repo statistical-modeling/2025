@@ -1,0 +1,376 @@
+---
+title: "Causal model building"
+description: |
+author: 
+ - "Diogo Melo"
+ - "Paulo Inácio Prado"
+date: '2024-02-07'
+output: 
+    distill::distill_article:
+      toc: true
+      toc_depth: 3
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, eval =TRUE}
+knitr::opts_chunk$set(echo = TRUE, eval =FALSE)
+```
+
+
+# Remembering multiple regression
+
+In [multiple linear regression](../03_linear_models/lab2.html), the
+expected value of the response is a **linear combination** of
+predictor variables:
+
+$$
+\begin{aligned} 
+  y_i &\sim Normal(\mu_i, \sigma) \\
+  \mu_i &= \sum_j \beta_j x_{ij} \\
+\end{aligned} 
+$$
+
+This model is fitted by finding the values of $\beta_j$ that provide
+the best prediction of the expected (or mean) response $\mu_i$. If the
+predictors are independent causes of the response, the estimated
+coefficients $\beta_j$ express the isolated effects of each predictor
+on the response. You can check this by creating a Gaussian variable with
+a mean value that is the sum of two independent predictors:
+
+```{r,  eval=FALSE }
+set.seed(42)
+x1 <- runif(1000)
+x2 <- runif(1000)
+y <- rnorm(1000, mean = x1 + x2, sd = 0.5)
+```
+
+and then comparing the coefficients of the multiple regression with
+those of the simple regression on each single predictor:
+
+```{r , eval=FALSE }
+coef( lm(y ~ x1 + x2) )
+coef( lm(y ~ x1) )
+coef( lm(y ~ x2) )
+```
+
+What happens if the predictors are not independent? Simulate two
+predictors that share a common cause, that is an unknown variable
+$u$. The common cause creates a correlation between the two
+predictors:
+
+
+```{r , eval=FALSE }
+u <- runif(100)
+x1 <- rnorm(100, mean = u, sd =0.1)
+x2 <- rnorm(100, mean = u, sd =0.1)
+y <-  rnorm(100, mean = x1 + x2, sd =0.1)
+plot(x2 ~ x1)
+```
+
+And now the coefficients of each predictor in the multiple model are
+much smaller than their isolated effects (estimated from simple
+regressions):
+
+```{r , eval=FALSE }
+coef( lm(y ~ x1 + x2) )
+coef( lm(y ~ x1) )
+coef( lm(y ~ x2) )
+```
+
+This happens because the coefficients of a multiple regression express
+**partial or controlled effects**, that is, the direct effects of each
+predictor when all the other predictors are held constant (and are
+not accounted for by other predictors). Thus, the coefficients of a
+multiple regression for a predictor $x_1$ correspond to the
+coefficients of a simple regression of the response as a function of
+the **residuals** of $x_1$ in respect to all other predictors $x_i$.
+
+Calculate the residuals of the predictors $x_1$ and $x_2$
+to each other and plot $y$ as a
+function of each of these residual variables:
+
+
+```{r, eval=FALSE }
+x1_res <- residuals( lm(x1 ~ x2) )
+x2_res <- residuals( lm(x2 ~ x1) )
+
+par(mfcol = c(2,2))
+plot(y ~ x1, main = "y ~ x1")
+abline( lm(y ~ x1) )
+plot(y ~ x1_res, main = "y ~ x1|x2", xlab = "residuals of x1 ~ x2")
+abline( lm(y ~  x1_res))
+plot(y ~ x2, main = "y ~ x2")
+abline( lm(y ~x2) )
+plot(y ~ x2_res, main = "y ~ x2|x1", xlab = "residuals of x2 ~ x1")
+abline( lm(y ~  x2_res))
+par(mfcol = c(1,1))
+```
+
+The coefficients of $x_1$ and $x_2$ in the multiple regression are the
+slopes of the lines in the lower row of the plots in the figure
+above. These slopes are smaller than those of the linear regression to
+the raw values of the predictors (first row of plots above). You can
+check this by comparing the coefficients of these regressions to the
+multiple regression coefficients:
+
+```{r , eval=FALSE }
+coef( lm(y ~ x1 + x2) )
+coef( lm(y ~x1_res) )
+coef( lm(y ~x2_res) )
+```
+
+In short, coefficients of multiple regression express direct effects,
+controlled for all other predictors. The inference of the causal paths
+behind these partialled effects is not trivial, because such effects
+can have different meanings. Independent variables in a multiple
+regression can play different roles, such as confounders, mediators
+or proxies.  If you understand that, you can infer some important
+aspects of the causal patterns from different linear models.
+
+
+# Good controls
+
+When fitting causal models, it is often necessary to add covariates to a linear model in order to correctly identify the effect of interest. This means running a multiple regression in which one of the coefficients is related to the causal path of interest, and the others are added to the model in order to block non-causal paths. Many of the examples in this tutorial are from [Cinelli, Carlos, Andrew Forney, and Judea Pearl. "A crash course in good and bad controls." Sociological Methods & Research (2021): 00491241221099552.](https://ftp.cs.ucla.edu/pub/stat_ser/r493.pdf)
+
+For example, in the following DAGs, where X, Y and Z are observed, and U is unobserved:
+
+![](figs/good_controls_1.png)
+
+There is always a shared common cause between X and Y, and estimating
+the effect of X on Y requires blocking this non-causal path, by
+including the shared cause (or confound variable) as a control in the
+model. The variable Z can be used as a covariate in all cases, even in
+the presence of the unobserved confound U.
+
+Let's check this by simulating the DAG in model 2:
+
+```{r, eval=FALSE }
+N = 100
+U = rnorm(N)
+b_zu = 0.5
+Z = rnorm(N, b_zu * U)
+b_xz = 0.8
+X = rnorm(N, b_xz * Z)
+b_yu = 1
+b_yx = 1
+Y = rnorm(N, b_yu * U + b_yx * X)
+
+lm(Y ~ X) |> coef() # Biased by non-causal path, effect of X is overestimated
+lm(Y ~ X + Z) |> coef() # Unbiased, effect of X is correct and equal to b_yx
+```
+
+
+The same logic applies if the confound is mediated by another variable M:
+
+![](figs/good_controls_2.png)
+
+Z should be added as a covariate in all of these cases. 
+
+
+__Question__: If we are interested in the effect of X on Y, could M
+also be added to the model? Explain.
+
+__Exercise__: Choose one of these DAGs and run a simulation, explore
+the effect of adding Z or M as covariates.
+
+## Pretty good controls
+
+Some covariates can be added to a model not to avoid bias, but to
+increase precision. For example, in the following DAG:
+
+```{r, out.height=100, out.width=100, echo=FALSE,  eval =TRUE}
+knitr::include_graphics("figs/pretty_good.png")
+```
+
+In this case, adding Z as a covariate increases the precision of the
+estimate of the effect of X on Y.
+
+Again, let's check using simulations, and then check the posterior
+distributions of the estimated effects of X on Y:
+
+```{r, eval=FALSE }
+set.seed(2)
+library(rethinking)
+N = 200
+X = rnorm(N)
+Z = rnorm(N)
+b_yx = 1
+b_yz = 2
+Y = rnorm(N, b_yx * X + b_yz * Z)
+## Fit models without and with confound as a control, and generate posterior distributions
+yx = lm(Y ~ X) |> extract.samples()
+yxz = lm(Y ~ X + Z) |> extract.samples()
+## Density histogram of posteriors
+dens(yxz$X, lwd = 2, col = 2, xlim = c(0.4, 1.65), xlab = "b_yx")
+dens(yx$X, lwd = 2, col = 1, add =TRUE)
+```
+
+The posterior distributions of the coefficient for X have the same
+mean, but different variances. This happens because adding the
+covariate removes part of the variation in Y that is not associated
+with X, which decreases the variance of the estimated effect of X (or
+increases its precision, which is the same).
+
+__Question__: What if Z is a cause of X, not of Y. Would adding it to the regression help in this case?
+
+# Bad controls
+
+Two classes of bad controls are the post-treatment or overcontrol bias, and bias amplification. 
+
+In the following DAGs, controlling on Z would lead to a underestimate of the effect of X on Y.
+
+```{r, out.height=150, out.width=550, echo=FALSE, eval =TRUE}
+knitr::include_graphics("figs/overcontrol.png")
+```
+
+In the following case, controlling on Z would lead to an increase in the bias caused by the unobserved variable U.
+
+```{r, out.height=150, out.width=210, echo=FALSE, eval =TRUE}
+knitr::include_graphics("figs/bias_amplification.png")
+```
+
+__Exercise__: Simulate the bias amplification example and check the effect of including the Z variable in the model.
+
+## AIC and significance won't help you
+
+To explore the effect of a bad control variable, let's simulate a collider:
+
+```{r, eval=FALSE }
+# DAG : X -> Z <- Y
+N = 200
+X = rnorm(N)
+Y = rnorm(N)
+Z = rnorm(N, Y + X)
+
+m1 = lm(Y~X)   # Correct model
+m2 = lm(Y~X+Z) # Model including the collider
+```
+
+First, let's look at the significance of the variables in both models:
+
+```{r, eval=FALSE }
+summary(m1)
+summary(m2)
+```
+
+Not including Z gives the correct estimate of no effect of X on Y, but the model including Z tells us that both X and Z have significant effects on Y. Why is this?
+
+Many researchers would interpret the significant results in model 2 as evidence that both X and Z affect Y, don't make this mistake! Statistical models are blind to causes, they only capture associations.
+
+How about AIC? Would model comparison identify the correct model?
+
+```{r, eval=FALSE }
+library(bbmle)
+AICctab(m1, m2, mnames = c("Correct", "Biased"),
+        base=TRUE, weights = TRUE, nobs = N)
+```
+
+The biased model is also selected by the AIC. This is not surprising, as the inclusion of the collider increases the available information about Y, and so makes better predictions.
+
+__The only way to identify the possible bias is having a clear scientific model.__
+
+# Practice DAGs
+
+## dagitty package
+
+Much of the causal implications contained in DAGs can be analyzed automatically. 
+The dagitty package provides functions for this.
+
+```{r,  eval =FALSE}
+## if(!require("dagitty")) install.packages("dagitty")
+## library(dagitty)
+```
+
+## Some DAGs to explore
+
+For each of the following DAGs from the rethinking book, write down
+the correct models for estimating the total causal influence of X on
+Y:
+
+```{r, out.height=285, out.width=400, echo=FALSE, eval =TRUE}
+knitr::include_graphics("figs/dags_6M3.png")
+```
+
+You can check your answers using the dagitty package or the [online
+interface](http://www.dagitty.net/dags.html)^[For begginers, we
+reccomend to start playing with this interface, and then check the
+results with the `dagitty` package]. Here is an example:
+
+```{r, eval=FALSE }
+dag1 = dagitty('dag { X -> Y Z -> X Z -> Y A -> Z A -> Y}')
+
+# Plotting the dag, we can use coordinates to place the nodes in the desired position
+coordinates( dag1 ) <-
+    list( x=c(X = 0, Y = 2, Z = 1, A = 2),
+          y=c(X = 0, Y = 0, Z = -1, A = -1) )
+plot(dag1)
+
+# get all paths from X to Y
+paths(dag1, from = "X", to = "Y")
+
+# get the correct adjustment set
+adjustmentSets(dag1, exposure = "X", outcome = "Y")
+```
+
+# Extra: full luxury models
+
+In some cases, you may want to estimate the full causal model, including all possible paths in the dag that relates X and Y. This is called a "full luxury model".
+
+Let's simulate from the DAG we saw in class and try to fit a complete model:
+
+```{r, eval=FALSE }
+dag2 = dagitty('dag { X -> W W -> Y Z -> X Z -> Y A -> Z A -> X B -> Z B -> Y}')
+coordinates( dag2 ) <-
+    list( x=c(X = 0, W = 1, A = 0, B = 2, Y = 2, Z = 1),
+          y=c(X = 0, W = 0, A = -1, B = -1, Y = 0, Z = -1) )
+plot(dag2)
+adjustmentSets(dag2, exposure = "X", outcome = "Y")
+```
+
+```{r, eval=FALSE }
+# Simulate the full model
+N = 200
+A = rnorm(N)
+B = rnorm(N)
+Z = rnorm(N, A + B)
+X = rnorm(N, A + Z)
+W = rnorm(N, X)
+Y = rnorm(N, W + Z + B)
+df = data.frame(X, Y, Z, W, A, B)
+```
+
+Remember that the correct adjustment set for estimating the effect of X on Y is {Z, B}.
+
+```{r, eval=FALSE }
+lm(Y ~ X + Z + B, data = df) |> coef()
+```
+
+This gives the correct estimate, but we can do better and try to fit the full DAG. This is a full luxury model, and it may not be necessary in many cases, but it is a good exercise to understand the implications of the DAG.
+
+```{r, eval=FALSE }
+# Full Luxury model
+
+mFull = ulam(
+  alist(
+    A ~ normal(muA, sA),
+    B ~ normal(muB, sB),
+    Z ~ normal(muZ + bAZ * A + bBZ * B, sZ),
+    X ~ normal(muX + bAX * A + bZX * Z, sX),
+    W ~ normal(muW + bXW * X, sW),
+    Y ~ normal(muY + bWY * W + bZY * Z + bBY * B, sY),
+    c(bAZ, bAX, bBZ, bZX, bZY, bBY, bXW, bWY) ~ normal(0, 0.3),
+    c(muA, muB, muZ, muX, muY, muW) ~ normal(0, 1),
+    c(sA, sB, sX, sY, sZ, sW) ~ exponential(1)
+  ), data = df, chains = 4, cores = 4, iter = 2000  
+)
+plot(precis(mFull))
+abline(v = 1, col = 2)
+```
+
+**Challenge**: What if B was unobserved? How would you estimate the effect of X on Y in this case?
+
+```{r, eval=FALSE }
+# Make B unboserved
+df_noB = data.frame(X, Y, W, A, Z)
+```
