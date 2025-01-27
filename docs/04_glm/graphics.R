@@ -324,3 +324,49 @@ ggsave("04_glm/figs/discrete.png", bg = "transparent", width = 9, height = 4.5)
 
 (g3 + theme_publication()| g4+ theme_publication())
 ggsave("04_glm/figs/continuous.png", bg = "transparent", width = 9, height = 4.5)
+
+# Binomial vs poisson ----------------------------------------------------------
+# Load ggplot2
+library(ggplot2)
+library(dplyr)
+
+# Parameters for the binomial distribution
+n_trials <- 10
+p_success <- 0.2
+
+# Generate probability data
+binomial_data <- data.frame(
+  x = 0:n_trials,
+  prob = dbinom(0:n_trials, size = n_trials, prob = p_success)
+)
+
+# Create the plot with vertical lines
+ggplot(binomial_data, aes(x = x, y = prob)) +
+  geom_segment(aes(xend = x, yend = 0), linetype = "solid", size = 1) +
+  labs(
+    title = sprintf("Binomial Distribution (n = %d, p = %.1f)", n_trials, p_success),
+    x = "Number of successes",
+    y = "Probability"
+  ) +
+  theme_publication()
+ggsave("05_glm/figs/binomial.png", heigh = 4.5, width = 4.5)
+
+
+n_trials <- 100
+
+# Generate probability data
+binomial_data <- data.frame(
+  x = 0:n_trials,
+  prob = dbinom(0:n_trials, size = n_trials, prob = p_success)
+)
+
+ggplot(binomial_data, aes(x = x, y = prob)) +
+  geom_segment(aes(xend = x, yend = 0), linetype = "solid", size = 1) +
+  scale_x_continuous(limits = c(0, 40)) +
+  labs(
+    title = sprintf("Binomial Distribution (n = %d, p = %.1f)", n_trials, p_success),
+    x = "Number of successes",
+    y = "Probability"
+  ) +
+  theme_publication()
+ggsave("05_glm/figs/binomial2.png", heigh = 4.5, width = 4.5)

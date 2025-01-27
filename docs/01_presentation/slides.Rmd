@@ -633,16 +633,20 @@ $$
 \begin{aligned}
 Y_i & \sim \mathcal{N}(\mu, \sigma) \\[1em]
 \mu & =  \alpha + \beta * AGCWP \\[1em]
-\sigma & \sim \mathcal{N}(0, 1)
 \end{aligned}
 $$
+
+Usually: $$ \sigma = C$$ For us:
+$\sigma$ is a random variable with its own distribution
+
+In both cases, $\sigma$ is always positive
 ]
 
 .pull-right[
 
 
 **Which means:** 
-This model assumes that biomass per basal area $Y_i$ is normally distributed around a mean value $\mu$ that is linearly related to above ground course wood productivity (AGCWP), and with a standard deviation $\sigma$ following a normal distribution. The slope $\beta$ quantifies how productivity affects biomass, while the intercept $\alpha$ represents the baseline biomass when AGCWP is zero.
+This model assumes that biomass per basal area $Y_i$ is normally distributed around a mean value $\mu$ that is linearly related to above ground course wood productivity (AGCWP), and with a standard deviation $\sigma$ following a particular distribution. The slope $\beta$ quantifies how productivity affects biomass, while the intercept $\alpha$ represents the baseline biomass when AGCWP is zero.
 
 ]
 
@@ -710,7 +714,6 @@ $$
 \begin{aligned}
 Y_i & \sim \mathcal{N}(\mu, \sigma) \\[1em]
 \mu & =  \alpha + \beta \times AGCWP \\[1em]
-\sigma & \sim \mathcal{N}(0, 1)
 \end{aligned}
 $$
 The biomass is a linear function of the woody productivity, and the slope would
@@ -753,12 +756,12 @@ $$
 \begin{aligned}
 Y_i & \sim \mathcal{N}(\mu, \sigma) \\[1em]
 \mu & =  \alpha + \beta \times AGCWP \\[1em]
-\sigma & \sim \mathcal{N}(0, 1)
+\sigma & \sim \mathcal{Exponential}(1)
 \end{aligned}
 $$
 
 *Which reads:*
-The biomass per basal area across plots $Y(i)$ follows a normal distribution with expected value $\mu$ that is a linear function of the coarse woody productivity of each plot, with a standard deviation $\sigma$ following a normal distribution
+The biomass per basal area across plots $Y(i)$ follows a normal distribution with expected value $\mu$ that is a linear function of the coarse woody productivity of each plot, with a standard deviation $\sigma$
 
 ]
 
@@ -784,7 +787,7 @@ model <- alist(
   mu <- a + b * AGCWP,
   a ~ dnorm(10, 5),  # Prior for intercept
   b ~ dnorm(0, 1),   # Prior for slope
-  sigma ~ dnorm(0, 1)    # Prior for residual SD
+  sigma ~ dexp(1)    # Prior for residual SD
 )
 ```
 
@@ -840,6 +843,9 @@ include_graphics("figs/roadmap.png")
 ---
 ## Computational resources
 
+```{r, echo = FALSE, out.width='95%'}
+include_graphics("figs/server.png")
+```
 
 
 

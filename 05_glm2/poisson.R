@@ -3,12 +3,9 @@ library(rstan)
 
 data(Kline)
 
-?Kline
-
 d <- Kline
 
 d$P <- scale(log(d$population))
-
 d$contact_id <- ifelse(d$contact == "high", 2, 1)
 
 dat <- list(
@@ -61,12 +58,19 @@ m02 <- ulam(
   data = dat, chains = 4, log_lik = TRUE
 )
 
-png("05_glm/")
+png("05_glm2/figs/poisson_data.png", bg = "transparent")
 par(bty = "l")
 plot( dat$P,dat$T,xlab="log population (std)",ylab="total tools",
       col=rangi2,lwd=2, pch=ifelse(dat$cid==1,1,16),
       ylim=c(0,75), cex=1+normalize(k))
+dev.off()
 
+
+png("05_glm2/figs/poisson_fit.png", bg = "transparent")
+par(bty = "l")
+plot( dat$P,dat$T,xlab="log population (std)",ylab="total tools",
+      col=rangi2,lwd=2, pch=ifelse(dat$cid==1,1,16),
+      ylim=c(0,75), cex=1+normalize(k))
 ns <-100
 P_seq <-seq(from=-1.4,to=3,length.out=ns)
 
@@ -91,6 +95,20 @@ legend("topleft",                           # Position of the legend
        lwd = 1.5,                            # Line width for each group
        title = "Contact Type")               # Optional title for the legend
 
-
+dev.off()
 
 save(m01, m02, file = "05_glm2/poisson.RData")
+
+
+png("05_glm2/figs/predict_poisson.png", bg = "transparent")
+plot(NULL,xlab="Population (log)",ylab="Tools",
+     xlim = range(P_seq), 
+     col=NA,lwd=2, pch=ifelse(dat$cid==1,1,16),
+     ylim=c(0,75), cex=1+normalize(k), xaxt = "n", yaxt = "n")
+
+# predictionsforcid=1(lowcontact)
+lambda <-link(m02,data=data.frame(P=P_seq,cid=1))
+lmu <-apply(lambda,2,mean)
+lci <-apply(lambda,2,PI)
+lines( P_seq,lmu,lty=1,lwd=2, col="black")
+dev.off()

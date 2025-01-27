@@ -159,8 +159,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div id="htmlwidget-914550597787a5ba2c15" style="width:1024px;height:504px;" class="grViz html-widget "></div>
-<script type="application/json" data-for="htmlwidget-914550597787a5ba2c15">{"x":{"diagram":"\ndigraph nicegraph {\n\n  bgcolor = \"#fdf6e3\"\n\n  # graph, node, and edge definitions\n  graph [compound = true, nodesep = .5, ranksep = .25,\n         color = \"#dc322f\"]\n\n  node [fontname = Helvetica, fontcolor = darkslategray,\n        shape = rectangle, fixedsize = false, \n        color = \"#586e75\", fontsize = 30]\n\n  edge [color = grey, arrowhead = none, arrowtail = none]\n\n  # subgraph for fondation\n  subgraph cluster0 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Presentation\" -> \"Probability distributions\" -> \"Bayesian statistics principles\" \n  }\n\n  # subgraph for tools\n  subgraph cluster1 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Linear models\" -> \"Multiple regression\" -> \"Generalized linear models\" -> \"Mixed and hierarchical models\" \n  }\n  \n    # subgraph inference\n  subgraph cluster2 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Model selection and prediction\" -> \"Causal thinking\"\n  }\n\n\n  \"Statistical modeling\"             [width = 5, fontsize = 30, height = 0.75, style = filled, fillcolor = \"#cb4b16\", fontcolor = \"#fdf6e3\"]\n  \"Foundation\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Fitting\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Inference\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.5, height = 0.6]\n\n  \"Statistical modeling\" -> \"Foundation\" \n  \"Statistical modeling\" -> \"Fitting\"\n  \"Statistical modeling\" ->   \"Inference\" \n  \"Foundation\" -> \"Presentation\"            [lhead = cluster0]\n  \"Fitting\" -> \"Linear models\"        [lhead = cluster1]\n  \"Inference\" -> \"Model selection and prediction\"        [lhead = cluster2]\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-67e08fd9681fc41e312e" style="width:1024px;height:504px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-67e08fd9681fc41e312e">{"x":{"diagram":"\ndigraph nicegraph {\n\n  bgcolor = \"#fdf6e3\"\n\n  # graph, node, and edge definitions\n  graph [compound = true, nodesep = .5, ranksep = .25,\n         color = \"#dc322f\"]\n\n  node [fontname = Helvetica, fontcolor = darkslategray,\n        shape = rectangle, fixedsize = false, \n        color = \"#586e75\", fontsize = 30]\n\n  edge [color = grey, arrowhead = none, arrowtail = none]\n\n  # subgraph for fondation\n  subgraph cluster0 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Presentation\" -> \"Probability distributions\" -> \"Bayesian statistics principles\" \n  }\n\n  # subgraph for tools\n  subgraph cluster1 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Linear models\" -> \"Multiple regression\" -> \"Generalized linear models\" -> \"Mixed and hierarchical models\" \n  }\n  \n    # subgraph inference\n  subgraph cluster2 {\n    node [fixedsize = true, width = 4.3, fontsize = 22]\n    \"Model selection and prediction\" -> \"Causal thinking\"\n  }\n\n\n  \"Statistical modeling\"             [width = 5, fontsize = 30, height = 0.75, style = filled, fillcolor = \"#cb4b16\", fontcolor = \"#fdf6e3\"]\n  \"Foundation\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Fitting\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.4, height = 0.6]\n  \"Inference\" [fontsize = 24, style = filled, fillcolor = dimgray, fontcolor = \"#fdf6e3\", width = 4.5, height = 0.6]\n\n  \"Statistical modeling\" -> \"Foundation\" \n  \"Statistical modeling\" -> \"Fitting\"\n  \"Statistical modeling\" ->   \"Inference\" \n  \"Foundation\" -> \"Presentation\"            [lhead = cluster0]\n  \"Fitting\" -> \"Linear models\"        [lhead = cluster1]\n  \"Inference\" -> \"Model selection and prediction\"        [lhead = cluster2]\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 &lt;/center&gt;
 
@@ -199,7 +199,7 @@ class: center, middle, inverse, title-slide
 ---
 ## Course schedule
 
-&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;table class="table" style="color: black; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:right;"&gt; Week &lt;/th&gt;
@@ -521,16 +521,20 @@ $$
 `\begin{aligned}
 Y_i &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
 \mu &amp; =  \alpha + \beta * AGCWP \\[1em]
-\sigma &amp; \sim \mathcal{N}(0, 1)
 \end{aligned}`
 $$
+
+Usually: $$ \sigma = C$$ For us:
+`\(\sigma\)` is a random variable with its own distribution
+
+In both cases, `\(\sigma\)` is always positive
 ]
 
 .pull-right[
 
 
 **Which means:** 
-This model assumes that biomass per basal area `\(Y_i\)` is normally distributed around a mean value `\(\mu\)` that is linearly related to above ground course wood productivity (AGCWP), and with a standard deviation `\(\sigma\)` following a normal distribution. The slope `\(\beta\)` quantifies how productivity affects biomass, while the intercept `\(\alpha\)` represents the baseline biomass when AGCWP is zero.
+This model assumes that biomass per basal area `\(Y_i\)` is normally distributed around a mean value `\(\mu\)` that is linearly related to above ground course wood productivity (AGCWP), and with a standard deviation `\(\sigma\)` following a particular distribution. The slope `\(\beta\)` quantifies how productivity affects biomass, while the intercept `\(\alpha\)` represents the baseline biomass when AGCWP is zero.
 
 ]
 
@@ -595,7 +599,6 @@ $$
 `\begin{aligned}
 Y_i &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
 \mu &amp; =  \alpha + \beta \times AGCWP \\[1em]
-\sigma &amp; \sim \mathcal{N}(0, 1)
 \end{aligned}`
 $$
 The biomass is a linear function of the woody productivity, and the slope would
@@ -621,7 +624,7 @@ depend on the effect of mortality
 --
 
 
-```r
+``` r
 head(df)
 ```
 
@@ -647,12 +650,12 @@ $$
 `\begin{aligned}
 Y_i &amp; \sim \mathcal{N}(\mu, \sigma) \\[1em]
 \mu &amp; =  \alpha + \beta \times AGCWP \\[1em]
-\sigma &amp; \sim \mathcal{N}(0, 1)
+\sigma &amp; \sim \mathcal{Exponential}(1)
 \end{aligned}`
 $$
 
 *Which reads:*
-The biomass per basal area across plots `\(Y(i)\)` follows a normal distribution with expected value `\(\mu\)` that is a linear function of the coarse woody productivity of each plot, with a standard deviation `\(\sigma\)` following a normal distribution
+The biomass per basal area across plots `\(Y(i)\)` follows a normal distribution with expected value `\(\mu\)` that is a linear function of the coarse woody productivity of each plot, with a standard deviation `\(\sigma\)`
 
 ]
 
@@ -669,7 +672,7 @@ The biomass per basal area across plots `\(Y(i)\)` follows a normal distribution
 
 ### Define the model 
 
-```r
+``` r
 # Define a linear model of the biomass as a 
 # linear function of the WP
 model &lt;- alist(
@@ -677,14 +680,14 @@ model &lt;- alist(
   mu &lt;- a + b * AGCWP,
   a ~ dnorm(10, 5),  # Prior for intercept
   b ~ dnorm(0, 1),   # Prior for slope
-  sigma ~ dnorm(0, 1)    # Prior for residual SD
+  sigma ~ dexp(1)    # Prior for residual SD
 )
 ```
 
 --
 ### Fit the model
 
-```r
+``` r
 fit &lt;- quap(
   model,
   data = df
@@ -699,15 +702,15 @@ fit &lt;- quap(
 
 
 
-```r
+``` r
 summary(fit)
 ```
 
 ```
 ##             mean         sd       5.5%      94.5%
-## a     13.1442543 0.41558406 12.4800707 13.8084379
-## b     -0.8853548 0.13283954 -1.0976581 -0.6730516
-## sigma  0.7538398 0.07387445  0.6357742  0.8719055
+## a     13.1443395 0.41481859 12.4813792 13.8072997
+## b     -0.8853512 0.13259524 -1.0972640 -0.6734384
+## sigma  0.7524177 0.07372921  0.6345841  0.8702512
 ```
 
 `\(\alpha = 13.14\)` 
@@ -738,6 +741,7 @@ summary(fit)
 ---
 ## Computational resources
 
+&lt;img src="figs/server.png" width="95%" /&gt;
 
 
 
