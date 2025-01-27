@@ -3,7 +3,7 @@ title: "Statistical models: linking data to theory"
 subtitle: "The Generalized Linear Model"  
 author: 
   - "Sara Mortara"
-date: '28 Jan 2025'
+date: '29 Jan 2025'
 output:
   xaringan::moon_reader:
     lib_dir: libs
