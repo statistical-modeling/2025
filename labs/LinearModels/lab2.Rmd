@@ -31,16 +31,10 @@ In an additive multiple linear regression, the expected value of the response $Î
 $$
 \begin{align}
 y_i &\sim Normal(\mu_i, \sigma) \\
-\mu_i & = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij} \\
-\sigma & = C
+\mu_i & = \alpha + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_j x_{ij} \\
 \end{align}
 $$
 
-The expression for the predicted value in this model can be written in the compact form:
-
-$$\mu_i = \sum_{j=0}^{J} \beta_{j} x_{ij}$$
-
-Where $J$ is the number of predictor variables. This is called the **linear predictor**.
 
 ## Fitting
 
@@ -49,26 +43,29 @@ We will use the same dataset of the biennial plant *Ipomopsis aggregata*. Forty 
 Prepare the data:
 
 ```{r data, eval=TRUE}
-ipomopsis <- read.csv("https://raw.githubusercontent.com/lmmx/crawley-r-statistics-book-notes/master/code/ipomopsis.csv")
-names(ipomopsis) <- c("diameter", "fruit.w", "treatment")
+df <- read.csv("https://raw.githubusercontent.com/lmmx/crawley-r-statistics-book-notes/master/code/ipomopsis.csv")
+names(df) <- c("Root", "Fruit", "Grazing")
+df$Root <- scale(df$Root, center = TRUE, scale = TRUE)
+df$Fruit <- scale(df$Fruit, center = TRUE, scale = TRUE)
+
 # Ungrazed is the control, and fenced grazed is the fenced treatment:
-ipomopsis$treatment <- ifelse(ipomopsis$treatment == "Ungrazed", 0, 1)
+df$Grazing0 <- ifelse(df$Grazing == "Ungrazed", 1, 0)
 ```
 
 Fit the additive model using `rethinking`:
 
 ```{r fit_model}
 # Fitting the model using quap
-m1 <- quap(
+m1 <- ulam(
   alist(
-    fruit.w ~ dnorm(mu, sigma),
-    mu <- beta0 + beta1 * diameter + beta2 * treatment,
-    beta0 ~ dnorm(-130, 50),  
-    beta1 ~ dnorm(20, 10),   
-    beta2 ~ dnorm(30, 10),  
-    sigma ~ dexp(1)          
+    Fruit ~ dnorm(mu, sigma),
+    mu <- a + b * Grazing0 + c * Root,
+    a ~ normal(0, 1),  
+    b ~ normal(0, 1),   
+    c ~ dnorm(0, 1),  
+    sigma ~ exponential(1)          
   ),
-  data = ipomopsis
+  data = df, chains = 4, cores = 4
 )
 ```
 
@@ -86,15 +83,15 @@ Create a plot to show the observed data and predicted values:
 
 ```{r plot_predictions}
 # Plot the observed data
-plot(ipomopsis$fruit.w ~ ipomopsis$diameter, 
-     col = ifelse(ipomopsis$treatment == 1, "red", "black"), 
-     pch = ifelse(ipomopsis$treatment == 1, 17, 16),
-     xlab = "Rootstock diameter (mm)", 
-     ylab = "Fruit dry weight (mg)")
+plot(df$Fruit ~ df$Root, 
+     col = ifelse(df$Grazing0 == 1, "red", "black"), 
+     pch = ifelse(df$Grazing0 == 1, 17, 16),
+     xlab = "Basal diameter (z-scores)", 
+     ylab = "Fruit dry weight (z-scores)")
 
 # Add the predicted lines
-abline(a = m1_coef["beta0", ], b = m1_coef["beta1", ], col = "black", lwd = 2)
-abline(a = m1_coef["beta0", ] + m1_coef["beta2", ], b = m1_coef["beta1", ], col = "red", lwd = 2)
+abline(a = m1_coef["a", ], b = m1_coef["b", ], col = "black", lwd = 2)
+abline(a = m1_coef["a", ] + m1_coef["c", ], b = m1_coef["b", ], col = "red", lwd = 2)
 
 # Add legend
 legend("topleft", legend = c("Fenced", "Control"), col = c("red", "black"), 
