@@ -250,10 +250,19 @@ coef(mod_bayesian)
 
 library(ggplot2)
 
+# Extract intercept and slope for both models
+ols_intercept <- coef(mod_ols)[1]
+ols_slope <- coef(mod_ols)[2]
+bayesian_intercept <- coef(mod_bayesian)[1]
+bayesian_slope <- coef(mod_bayesian)[2]
+
+
 ggplot(data, aes(x, y)) + 
   geom_point() +
-  geom_abline(intercept = coef(mod_ols)[1], slope = coef(mod_ols)[2], color = "red") +
-  geom_abline(intercept = coef(mod_bayesian)[1], slope = coef(mod_bayesian)[2], color = "blue") + theme_bw()
+  geom_abline(intercept = ols_intercept, slope = ols_slope, color = "red", linetype = "solid") +
+  geom_abline(intercept = bayesian_intercept, slope = bayesian_slope, color = "blue", linetype = "dashed") + 
+  theme_bw()
+
 ```
 
 How similar are the estimates of the two methods?
