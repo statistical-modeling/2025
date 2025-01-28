@@ -109,7 +109,7 @@ Prepare the data:
 data(tulips)
 tulips$blooms <- tulips$blooms / max(tulips$blooms)
 tulips$water <- scale(tulips$water, scale = FALSE)
-#tulips$shade <- scale(tulips$shade, scale = FALSE)
+tulips$shade <- scale(tulips$shade, scale = FALSE)
 ```
 
 Fit the interaction model:

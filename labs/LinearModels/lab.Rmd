@@ -68,7 +68,7 @@ As you can see, plotting the data suggests a linear relationship between these t
 
 We can calculate the correlation coefficients using several methods. The Ordinary Least Squares (OLS) method is the most common, and provides analitical solutions for the coefficients. The slope is the ratio of the covariance between $x$ and $y$ and the variance of $x$. The intercept is the mean of $y$ minus the product of the slope and the mean of $x$.
 
-$$\widehat{\beta}= \frac{Cov(x, y)}{Var(y)} = \frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2}$$
+$$\widehat{\beta}= \frac{Cov(x, y)}{Var(x)} = \frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2}$$
 
 and 
 
@@ -156,8 +156,8 @@ Can be also written as:
 
 $$
 \begin{align}
-y_i & = \sum \beta_j x_ij + \epsilon \\
-\epsilon & \sim Normal(\mu, \sigma) \\
+y_i & = \sum \beta_jx_{ij} + \epsilon \\
+\epsilon & \sim Normal(0, \sigma) \\
 \end{align}
 $$
 
