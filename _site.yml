@@ -31,6 +31,8 @@ navbar:
       menu:
         - text: "Linear Models"
           href: labs/LinearModels/lab.html
+        - text: "Generalized Linear Models"
+          href: labs/GLMs/lab.html
     - text: "About us"
       href: about.html
     - icon: fa fa-github
