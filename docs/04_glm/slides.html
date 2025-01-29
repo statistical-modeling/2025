@@ -4,7 +4,7 @@
     <title>Statistical models: linking data to theory</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sara Mortara" />
-    <meta name="date" content="2025-01-28" />
+    <meta name="date" content="2025-01-29" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <script src="libs/clipboard/clipboard.min.js"></script>
     <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
@@ -34,7 +34,7 @@ class: center, middle, inverse, title-slide
 ### Sara Mortara
 ]
 .date[
-### 28 Jan 2025
+### 29 Jan 2025
 ]
 
 ---
@@ -53,9 +53,8 @@ class: center, middle, inverse, title-slide
 
 --
 
-* So far we have assumed the response variable `\(y\)` changes continuously and 
-  errors are normally distributed around the mean, but this need not be the case
-
+* So far we have assumed the likelihood of `\(y\)` to be `\(P(y|\mu, \sigma)\)`, which 
+means `\(Y_i \sim N(\mu, \sigma)\)` 
 
 --
 
@@ -116,18 +115,104 @@ How can pebbles be distributed across buckets under varying constraints?
 ]
 
 ---
+## Understanding entropy
+
+
+.pull-left[
+&lt;img src="figs/McElreath_Fig10_1.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+``` r
+p &lt;-list()
+p$A &lt;- c(0, 0, 10, 0, 0)
+p$B &lt;- c(0, 1, 8, 1, 0)
+p$C &lt;- c(0, 2, 6, 2, 0)
+p$D &lt;- c(1, 2, 4, 2, 1)
+p$E &lt;- c(2, 2, 2, 2, 2)
+
+(p_norm &lt;- lapply(p,function(q) q/sum(q)))
+```
+
+```
+## $A
+## [1] 0 0 1 0 0
+## 
+## $B
+## [1] 0.0 0.1 0.8 0.1 0.0
+## 
+## $C
+## [1] 0.0 0.2 0.6 0.2 0.0
+## 
+## $D
+## [1] 0.1 0.2 0.4 0.2 0.1
+## 
+## $E
+## [1] 0.2 0.2 0.2 0.2 0.2
+```
+
+
+]
+
+
+---
+## Understanding entropy
+
+
+.pull-left[
+&lt;img src="figs/McElreath_Fig10_1.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-right[
+
+$$ 
+`\begin{align}
+H(p) = -\sum{p_{i} log p_{i}}
+\end{align}`
+$$
+
+
+``` r
+entropy &lt;- function(p) -sum(ifelse(p == 0, 0, p * log(p))) 
+(H &lt;- sapply(p_norm, entropy))
+```
+
+```
+##         A         B         C         D         E 
+## 0.0000000 0.6390319 0.9502705 1.4708085 1.6094379
+```
+
+``` r
+library(vegan)
+sapply(p, diversity)
+```
+
+```
+##         A         B         C         D         E 
+## 0.0000000 0.6390319 0.9502705 1.4708085 1.6094379
+```
+
+
+]
+
+
+---
 ## Generalized linear models 
 
+### Why does entropy matter?
 
 Choose the probability distribution from the __exponential family__ that best 
-matches the constraints imposed by the predictors
+matches the constraints imposed by the predictors.
 
 
 &lt;img src="figs/McElreath_Fig10_6.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 
 ---
-## Discrete and continuous distributions
+## A (very) quick recap on probability distributions
+### Discrete and continuous distributions
 
 
 .pull-left[
@@ -278,6 +363,38 @@ around the mean, without changing the mean
 
 
 ---
+## Generalized liner models 
+
+
+Two changes from the linear model:
+
+.pull-left[
+__Principled change__: the principle of maximum entropy
++ the distributions are chosen because they maximize entropy given certain 
+contraints 
+
++ emerge from probability theory and information theory
+
++ the model is consistent with known information (e.g. for binary data, the 
+Binomial distribution maximizes entropy)
+]
+
+.pull-right[
+__Epicycle change__: a modeling trick
+
++ connects the linear predictor to the mean of the outcome variable's 
+distribution
+
++ it’s added to make the math and modeling work
+
++ but it doesn’t inherently explain why the relationship takes the transformed form
+
++ ex: probabilities in Binomial models must stay between 0 and 1, so we need a link like logit or probit
+
+]
+
+
+---
 ## Generalized Linear Models
 
 GLMs choose the probability distribution from the exponential family that best 
@@ -305,12 +422,31 @@ change in `\(x\)`
  
 
 
+---
+## Generalized Linear Models
+
+GLMs choose the probability distribution from the exponential family that best 
+matches the constraints imposed by the predictors
+
+
+.bg-white.b--brblack.ba.bw2.br3.shadow-5.ph4.mt1[
+`$$Y_i \sim Normal(\mu, \sigma) \\
+\mu_i = \alpha + \beta x_i$$`
+]
+
+
+.bg-white.b--brblack.ba.bw2.br3.shadow-5.ph4.mt1[
+`$$Y_i \sim Binomial(n, p_i) \\
+logit(p_i) = \alpha + \beta x_i$$`
+]
+
+
 
 ---
 ## Generalized Linear Models
 
 * The response variable is modeled by a distribution from the exponential family
-  (e.g. Gaussian, Gamma, Binomial, Poisson)
+  (e.g. Gaussian, Gamma, Binomial, Poisson) `\(\to\)` change in the likelihood
 
 --
 
@@ -322,9 +458,7 @@ change in `\(x\)`
 * The link function linearizes the relationship between fitted values and the 
   predictors
 
---
 
-* Parameters are estimated through least squares algorithm
 
 ---
 
@@ -402,7 +536,12 @@ P(Y_i = y_i | p_i) = p_i^{y_i} (1-p_i)^{1-y_i}
 $$
 --
 
-Saying that the probability `\(P(Y_i = 1) = \pi_i\)` and `\(P(Y_i = 0) = (1-p_i)\)`
+
+The probability that the outcome `\(Y_i\)`  takes a specific value `\(y_i\)`, given the probability `\(p_i\)`
+
+-- 
+
+Saying that the probability `\(P(Y_i = 1) = p_i\)` and `\(P(Y_i = 0) = (1-p_i)\)`
 
 --
 
@@ -413,7 +552,7 @@ Now we want to relate the parameter `\(p_i\)` to the __linear predictor__
 
 ## Logistic Regression
 
-The most popular choice is to use the _Logit_ function as the link function
+The most popular choice is to use the _logit_ function as the link function
 
 --
 
@@ -427,7 +566,8 @@ logit(p_i) = \alpha + \beta x_i
 $$
 
 where `\(y\)` is some count variable, `\(n\)` is the number of trials, and `\(\pi\)` is the 
-probability a given trial was `\(1\)`. In our binary example, `\(n=1\)` which means `\(y\)` 
+probability a given trial was `\(1\)`. 
+In our binary example, `\(n=1\)` which means `\(y\)` 
 will be a vector of 1's and 0's.
 
 --
@@ -441,19 +581,42 @@ logit(p_i) = \alpha + \beta x_i
 $$
 
 ---
+class: middle, inverse
+
+### Logistic regression is a special case of a __GLM__ where the response follows a __Bernoulli distribution__, and the __logit__ function is used as the link function.
+
+
+---
 
 ## Logistic Regression
 
-The function `\(Logit(\pi_i) = \alpha + \beta x_i\)` can be written as:
+The function `\(logit(p_i) = \alpha + \beta x_i\)` can be written as:
 
 $$
 `\begin{align}
-Logit(p_i) = \log\left(\frac{p_i}{(1-p_i)}\right)    
+logit(p_i) = \log\left(\frac{p_i}{(1-p_i)}\right) = \alpha + \beta x_i   
 \end{align}`
 $$
 --
 
-Practically this means:
+$$ exp(\alpha + \beta x_i) = \frac{p_i}{(1 - p_i)} $$
+
+when solving for `\(p_i\)`:
+
+$$
+`\begin{align}
+p_i = \frac{e^{\alpha + \beta x_i}}{1+e^{\alpha + \beta x_i}}
+\end{align}`
+$$
+
+
+---
+
+
+## So, Logistic Regression
+
+The function `\(logit(p_i) = \alpha + \beta x_i\)` can be written as:
+
 
 $$
 `\begin{align}
@@ -467,11 +630,15 @@ when `\(\alpha + \beta x_i = 0\)` the probability `\(p_i = \frac{1}{2}\)`
 while the probability tends to one when `\(\alpha + \beta x_i \to \infty\)` and 
   zero when `\(\alpha + \beta x_i \to - \infty\)`
 
+
 ---
 
 ## Logistic Regression
 
-Now let's see how this looks like
+Now let's see how this looks like: `\(p_i = \frac{e^{\alpha + \beta x_i}}{1+e^{\alpha + \beta x_i}}\)`
+
+
+--
 
 .pull-left[
 
@@ -480,18 +647,18 @@ Now let's see how this looks like
 --
 
 .pull-right[
-![](slides_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 ]
 
 ---
 
 ## Logistic Regression
 
-Now let's see how this looks like
+Now let's see how this looks like: `\(p_i = \frac{e^{\alpha + \beta x_i}}{1+e^{\alpha + \beta x_i}}\)`
 
 .pull-left[
 
-```r
+``` r
 set.seed(123)
 # some random data
 X &lt;- rnorm(100)
@@ -510,7 +677,7 @@ This is a logistic curve. The parameters `\(\alpha\)` and `\(\beta\)`
 ]
 
 .pull-right[
-![](slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](slides_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -518,13 +685,13 @@ This is a logistic curve. The parameters `\(\alpha\)` and `\(\beta\)`
 
 .pull-left[
 
-&lt;img src="figs/titanic.jpg" width="1971" style="display: block; margin: auto;" /&gt;
+&lt;img src="figs/titanic.jpg" style="display: block; margin: auto;" /&gt;
 
 ]
 
 .pull-right[
 
-```r
+``` r
 data("Titanic")
 Titanic[, , Age = "Child", ]
 ```
@@ -568,7 +735,7 @@ Let's model the probability of survival according to class and gender. We can
 
 
 
-```r
+``` r
 library(titanic)
 
 # Data preparation
@@ -599,7 +766,7 @@ $$
 
 
 
-```r
+``` r
 # Summary
 m0_precis &lt;- precis(model_null, prob = 0.95)
 # the best fitting (alpha) intercept should lead to 
@@ -612,7 +779,7 @@ exp(alpha) / (1 + exp(alpha))
 ## [1] 0.3843787
 ```
 
-```r
+``` r
 mean(titanic_train$Survived)
 ```
 
@@ -634,7 +801,7 @@ Now let's include gender. What was the probability of surviving depending on gen
 --
 
 
-```r
+``` r
 # Convert gender to numeric
 df$gender &lt;- as.numeric(titanic_train$Sex == "male")
 
@@ -664,7 +831,7 @@ Now let's include gender. What was the probability of surviving depending on gen
 --
 
 
-```r
+``` r
 # Summary
 precis(model_gender, prob = 0.95)
 ```
@@ -681,27 +848,28 @@ precis(model_gender, prob = 0.95)
 ## The Titanic example: the effect of gender
 
 
+
 $$ p = \frac{1}{1 + e^{-logit(p)}}$$ 
 
 The calculation `\(\frac{1}{1 + odds}\)` converts odds to probabilities
 
 
-```r
-# What is the best-fitting probability of 
- # survival for male/female?
+``` r
+# What is the best-fitting probability of survival for male/female?
 coeffs &lt;- precis(model_gender)
-
+logit_p_women &lt;- coeffs['a', 'mean']
+logit_p_men &lt;- coeffs['a', 'mean'] + coeffs['b', 'mean']
 # Probability of survival for women
-1 - 1 / (1 + exp(coeffs['a', 'mean']))
+1 / (1 + exp(-logit_p_women))
 ```
 
 ```
 ## [1] 0.7311133
 ```
 
-```r
+``` r
 # Probability of survival for men
-1 - 1 / (1 + exp(coeffs['a', 'mean'] + coeffs['b', 'mean']))
+1 / (1 + exp(-logit_p_men))
 ```
 
 ```
@@ -719,10 +887,8 @@ Our data set also includes information on passenger's class. Let's incorporate
 
 
 
-```r
-# Prepare class data
-df$class &lt;- as.factor(titanic_train$Pclass)
-
+``` r
+df$class &lt;- as.factor(titanic_train$Pclass) # Prepare class data
 # Bayesian Model with Gender and Class using quap
 model_class &lt;- quap(
   alist(
@@ -738,7 +904,14 @@ model_class &lt;- quap(
     class = df$class
   )
 )
+```
 
+---
+## The Titanic example: the effect of gender and class
+
+
+
+``` r
 # Summary
 precis(model_class, depth = 2, prob = 0.95)
 ```
@@ -758,7 +931,7 @@ precis(model_class, depth = 2, prob = 0.95)
 
 
 
-```r
+``` r
 (coeffs &lt;- precis(model_class, depth = 2))
 ```
 
@@ -771,20 +944,19 @@ precis(model_class, depth = 2, prob = 0.95)
 ## b_2[3] -0.6271755 0.5116857 -1.4449482  0.1905971
 ```
 
-```r
+``` r
 # A woman in first class
-as.numeric(1 - 1 / (1 + exp(coeffs['a', 'mean'] + coeffs['b_2[1]', 'mean'])))
+1 / (1 + exp(-(coeffs['a', 'mean'] + coeffs['b_2[1]', 'mean'])))
 ```
 
 ```
 ## [1] 0.8981153
 ```
 
-```r
+``` r
 # A man in third class
-as.numeric(1 - 1 / (1 + exp(coeffs['a', 'mean'] + 
-                              coeffs['b_1', 'mean'] + 
-                              coeffs['b_2[3]', 'mean'])))
+1 / (1 + exp(-(coeffs['a', 'mean'] + coeffs['b_1', 'mean'] + 
+                 coeffs['b_2[3]', 'mean'])))
 ```
 
 ```
@@ -792,30 +964,44 @@ as.numeric(1 - 1 / (1 + exp(coeffs['a', 'mean'] +
 ```
 
 ---
-## Comparing estimates with the data
+## The Titanic Example: Comparing Predictions with Observations
+
+We now compare the **predicted probabilities** from our Bayesian model with the **actual survival proportions** in the dataset.
 
 
-```r
+``` r
 library(dplyr)
-titanic_train %&gt;% 
+library(ggplot2)
+
+# Compute observed survival probabilities per category
+observed_probs &lt;- titanic_train %&gt;% 
   group_by(Sex, Pclass) %&gt;% 
-  summarize(p = mean(Survived))
+  summarize(observed_p = mean(Survived), .groups = "drop")
+
+# Compute predicted survival probabilities per category from model
+predicted_probs &lt;- observed_probs %&gt;%
+  mutate(
+    gender = as.numeric(Sex == "male"),  # Convert gender to numeric
+    class = as.factor(Pclass),           # Class as factor
+    predicted_p = 1 / (1 + exp(-(coeffs['a', 'mean'] + 
+                                  coeffs['b_1', 'mean'] * gender + 
+                                  coeffs[paste0('b_2[', class, ']'), 'mean'])))
+  )
 ```
 
-```
-## # A tibble: 6 × 3
-## # Groups:   Sex [2]
-##   Sex    Pclass     p
-##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
-## 1 female      1 0.968
-## 2 female      2 0.921
-## 3 female      3 0.5  
-## 4 male        1 0.369
-## 5 male        2 0.157
-## 6 male        3 0.135
-```
+---
+## The Titanic Example: Comparing Predictions with Observations
 
 
+
+|Sex    | Pclass| observed_p| predicted_p| difference|
+|:------|------:|----------:|-----------:|----------:|
+|female |      1|      0.968|       0.898|      0.070|
+|female |      2|      0.921|       0.798|      0.123|
+|female |      3|      0.500|       0.586|     -0.086|
+|male   |      1|      0.369|       0.413|     -0.044|
+|male   |      2|      0.157|       0.240|     -0.083|
+|male   |      3|      0.135|       0.102|      0.034|
 
 ---
 ## Further reading

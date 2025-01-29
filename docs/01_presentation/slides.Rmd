@@ -656,7 +656,7 @@ This model assumes that biomass per basal area $Y_i$ is normally distributed aro
 .pull-left[
 
 **Model fitting:** 
-use the data to find the best guesses for the free parameters of the model ( $c$, $z$ )
+use the data to find the best guesses for the free parameters of the model ( $\alpha$, $\beta$ )
 
 **Inference**: 
 Use the guessed parameters and the fitted model to learn about the study system and to make predictions

@@ -4,7 +4,7 @@ author:
  - "Paula (Paulinha) Lemos-Costa"
  - "Sara Mortara"
  - "Paulo Inácio Prado"
-date: "2024-02-08"
+date: "2025-01-30"
 output: 
     distill::distill_article:
       toc: true
@@ -41,16 +41,14 @@ In linear models, it is assumed that the response variable ($y_i$) changes conti
 $$
 \begin{align}
 y_i &\sim Normal(\mu_i, \sigma) \\
-\mu_i &= \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
+\mu_i &= \alpha + \beta_1 X_{i1} + \beta_2 X_{i2}
 \end{align}
 $$
 
 However, in many cases some of these assumptions are not met and the
 response variable does not have support in the whole real line. For
 example when a researcher has count data, binary responses, only
-positive values. Additionally, errors might not be normally
-distributed and variance might change with the mean, which violates
-the assumptions of a linear model. For such cases, we rely on
+positive values. For such cases, we rely on
 **generalized linear models** (glm).  In a generalized linear model, the
 expected value is some **function** of an additive combination of
 parameters.
@@ -60,8 +58,8 @@ For example, a glm for a binary response uses a Bernoulli distribution:
 $$
 \begin{align}
 Y &\sim Bernoulli(p_i) \\
-p_i &= g^{-1}(\beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}) \\
-g(p_i) &= \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2}
+p_i &= g^{-1}(\alpha + \beta_1 X_{i1} + \beta_2 X_{i2}) \\
+g(p_i) &= \alpha + \beta_1 X_{i1} + \beta_2 X_{i2}
 \end{align}
 $$
 
