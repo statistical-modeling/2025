@@ -129,9 +129,8 @@ plot.q <- function(df2, df1){
 
 --
 
-* So far we have assumed the response variable $y$ changes continuously and 
-  errors are normally distributed around the mean, but this need not be the case
-
+* So far we have assumed the likelihood of $y$ to be $P(y|\mu, \sigma)$, which 
+means $Y_i \sim N(\mu, \sigma)$ 
 
 --
 
@@ -194,11 +193,70 @@ How can pebbles be distributed across buckets under varying constraints?
 ]
 
 ---
+## Understanding entropy
+
+
+.pull-left[
+```{r, echo = FALSE, fig.align='center', out.width='80%'}
+include_graphics("figs/McElreath_Fig10_1.png")
+```
+]
+
+.pull-right[
+```{r, echo = TRUE}
+p <-list()
+p$A <- c(0, 0, 10, 0, 0)
+p$B <- c(0, 1, 8, 1, 0)
+p$C <- c(0, 2, 6, 2, 0)
+p$D <- c(1, 2, 4, 2, 1)
+p$E <- c(2, 2, 2, 2, 2)
+
+(p_norm <- lapply(p,function(q) q/sum(q)))
+
+```
+
+
+]
+
+
+---
+## Understanding entropy
+
+
+.pull-left[
+```{r, echo = FALSE, fig.align='center', out.width='80%'}
+include_graphics("figs/McElreath_Fig10_1.png")
+```
+]
+
+
+.pull-right[
+
+$$ 
+\begin{align}
+H(p) = -\sum{p_{i} log p_{i}}
+\end{align}
+$$
+
+```{r, echo = TRUE}
+entropy <- function(p) -sum(ifelse(p == 0, 0, p * log(p))) 
+(H <- sapply(p_norm, entropy))
+
+library(vegan)
+sapply(p, diversity)
+```
+
+
+]
+
+
+---
 ## Generalized linear models 
 
+### Why does entropy matter?
 
 Choose the probability distribution from the __exponential family__ that best 
-matches the constraints imposed by the predictors
+matches the constraints imposed by the predictors.
 
 
 ```{r, echo = FALSE, fig.align='center', out.width='40%'}
@@ -207,7 +265,8 @@ include_graphics("figs/McElreath_Fig10_6.png")
 
 
 ---
-## Discrete and continuous distributions
+## A (very) quick recap on probability distributions
+### Discrete and continuous distributions
 
 
 .pull-left[
@@ -374,6 +433,38 @@ include_graphics("figs/binomial.png")
 
 
 ---
+## Generalized liner models 
+
+
+Two changes from the linear model:
+
+.pull-left[
+__Principled change__: the principle of maximum entropy
++ the distributions are chosen because they maximize entropy given certain 
+contraints 
+
++ emerge from probability theory and information theory
+
++ the model is consistent with known information (e.g. for binary data, the 
+Binomial distribution maximizes entropy)
+]
+
+.pull-right[
+__Epicycle change__: a modeling trick
+
++ connects the linear predictor to the mean of the outcome variable's 
+distribution
+
++ it’s added to make the math and modeling work
+
++ but it doesn’t inherently explain why the relationship takes the transformed form
+
++ ex: probabilities in Binomial models must stay between 0 and 1, so we need a link like logit or probit
+
+]
+
+
+---
 ## Generalized Linear Models
 
 GLMs choose the probability distribution from the exponential family that best 
@@ -401,12 +492,31 @@ change in $x$
  
 
 
+---
+## Generalized Linear Models
+
+GLMs choose the probability distribution from the exponential family that best 
+matches the constraints imposed by the predictors
+
+
+.bg-white.b--brblack.ba.bw2.br3.shadow-5.ph4.mt1[
+$$Y_i \sim Normal(\mu, \sigma) \\
+\mu_i = \alpha + \beta x_i$$
+]
+
+
+.bg-white.b--brblack.ba.bw2.br3.shadow-5.ph4.mt1[
+$$Y_i \sim Binomial(n, p_i) \\
+logit(p_i) = \alpha + \beta x_i$$
+]
+
+
 
 ---
 ## Generalized Linear Models
 
 * The response variable is modeled by a distribution from the exponential family
-  (e.g. Gaussian, Gamma, Binomial, Poisson)
+  (e.g. Gaussian, Gamma, Binomial, Poisson) $\to$ change in the likelihood
 
 --
 
@@ -418,9 +528,7 @@ change in $x$
 * The link function linearizes the relationship between fitted values and the 
   predictors
 
---
 
-* Parameters are estimated through least squares algorithm
 
 ---
 
@@ -498,7 +606,12 @@ P(Y_i = y_i | p_i) = p_i^{y_i} (1-p_i)^{1-y_i}
 $$
 --
 
-Saying that the probability $P(Y_i = 1) = \pi_i$ and $P(Y_i = 0) = (1-p_i)$
+
+The probability that the outcome $Y_i$  takes a specific value $y_i$, given the probability $p_i$
+
+-- 
+
+Saying that the probability $P(Y_i = 1) = p_i$ and $P(Y_i = 0) = (1-p_i)$
 
 --
 
@@ -509,7 +622,7 @@ Now we want to relate the parameter $p_i$ to the __linear predictor__
 
 ## Logistic Regression
 
-The most popular choice is to use the _Logit_ function as the link function
+The most popular choice is to use the _logit_ function as the link function
 
 --
 
@@ -523,7 +636,8 @@ logit(p_i) = \alpha + \beta x_i
 $$
 
 where $y$ is some count variable, $n$ is the number of trials, and $\pi$ is the 
-probability a given trial was $1$. In our binary example, $n=1$ which means $y$ 
+probability a given trial was $1$. 
+In our binary example, $n=1$ which means $y$ 
 will be a vector of 1's and 0's.
 
 --
@@ -537,19 +651,42 @@ logit(p_i) = \alpha + \beta x_i
 $$
 
 ---
+class: middle, inverse
+
+### Logistic regression is a special case of a __GLM__ where the response follows a __Bernoulli distribution__, and the __logit__ function is used as the link function.
+
+
+---
 
 ## Logistic Regression
 
-The function $Logit(\pi_i) = \alpha + \beta x_i$ can be written as:
+The function $logit(p_i) = \alpha + \beta x_i$ can be written as:
 
 $$
 \begin{align}
-Logit(p_i) = \log\left(\frac{p_i}{(1-p_i)}\right)    
+logit(p_i) = \log\left(\frac{p_i}{(1-p_i)}\right) = \alpha + \beta x_i   
 \end{align}
 $$
 --
 
-Practically this means:
+$$ exp(\alpha + \beta x_i) = \frac{p_i}{(1 - p_i)} $$
+
+when solving for $p_i$:
+
+$$
+\begin{align}
+p_i = \frac{e^{\alpha + \beta x_i}}{1+e^{\alpha + \beta x_i}}
+\end{align}
+$$
+
+
+---
+
+
+## So, Logistic Regression
+
+The function $logit(p_i) = \alpha + \beta x_i$ can be written as:
+
 
 $$
 \begin{align}
@@ -563,11 +700,15 @@ when $\alpha + \beta x_i = 0$ the probability $p_i = \frac{1}{2}$
 while the probability tends to one when $\alpha + \beta x_i \to \infty$ and 
   zero when $\alpha + \beta x_i \to - \infty$
 
+
 ---
 
 ## Logistic Regression
 
-Now let's see how this looks like
+Now let's see how this looks like: $p_i = \frac{e^{\alpha + \beta x_i}}{1+e^{\alpha + \beta x_i}}$
+
+
+--
 
 .pull-left[
 ```{r, echo=FALSE}
@@ -598,7 +739,7 @@ ggplot(data = tibble(linear_predictor = linear_predictor, probability = predicte
 
 ## Logistic Regression
 
-Now let's see how this looks like
+Now let's see how this looks like: $p_i = \frac{e^{\alpha + \beta x_i}}{1+e^{\alpha + \beta x_i}}$
 
 .pull-left[
 ```{r, echo = TRUE}
@@ -750,7 +891,6 @@ $$logit(p_i) = \alpha + \beta * Gender$$
 ```{r, echo = TRUE}
 # Summary
 precis(model_gender, prob = 0.95)
-
 ```
 
 
@@ -759,20 +899,21 @@ precis(model_gender, prob = 0.95)
 ## The Titanic example: the effect of gender
 
 
+
 $$ p = \frac{1}{1 + e^{-logit(p)}}$$ 
 
 The calculation $\frac{1}{1 + odds}$ converts odds to probabilities
 
 ```{r, echo = TRUE}
-# What is the best-fitting probability of 
- # survival for male/female?
+# What is the best-fitting probability of survival for male/female?
 coeffs <- precis(model_gender)
-
+logit_p_women <- coeffs['a', 'mean']
+logit_p_men <- coeffs['a', 'mean'] + coeffs['b', 'mean']
 # Probability of survival for women
-1 - 1 / (1 + exp(coeffs['a', 'mean']))
+1 / (1 + exp(-logit_p_women))
 
 # Probability of survival for men
-1 - 1 / (1 + exp(coeffs['a', 'mean'] + coeffs['b', 'mean']))
+1 / (1 + exp(-logit_p_men))
 
 ```
 
@@ -787,9 +928,7 @@ $$logit(p_i) = \alpha + \beta_1 * Sex + \beta_2 * Class$$
 
 
 ```{r, echo = TRUE}
-# Prepare class data
-df$class <- as.factor(titanic_train$Pclass)
-
+df$class <- as.factor(titanic_train$Pclass) # Prepare class data
 # Bayesian Model with Gender and Class using quap
 model_class <- quap(
   alist(
@@ -806,6 +945,13 @@ model_class <- quap(
   )
 )
 
+```
+
+---
+## The Titanic example: the effect of gender and class
+
+
+```{r, echo = TRUE}
 # Summary
 precis(model_class, depth = 2, prob = 0.95)
 ```
@@ -818,27 +964,55 @@ precis(model_class, depth = 2, prob = 0.95)
 ```{r, echo = TRUE}
 (coeffs <- precis(model_class, depth = 2))
 # A woman in first class
-as.numeric(1 - 1 / (1 + exp(coeffs['a', 'mean'] + coeffs['b_2[1]', 'mean'])))
+1 / (1 + exp(-(coeffs['a', 'mean'] + coeffs['b_2[1]', 'mean'])))
 
 # A man in third class
-as.numeric(1 - 1 / (1 + exp(coeffs['a', 'mean'] + 
-                              coeffs['b_1', 'mean'] + 
-                              coeffs['b_2[3]', 'mean'])))
+1 / (1 + exp(-(coeffs['a', 'mean'] + coeffs['b_1', 'mean'] + 
+                 coeffs['b_2[3]', 'mean'])))
 
 ```
 
 ---
-## Comparing estimates with the data
+## The Titanic Example: Comparing Predictions with Observations
+
+We now compare the **predicted probabilities** from our Bayesian model with the **actual survival proportions** in the dataset.
 
 ```{r, echo = TRUE}
 library(dplyr)
-titanic_train %>% 
+library(ggplot2)
+
+# Compute observed survival probabilities per category
+observed_probs <- titanic_train %>% 
   group_by(Sex, Pclass) %>% 
-  summarize(p = mean(Survived))
+  summarize(observed_p = mean(Survived), .groups = "drop")
+
+# Compute predicted survival probabilities per category from model
+predicted_probs <- observed_probs %>%
+  mutate(
+    gender = as.numeric(Sex == "male"),  # Convert gender to numeric
+    class = as.factor(Pclass),           # Class as factor
+    predicted_p = 1 / (1 + exp(-(coeffs['a', 'mean'] + 
+                                  coeffs['b_1', 'mean'] * gender + 
+                                  coeffs[paste0('b_2[', class, ']'), 'mean'])))
+  )
+
 
 ```
 
+---
+## The Titanic Example: Comparing Predictions with Observations
 
+
+```{r}
+# Merge observed and predicted probabilities
+comparison <- predicted_probs %>%
+  select(Sex, Pclass, observed_p, predicted_p)
+
+# Display comparison table
+comparison %>% 
+  mutate(difference = observed_p - predicted_p) %>% 
+  knitr::kable(digits = 3)
+```
 
 ---
 ## Further reading
