@@ -128,7 +128,7 @@ plot.q <- function(df2, df1){
 
 --
 
-* In statistical modeling, minimizing __entropy__ helps derive probability 
+* In statistical modeling, maximizing __entropy__ helps derive probability 
 distributions under constraints, leading to models that best represent the 
 observed data
 
