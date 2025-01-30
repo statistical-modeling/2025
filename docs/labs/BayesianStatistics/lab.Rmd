@@ -259,10 +259,10 @@ A more principled approach is to use information theory. These methods use the p
 AIC = -2 \sum_i \log \left [ p(y_i | \theta) \right ] + 2k
 \]
 
-Lets think about what we are trying to accomplish: a balance between accuracy and complexity. The first term in the AIC is called the _deviance_, which is a measure of how well the model fits the data. If the model attributes high probability to our data, $\sum_i \log [ p(y_i | \theta) ]$ will be big and the deviance will be small. The second term is a penalty for the number of parameters in the model, which is a measure of the complexity of the model. Lower values of AIC means our model should be better at predicting new data.
-The AIC is not a baysean procedure, and is calculated using the maximum likelihood estimate for the parameters. 
+Let's think about what we are trying to accomplish: a balance between accuracy and complexity. The first term in the AIC is called the _deviance_, which is a measure of how well the model fits the data. If the model attributes high probability to our data, $\sum_i \log [ p(y_i | \theta) ]$ will be big and the deviance will be small. The second term is a penalty for the number of parameters in the model, which is a measure of the complexity of the model. Lower values of AIC means our model should be better at predicting new data.
+The AIC is not a bayesian procedure, and is calculated using the maximum likelihood estimate for the parameters. 
 
-If we want to incorporate uncertainty into our model comparisons, we should use a Bayesian version of this information criteria that instead uses the full posterior distribution of the parameters. This is the Widely Applicable Information Criterion (WAIC). The WAIC is defined using the log pointwise predictive density (lppd), which is the log of the likelihood of the data given the parameters. 
+If we want to incorporate uncertainty into our model comparisons, we should use a Bayesian version of this information criteria that instead uses the full posterior distribution of the parameters. This is the Widely Applicable Information Criterion (WAIC). Because WAIC was first proposed by another Japanese statistician, Sumio Watanabe (渡辺澄夫), it is sometimes called the Watanabe-Akaike Information Criterion, conveniently sharing the same acronym. The WAIC is defined using the log pointwise predictive density (lppd), which is the log of the likelihood of the data given the parameters. 
 
 \[
   \text{lppd} = \sum_i \log \left [ \frac{1}{S} \sum_s p(y_i | \theta_s) \right ]
@@ -276,7 +276,7 @@ Finally, the WAIC is defined as:
   \text{WAIC} = -2 \left [ \text{lppd} - \sum_i \text{var}_{\theta} \log p(y_i|\theta) \right ] 
 \]
 
-The penalty term that appears in place of the number of parameters in the AIC formula is the variance of the log likelihood, and means: “compute the variance in log-probabilities for each observation i, and then sum up these variances to get the total penalty.” This is sometimes called the $p_{waic}$, and is a measure of the effective number of parameters in the model.  
+The penalty term that appears in place of the number of parameters in the AIC formula is the variance of the log likelihood, and means: “compute the variance in log-probabilities for each observation i, and then sum up these variances to get the total penalty.” Each observation makes an independent contribution to this quantity, and observations whose log likelihood changes more along the posterior are more important. This is usually refered to as $p_{waic}$, and is a measure of the effective number of parameters in the model. This is loosely related to the actual number o parameters, but depends more on the strucutre of the model. Adding more parameters can actually reduce the effective number of parameters, something that is quite common in mixed and hierarchical models.
 
 ## Example of a multiple regression
 
