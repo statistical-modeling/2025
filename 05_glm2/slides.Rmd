@@ -33,6 +33,7 @@ library(kableExtra)
 library(dplyr)
 library(tidyr)
 library(rethinking)
+library(rstan)
 
 xaringanExtra::use_share_again()
 xaringanExtra::use_fit_screen()
@@ -148,8 +149,8 @@ to the mean of the distribution
 ---
 ## Generalized Linear Models
 
-GLMs choose the probability distribution from the exponential family that best 
-matches the constraints imposed by the predictors
+GLMs use probability distributions from the exponential family that best fit 
+the constraints defined by the predictors
 
 --
 
@@ -159,13 +160,69 @@ $$f(\theta_i) = \alpha + \beta (x_i - \overline{x})$$
 ]
 
 
+
 --
+
 - When the predictor $x_i$ is mean-centered, the intercept $\alpha$ represents
 the value of the link function $f(p_i)$ when $x_i$ is at its mean
 - The slope $\beta$ still represents the change in $f(p_i)$ for a one-unit
 change in $x$
 
 _Zaphod is not a real distribution!_ 
+
+---
+## Distributions and link functions
+
+
+```{r, echo =FALSE}
+library(knitr)
+library(kableExtra)
+
+# Create the table with LaTeX notation
+df <- data.frame(
+  Distribution = c("Normal", "Exponential", "Gamma", #"Inverse Gaussian", 
+                   "Poisson", "Bernoulli", "Binomial", #"Categorical", 
+                   "Multinomial"),
+  Support = c("$(-\\infty, +\\infty)$", "$(0, +\\infty)$", "$(0, +\\infty)$", #"$(0, +\\infty)$", 
+              "$\\{0,1,2,...\\}$", "$\\{0,1\\}$", "$\\{0,1,...,N\\}$", #"$[0,K)$", 
+              "$[0,N]$"),
+  Typical_Uses = c("Linear-response data", 
+                   "Exponential-response data, scale parameters", 
+                   "Various response distributions",
+                   "Count of occurrences in fixed time/space", 
+                   "Outcome of single yes/no occurrence", 
+                   "Count of 'yes' occurrences out of $N$", 
+                   "K-vector of integer: $[0, N]$"),
+  Link_Name = c("Identity", "Negative inverse", "Inverse", #"Inverse squared",
+                "Log", "Logit", "Logit", #"Logit", 
+                "Logit"),
+  Link_Function = c("$\\mathbf{X} \\boldsymbol{\\beta} = \\mu$", 
+                    "$\\mathbf{X} \\boldsymbol{\\beta} = -\\mu^{-1}$", 
+                    "$\\mathbf{X} \\boldsymbol{\\beta} = \\mu^{-1}$", 
+                    "$\\mathbf{X} \\boldsymbol{\\beta} = \\ln(\\mu)$", 
+                    "$\\mathbf{X} \\boldsymbol{\\beta} = \\ln \\left(\\frac{\\mu}{1-\\mu} \\right)$", 
+                    "$\\mathbf{X} \\boldsymbol{\\beta} = \\ln \\left(\\frac{\\mu}{N-\\mu} \\right)$", 
+                    "$\\mathbf{X} \\boldsymbol{\\beta} = \\ln \\left(\\frac{\\mu}{1-\\mu} \\right)$"),
+  Mean_Function = c("$\\mu = \\mathbf{X} \\boldsymbol{\\beta}$", 
+                    "$\\mu = - (\\mathbf{X} \\boldsymbol{\\beta})^{-1}$", 
+                    "$\\mu = (\\mathbf{X} \\boldsymbol{\\beta})^{-1}$", 
+                    "$\\mu = \\exp(\\mathbf{X} \\boldsymbol{\\beta})$", 
+                    "$\\mu = \\frac{\\exp(\\mathbf{X} \\boldsymbol{\\beta})}{1 + \\exp(\\mathbf{X} \\boldsymbol{\\beta})}$", 
+                    "$\\mu = \\frac{\\exp(\\mathbf{X} \\boldsymbol{\\beta})}{1 + \\exp(\\mathbf{X} \\boldsymbol{\\beta})}$", 
+                                        "$\\mu = \\frac{\\exp(\\mathbf{X} \\boldsymbol{\\beta})}{1 + \\exp(\\mathbf{X} \\boldsymbol{\\beta})}$")
+)
+
+# Display the table correctly in xaringan
+names(df) <- gsub("_", " ", names(df))
+kable(df, format = "html", escape = FALSE) %>%  # IMPORTANT: escape = FALSE
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"), 
+                font_size = 22) %>%
+  column_spec(1, bold = TRUE) %>%
+  column_spec(5, width = "6cm") # Adjusting width for clarity
+
+
+```
+
 
 
 ---
@@ -175,7 +232,7 @@ When a binomial distribution has a very small probability of an event $p$ and a
 very large number of trials $n$, then it takes a special shape
 
 .pull-left[
-```{r, echo = FALSE, fig.out = '50%'}
+```{r, echo = FALSE, out.width="70%", fig.align="center"}
 include_graphics("figs/binomial.png")
 ```
 
@@ -184,7 +241,8 @@ include_graphics("figs/binomial.png")
 --
 
 .pull-right[
-```{r, echo = FALSE, fig.out = '50%'}
+
+```{r, echo = FALSE, out.width="70%", fig.align="center"}
 include_graphics("figs/binomial2.png")
 ```
 ]
@@ -223,7 +281,7 @@ of a binomial a.k.a. __Poisson__
 ## Count Data: Poisson Regression
 
 $$Y ~ Poisson(\lambda_i)$$
-$$log(\lambda_i) = \alpha + \beta(x_i - \overline{x}) $$
+$$log(\lambda_i) = \alpha + \beta x_i $$
 
 
 For response variables that are non-negative integers. For example, counting
@@ -237,6 +295,10 @@ One of the assumptions of this
   distribution is that the mean $\mu$ and variance $\sigma^2$ are the same and 
   expressed as $\lambda$
 
+---
+class: middle, inverse
+
+Poisson __GLM__ with a __log__ link
 
 ---
 ## Poisson Regression
@@ -300,7 +362,7 @@ island size
 ```{r, echo = FALSE}
 include_graphics("figs/McElreath_Fig11_6.png")
 ```
-
+[Kline et al 2010](https://royalsocietypublishing.org/doi/10.1098/rspb.2010.0452) 
 ]
 
 
@@ -366,13 +428,81 @@ dat <- list(
 ]
 
 ---
-## Build and fit the model
+## Build and fit the model: the __prior__
 
+
+.pull-left[
 $$ T_i \sim Poisson(\lambda_i)$$
 $$ log(\lambda_i) = \alpha + \beta * log(P)$$
+]
+
+
+.pull-right[
+
+```{r, eval = FALSE}
+ulam(
+  alist(
+    T ~ dpois(lambda), 
+    log(lambda) <- a + b * P, 
+    a ~ dnorm(3, 0.5), 
+    b ~ dnorm(0, ?)
+  ), 
+  data = dat, chains = 4, log_lik = TRUE
+)
+
+```
+]
+
+
+
+
+
+---
+## Simulating the priors
+
+
+Let's simulate curves with two different priors, one with a large variance, and
+the other one with a small one
+
+```{r}
+set.seed(10)
+N <- 100
+a <- rnorm(N, 3, 0.5)
+b_large <- rnorm(N, 0, 10)
+b_small <- rnorm(N, 0, 0.2)
+
+x_seq <- seq(from = log(100), to = log(200000), length.out = 100)
+
+# given that: log(lambda) = a + b * c, then:
+lambda_large <- sapply(x_seq,function(x) exp(a + b_large * x))
+lambda_small <- sapply(x_seq,function(x) exp(a + b_small * x))
+```
+
+
+---
+## Predicted curves based on simulated priors
+
+```{r, fig.align='center', echo = FALSE, out.width="90%"}
+include_graphics("figs/prior_poisson.png")
+```
+
+
+---
+## Priors and the model fit
 
 .pull-left[
 
+Check the prior with $\sigma = 0.2$ in the log scale
+
+```{r, fig.align='center', echo = FALSE, out.width="85%"}
+include_graphics("figs/prior_poisson2.png")
+```
+]
+
+--
+
+.pull-right[
+Fit the model with the prior with the smallest variance
 ```{r, eval = FALSE}
 m01 <- ulam(
   alist(
@@ -385,15 +515,16 @@ m01 <- ulam(
 )
 
 ```
+
 ]
 
-.pull-right[
+---
+## Comparing prior and posterior distributions
 
-```{r, echo = FALSE, fig.align='center', out.width='60%'}
-include_graphics("figs/poisson_data.png")
+
+```{r, fig.align='center', echo = FALSE, out.width='85%'}
+include_graphics("figs/prior_posterior.png")
 ```
-
-]
 
 
 ---
@@ -430,7 +561,13 @@ lci[, 1:7]
 
 
 ---
-## Comparing predictions with the data 
+## Comparing predictions of model 1 with the data 
+
+```{r, echo = FALSE, fig.align="center", out.width="50%"}
+include_graphics("figs/poisson_data_fitm01.png")
+```
+
+
 
 ---
 ## Interaction with contact
@@ -460,13 +597,48 @@ m02 <- ulam(
 .pull-right[
 
 ```{r, echo = FALSE, fig.align='center', out.width='60%'}
-include_graphics("figs/poisson_data.png")
+include_graphics("figs/poisson_data2.png")
 ```
 
 ]
 
 ---
-## Comparing predictions with the data 
+## Calculating the predicted values using the link() function
+
+__CID 1__
+
+```{r}
+# predictions for cid=1 (lowcontact)
+lambda1 <- link(m02, data = data.frame(P = P_seq, cid = 1))
+lambda1[1:5, 1:8]
+
+lmu1 <- apply(lambda, 2, mean)
+lci1 <- apply(lambda, 2, PI)
+```
+
+
+---
+## Calculating the predicted values using the link() function
+
+__CID 2__
+
+
+```{r}
+# predictions for cid=2 (highcontact)
+lambda2 <- link(m02, data = data.frame(P = P_seq, cid = 2))
+lambda2[1:5, 1:8]
+lmu2 <- apply(lambda2, 2, mean)
+lci2 <- apply(lambda2, 2, PI)
+```
+
+
+
+---
+## Comparing predictions of model 2 with the data 
+
+```{r, echo = FALSE, fig.align="center", out.width="50%"}
+include_graphics("figs/poisson_fit_m02.png")
+```
 
 
 ---
@@ -489,61 +661,252 @@ larger than what assumed by Poisson), you need to choose a different model
 
 This happens very often, and one of the solutions is to use is a __Generalized 
 Poisson distribution__ or alternatively __Negative Binomial Regression__ 
-(a negative binomial distribution can be thought of as a Poisson with a scaled 
-variance)
+
+--
+
+A negative binomial distribution can be thought of as a Poisson with a scaled 
+variance, also called __Gamma-Poisson__ distribution
 
 
 ---
-## Negative Binomial Regression
+class: middle, inverse
 
-Fitting a Negative binomial amounts to fitting:
+A Negative Binomial regression is a special case of a __GLM__ where the response 
+follows a __Negative Binomial__ distribution, modeled as a __Gamma-Poisson 
+mixture__, and the __log__ function is used as the link function
 
-$$
-\begin{align}
-\mathbb{E}[\lambda_i] = \alpha + \beta x_i
-\end{align}
-$$
+---
 
-and 
+## Poisson Model parameters
 
-$$
-\begin{align}
-\mathbb{V[\lambda]} = \mathbb{E}[\lambda_i^2] - \mathbb{E}[\lambda_i]^2 = \phi \lambda 
-\end{align}
-$$
-where $\phi$ controls the dispersion of the data
+- **Poisson Distribution:** $Y \sim \text{Poisson}(\lambda)$
+
+- The Poisson models assume the mean and variance are equal: $E[Y] = \text{Var}(Y) = \lambda$
+
+
+- This assumption often fails in real-world data
 
 --
 
-A value $\phi > 1$ signals over-dispersion, while (the very rare case of) 
-$\phi<1$ under-dispersion. The Poisson regression is appropriate only
-when $\phi \approx 1$
+## Gamma-Poisson Mixture
 
---
+- Instead of assuming a fixed $\lambda$, model it as a 
+**Gamma-distributed prior**: $\lambda \sim \text{Gamma}(\alpha, \beta)$
 
-A simple way to test for dispersion is to fit a _quasipoisson_ model, which 
-returns a dispersion parameter (anything larger than 1 means over-dispersion)
+- The marginal distribution of $Y$ becomes **Negative Binomial**: $Y \sim \text{NB}(r, p)$
+
+- Where $r = \alpha$ and $p = \frac{\beta}{\beta+1}$
+
+---
+
+## Why Use a Gamma Prior?
+
+- The **Gamma distribution** is conjugate to Poisson $\to$ simplifies Bayesian inference
+
+- There is an **analytical expression** for Poisson probabilities mixed with Gamma-distributed rates
+
+- Poisson distributions are **narrow** (variance = mean), but Gamma-Poisson allows more variation
+
+Therefore, 
+
+it can be used for **modeling count data** with high variance (e.g., ecological epidemiological data)
+
+---
+## The distribution of Negative-Binomial or Gamma-Poisson
+
+```{r, echo = FALSE, fig.align="center"}
+# Simulating Negative Binomial Data
+y <- rnbinom(1000, size = 5, prob = 0.5)
+hist(y, breaks = 30, col = "lightblue", main = "Negative Binomial Distribution")
+```
+
+---
+## Fitting a  Negative-Binomial or Gamma-Poisson model 
+
+- A **Negative Binomial model** is also known as a **Gamma-Poisson model**
+
+- It assumes each **Poisson count observation has its own rate**
+
+- This model estimates the **shape of a Gamma distribution** to describe Poisson rates
+
+- Predictor variables **adjust the shape of the distribution, not the expected value** of each observation
+
+---
+## Back to the ocean islands example
+
+$$ Y_i ∼ Gamma-Poisson(\lambda_i, \phi)$$
+
+- __ $\lambda$ __ is the __rate__ parameter
+
+- __ $\phi$ __ is a positive parameter that controls for __variance__
+
+- The variance is: $\lambda + \lambda^2/\phi$
+
+- __Larger $\phi$__ means the distribution
+is closer to a __pure Poisson process__
+
+---
+## Building the model
+
+$$ Y_i ∼ Gamma-Poisson(\lambda_i, \phi)$$
+
+The standard approach in __log-link__ Poisson regression is:
+
+$$\log(\lambda) = \alpha_{CID[i]} + \beta_{CID[i]} * log(P)$$
+
+In this model, an additional scaling factor $g$ is introduced:
+
+$$\log(\lambda) = \alpha_{CID[i]} + \beta_{CID[i]} * log(P) - log(g)$$
+
+This represents a __global normalization__ to prevent uncontrolled growth
+
+---
+## Where does __g__ come from?
+
+- Poisson Model: assumes a __fixed $\lambda$__
+
+- Gamma-Poisson Model: Instead of a fixed $\lambda$, assume it follows a __Gamma prior__:
+
+$$\lambda \sim Gamma(\alpha, 1/g)$$
+
+- $g$ acts as a __scaling factor__ controlling dispersion 
+
+- This prior introduces extra variance, leading to a __Negative Binomial__ marginal 
+distribution
+
+Thus:
+
+- $\lambda$ is modeled as a hierarchical function of population size
+- The global scale parameter $g$ accounts for extra variability in the Poisson process
+- Higher $g$ means higher variance, ensuring the model can account for overdispersion
 
 
 ---
-## Other GLMs
+## Understanding the model notation
 
-Historically, GLMs have been defined for the canonical families:
+$$\log(\lambda) = \alpha_{CID[i]} + \beta_{CID[i]} * log(P) - log(g)$$
 
-* __Gaussian__: linear regression
-* __Gamma and Inverse Gaussian__: Positive, continuous
-* __Poisson__: count data
-* __Negative Binomial__: count data (fit an ancillary parameter for over-dispersion)
-* __Binary/Binomial (logistic)__: binary responses; number of successes;
-  probabilities/proportions
+This is also:
+
+$$\lambda = exp(\alpha_{CID[i]} + \beta_{CID[i]} * log(P) - log(g))$$
+
+Using log rules:
+
+$$\lambda = \frac{exp(\alpha_{CID[i]}) P^{\beta_{CID[i]}}}{g}$$
+
+This formulation arises because:
+
+- $g$ comes from the Gamma prior, influencing the variance
+- The log transformation ensures $\lambda$ stays positive
+- The power-law effect of $P$ enables nonlinear scaling in response predictions
+
+
+---
+## Building the model in R
+
+
+```{r, echo = FALSE}
+dat2 <-list(
+  T = d$total_tools,
+  P = d$population, # no log transformation
+  cid = d$contact_id)
+
+```
+
+
+.pull-left[
+
+```{r, eval = FALSE}
+# The previous model:
+m02 <- ulam(
+  alist(
+    T ~ dpois(lambda), 
+    log(lambda) <- a[cid] + b[cid] * P, 
+    a[cid] ~ dnorm(3, 0.5),
+    b[cid] ~ dnorm(0, 0.2)
+  ), 
+  data = dat, chains = 4, log_lik = TRUE
+)
+
+```
+
+]
+
+
+.pull-right[
+```{r, eval = FALSE}
+# Creating a dataset
+dat2 <-list(
+  T = d$total_tools,
+  P = d$population, # no log transformation
+  cid = d$contact_id)
+
+# Gamma-poisson model with the scalling factor g
+m3 <- ulam(
+  alist(
+    T ~ dgampois(lambda, phi),
+    lambda <- exp(a[cid]) * P ^ b[cid] / g,
+    a[cid] ~ dnorm(1, 1),
+    b[cid] ~ dexp(1),
+    g ~ dexp(1),
+    phi ~ dexp(1)
+  ),
+  data = dat2,
+  chains = 4,
+  log_lik = TRUE
+)
+
+```
+]
+
+
+
+---
+## Comparing predictions of model 3 with the data 
+
+```{r, echo = FALSE, fig.align="center", out.width = "80%"}
+include_graphics("figs/model03.png")
+```
+
+
+---
+
+## Conclusion
+
+- The **Negative Binomial** arises naturally from a **Gamma-Poisson** process
+
+- Useful for **modeling overdispersion** in count data
+
+- Widely used in **Bayesian statistics and hierarchical modeling**
+
+- Easy to implement in **R, Stan, JAGS, and other Bayesian frameworks**
+
+---
+
+## Take home messages
+
+- The choice of probability distribution for $Y$ follows the principle of 
+__maximum entropy__ under given constraints
 
 --
 
-There are also 'non-canonical' GLMs, that use the same general idea:
+- __Link functions__ transform nonlinear relationships into linear ones, making 
+model interpretation more intuitive
 
-* __Log-normal__: Positive, continuous
-* __Log-gamma__: survival models
-* __Probit__: binary
+--
+
+- __Generalized Linear Models__ (GLMs) extend classical regression to handle 
+different types of response variables (counts, binary outcomes, etc.)
+
+--
+
+- Overdispersion matters! When variance exceeds the mean, Negative Binomial 
+models provide a better fit than Poisson
+
+-- 
+- Bayesian approaches allow flexible modeling of LMs, GLMs, and mixture models 
+using a unified conceptual framework
+
 
 ---
 ## Further reading
@@ -558,3 +921,4 @@ There are also 'non-canonical' GLMs, that use the same general idea:
   Brooks, Mollie E., et al. Ecology 100.7 (2019): e02706.
   
   
++ Statistical Rethinking, chapters 11 and 12

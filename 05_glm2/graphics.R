@@ -75,8 +75,8 @@ library(ggplot2)
 library(dplyr)
 
 # Parameters for the binomial distribution
-n_trials <- 10
-p_success <- 0.001
+n_trials <- 20
+p_success <- 0.05
 
 # Generate probability data
 binomial_data <- data.frame(
@@ -87,9 +87,9 @@ binomial_data <- data.frame(
 # Create the plot with vertical lines
 ggplot(binomial_data, aes(x = x, y = prob)) +
   geom_segment(aes(xend = x, yend = 0), linetype = "solid", size = 1) +
-  scale_x_continuous(limits = c(0, 5)) +
+  scale_x_continuous(limits = c(0, 7)) +
   labs(
-    title = sprintf("Binomial Distribution (n = %d, p = %.2f)", n_trials, p_success),
+    title = sprintf("n = %d, p = %.2f", n_trials, p_success),
     x = "Number of successes",
     y = "Probability"
   ) +
@@ -98,19 +98,19 @@ ggsave("05_glm2/figs/binomial.png", heigh = 4.5, width = 4.5)
 
 # Second binomial
 
-n_trials <- 10000
+n_trials2 <- 10000
 
 # Generate probability data
-binomial_data <- data.frame(
-  x = 0:n_trials,
-  prob = dbinom(0:n_trials, size = n_trials, prob = p_success)
+binomial_data2 <- data.frame(
+  x = 0:n_trials2,
+  prob = dbinom(0:n_trials2, size = n_trials2, prob = p_success)
 )
 
-ggplot(binomial_data, aes(x = x, y = prob)) +
+ggplot(binomial_data2, aes(x = x, y = prob)) +
   geom_segment(aes(xend = x, yend = 0), linetype = "solid", size = 1) +
-  scale_x_continuous(limits = c(50, 150)) +
+  scale_x_continuous(limits = c(420, 580)) +
   labs(
-    title = sprintf("Binomial Distribution (n = %d, p = %.2f)", n_trials, p_success),
+    title = sprintf("n = %d, p = %.2f", n_trials2, p_success),
     x = "Number of successes",
     y = "Probability"
   ) +
