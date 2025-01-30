@@ -23,7 +23,9 @@ xaringanExtra::embed_xaringan("06_model_selection/slides.html")
 
 [Open slides in new window](06_model_selection/slides.html)
 
-<!-- [Slides PDF](06_model_selection/slides.pdf) -->
+# Lab
+
+[Model comparison and Bayesian models](labs/BayesianStatistics/lab.html)
 
 # Further reading
 
