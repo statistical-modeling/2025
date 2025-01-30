@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE, eval =FALSE)
 
 # Remembering multiple regression
 
-In [multiple linear regression](../03_linear_models/lab2.html), the
+In [multiple linear regression](../LinearModels/lab2.html), the
 expected value of the response is a **linear combination** of
 predictor variables:
 
@@ -330,6 +330,7 @@ adjustmentSets(dag2, exposure = "X", outcome = "Y")
 
 ```{r, eval=FALSE }
 # Simulate the full model
+set.seed(2)
 N = 200
 A = rnorm(N)
 B = rnorm(N)
@@ -353,18 +354,18 @@ This gives the correct estimate, but we can do better and try to fit the full DA
 
 mFull = ulam(
   alist(
-    A ~ normal(muA, sA),
-    B ~ normal(muB, sB),
-    Z ~ normal(muZ + bAZ * A + bBZ * B, sZ),
-    X ~ normal(muX + bAX * A + bZX * Z, sX),
-    W ~ normal(muW + bXW * X, sW),
-    Y ~ normal(muY + bWY * W + bZY * Z + bBY * B, sY),
+    A ~ normal(aA, sA),
+    B ~ normal(aB, sB),
+    Z ~ normal(aZ + bAZ * A + bBZ * B, sZ),
+    X ~ normal(aX + bAX * A + bZX * Z, sX),
+    W ~ normal(aW + bXW * X, sW),
+    Y ~ normal(aY + bWY * W + bZY * Z + bBY * B, sY),
     c(bAZ, bAX, bBZ, bZX, bZY, bBY, bXW, bWY) ~ normal(0, 0.3),
-    c(muA, muB, muZ, muX, muY, muW) ~ normal(0, 1),
+    c(aA, aB, aZ, aX, aY, aW) ~ normal(0, 1),
     c(sA, sB, sX, sY, sZ, sW) ~ exponential(1)
   ), data = df, chains = 4, cores = 4, iter = 2000  
 )
-plot(precis(mFull))
+plot(precis(mFull, prob = 0.95))
 abline(v = 1, col = 2)
 ```
 
