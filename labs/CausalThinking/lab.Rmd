@@ -122,7 +122,7 @@ coef( lm(y ~x2_res) )
 
 In short, coefficients of multiple regression express direct effects,
 controlled for all other predictors. The inference of the causal paths
-behind these partialled effects is not trivial, because such effects
+behind these partial effects is not trivial, because such effects
 can have different meanings. Independent variables in a multiple
 regression can play different roles, such as confounders, mediators
 or proxies.  If you understand that, you can infer some important
@@ -293,8 +293,8 @@ knitr::include_graphics("figs/dags_6M3.png")
 ```
 
 You can check your answers using the dagitty package or the [online
-interface](http://www.dagitty.net/dags.html)^[For begginers, we
-reccomend to start playing with this interface, and then check the
+interface](http://www.dagitty.net/dags.html)^[For beginners, we
+recommend to start playing with this interface, and then check the
 results with the `dagitty` package]. Here is an example:
 
 ```{r, eval=FALSE }
