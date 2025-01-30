@@ -218,7 +218,7 @@ c(mean(y), var(y))
 ```
 
 ```
-## [1] 1.0016500 0.9999773
+## [1] 1.002280 1.001845
 ```
 ]
 
@@ -437,7 +437,7 @@ lambda_small &lt;- sapply(x_seq,function(x) exp(a + b_small * x))
 ---
 ## Predicted curves based on simulated priors
 
-&lt;img src="figs/prior_poisson.png" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figs/prior_poisson.png" width="85%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -473,7 +473,7 @@ m01 &lt;- ulam(
 ## Comparing prior and posterior distributions
 
 
-&lt;img src="figs/prior_posterior.png" width="85%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figs/prior_posterior.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -680,6 +680,12 @@ follows a __Negative Binomial__ distribution, modeled as a __Gamma-Poisson
 mixture__, and the __log__ function is used as the link function
 
 ---
+## The distribution of Negative-Binomial or Gamma-Poisson
+
+&lt;img src="figs/negative_binomial.png" width="35%" style="display: block; margin: auto;" /&gt;
+
+
+---
 
 ## Poisson Model parameters
 
@@ -715,10 +721,6 @@ Therefore,
 
 it can be used for **modeling count data** with high variance (e.g., ecological epidemiological data)
 
----
-## The distribution of Negative-Binomial or Gamma-Poisson
-
-&lt;img src="slides_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Fitting a  Negative-Binomial or Gamma-Poisson model 
@@ -858,7 +860,7 @@ m3 &lt;- ulam(
 ---
 ## Comparing predictions of model 3 with the data 
 
-&lt;img src="figs/model03.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figs/model03.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -880,22 +882,31 @@ m3 &lt;- ulam(
 - The choice of probability distribution for `\(Y\)` follows the principle of 
 __maximum entropy__ under given constraints
 
+
 --
+
 
 - __Link functions__ transform nonlinear relationships into linear ones, making 
 model interpretation more intuitive
 
+
 --
+
 
 - __Generalized Linear Models__ (GLMs) extend classical regression to handle 
 different types of response variables (counts, binary outcomes, etc.)
 
+
 --
 
-- Overdispersion matters! When variance exceeds the mean, Negative Binomial 
+
+- __Overdispersion__ matters! When variance exceeds the mean, Negative Binomial 
 models provide a better fit than Poisson
 
+
 -- 
+
+
 - Bayesian approaches allow flexible modeling of LMs, GLMs, and mixture models 
 using a unified conceptual framework
 

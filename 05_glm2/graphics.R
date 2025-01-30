@@ -147,3 +147,43 @@ ggplot(prob_data, aes(x = x, y = prob)) +
   theme_publication()
 ggsave("05_glm2/figs/binomial.png", heigh = 4.5, width = 4.5)
 
+# NegBin distribution ----------------------------------------------------------
+# Load necessary libraries
+library(ggplot2)
+library(ggridges)
+library(dplyr)
+library(tidyr)
+
+# Negative Binomial ----------------------------------------------------------------------
+df_nb <- data.frame(
+  case_number = factor(1:5),
+  lambda = seq(1, 5, by = 1),  # Mean of the distribution
+  phi = c(0.5, 1, 2, 5, 10)    # Dispersion parameter
+)
+
+n <- 100
+df_nb_ridges <- 
+  df_nb %>%
+  mutate(low = 0, high = 15) %>%
+  uncount(n, .id = "row") %>%
+  mutate(x = (1 - row/n) * low + row/n * high, 
+         density = dnbinom(round(x), size = phi, mu = lambda))
+
+# Plot using geom_ridgeline
+ggplot(df_nb_ridges, aes(x, factor(case_number), height = density, color = case_number)) +
+  geom_ridgeline(scale = 3, aes(fill = case_number), alpha = 0.5, linetype = 0) +
+  xlim(0, 15) + 
+  theme_minimal(base_size = 18) +
+  theme(legend.position = "none",
+        axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank()) +
+  annotate("text", x = rep(14, 5),
+           y = 1:5 + 0.05,
+           label = c(TeX(r"($\phi = 0.5$)"), TeX(r"($\phi = 1$)"), TeX(r"($\phi = 2$)"),
+                     TeX(r"($\phi = 5$)"), TeX(r"($\phi = 10$)")),
+           size = 6)
+
+# Save the plot
+ggsave("05_glm2/figs/negative_binomial.png")
