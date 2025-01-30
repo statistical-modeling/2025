@@ -25,11 +25,6 @@ xaringanExtra::embed_xaringan("06_bayesian_statistics/slides.html")
 
 [Slides PDF](06_bayesian_statistics/bayesian_statistics.pdf)
 
-# Lab
-
-[Bayesian model fitting and inference](labs/BayesianStatistics/lab.html)
-
-
 # Further reading
 
 Jaynes, E.T., 2003. Probability theory: The logic of science. Cambridge University press.
