@@ -22,6 +22,13 @@ knitr::opts_chunk$set(echo = FALSE)
 xaringanExtra::embed_xaringan("04_glm/slides.html")
 ```
 
+
+```{r slides2}
+#| eval: true
+xaringanExtra::embed_xaringan("05_glm2/slides.html")
+```
+
+
 # Lab
 
 [GLM Lab](labs/GLMs/lab.html)
