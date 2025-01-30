@@ -51,7 +51,7 @@ Let's start by scaling and fitting a linear model to the data. Can you articulat
 For example: the prior on the intercept (a) is centered on the mean brain volume (rescaled) in the data. So it says that the average species with an average body mass has a brain volume with an 89% credible interval from about −1 to 2. 
 
 
-```{r linear_model}
+```{r linear_model, eval = FALSE}
 d$mass_s <- scale(d$mass)
 d$brain_s <- d$brain/max(d$brain)
 
@@ -78,7 +78,7 @@ ggplot(d, aes(x=mass_s, y=brain_s)) +
 
 One common option to check model fit is to use the mean squared prediction error, a measure of how different the predictions are to the observed value. We can calculate this quantity for this model by defining a function that calculates the squared residuals and then taking their average.
 
-```{r sum_residuals}
+```{r sum_residuals, eval = FALSE}
 calc_mean_sq_error = function(fit){
   s <- sim( fit ) # the sim function simulates data from the posterior
   r <- apply(s,2,mean) - d$brain_s
@@ -91,7 +91,7 @@ This is rarely a good idea, because the sum of squared residuals always decrease
 
 ## Polynomial models
 
-```{r polynomial_model}
+```{r polynomial_model, eval = FALSE}
 mass_grid = seq(min(d$mass_s), max(d$mass_s), by = 0.1)
 getPredictions = function(fit, data){
   sim(fit, data = data) |> colMeans()
@@ -171,7 +171,7 @@ ggplot(d, aes(x=mass_s, y=brain_s)) +
 
 After having fit all there models, lets calculate the mean squared error for each of them. Notice that the mean squared error decreases as the model complexity increases. This is because the model has more parameters to fit the data, and so is capable of overfitting the data. 
 
-```{r, mean_sq_errors}
+```{r, mean_sq_errors, eval = FALSE}
 fit_models = list(fit_m1, fit_m2, fit_m3, fit_m4, fit_m5)
 mean_sq_errors = sapply(fit_models, calc_mean_sq_error)
 mean_sq_errors
@@ -183,7 +183,7 @@ lines(1:5, mean_sq_errors)
 
 To avoid the problem of overfitting, one option is to use cross validation, where we fit the model to a subset of the data and then predict the remaining data. We then calculate the mean squared error for the prediction of data points not used to fit the model. This is a more robust way to compare models. Here, we will use a leave-one-out cross validation, where we fit the model to all but one data point and then predict the remaining data point. Since the model is fit without the data point we are attempting to predict, it is less likely to be able to overfit it.
 
-```{r loo_cv}
+```{r loo_cv, eval = FALSE}
 loo_cv = function(m, fit_m){
   r = numeric(nrow(d))
   for(i in 1:nrow(d)){
@@ -212,7 +212,7 @@ Notice how the mean squared error calculated using cross validation is higher th
 
 One way to reduce this poor performance is to use more skeptical priors for the predictor coefficients. This will make the model less able to use large parameter values and overfit the data. Let's fit the third degree model with a skeptical prior and see the difference. This applies to any type of model, not only polynomial models, and is a key advantage of using Bayesian models. For example, skeptical priors, often called _regularizing priors_, are routinely used to prevent overfitting in neural networks and other complex models. Paradoxically, when properly tuned, these priors can improve our models by making their fit to the data worse! However, if we make our priors too skeptical, too informative, they will make the model incapable of learning anything from the data.
 
-```{r skeptical_prior}
+```{r skeptical_prior, eval = FALSE}
 m3_skeptical = alist(
   brain_s ~ dnorm(mu, exp(log_sigma)),
   mu <- a + b * mass_s + c * mass_s^2 + d * mass_s^3,
@@ -289,7 +289,7 @@ y_i &\sim Normal(\mu_i, 1) \\
 \end{aligned}
 \] 
 
-```{r sim_data}
+```{r sim_data, eval = FALSE}
 set.seed(1)
 n = 100
 x1 = rnorm(n)
@@ -306,7 +306,7 @@ d = data.frame(y = y, x1 = x1, x2 = x2, z1 = z1, z2 = z2, z3 = z3)
 
 First, let's manully calculate the WAIC for a regression with a single predictor:
 
-```{r single_predictor}
+```{r single_predictor, eval = FALSE}
 m = quap(alist(
   y ~ dnorm(mu, sigma),
   mu <- a + b*x1,
@@ -420,7 +420,7 @@ The $\lambda_j$ parameters are the _shrinkage parameters_, and they control how 
 
 Let's fit a model with the horseshoe prior to the data we simulated before.
 
-```{r horseshoe_prior}
+```{r horseshoe_prior, eval = FALSE}
 library(rstanarm)
 library(bayesplot)
 library(ggplot2)
@@ -431,4 +431,5 @@ mcmc_intervals(m_horseshoe) +
   geom_point(data = data.frame(y = c(2:6), x = c(0, 0, 0, -0.4, 0.15)), 
              col =  "red", aes(y = y, x = x)) 
 ```
+
 The smaller coefficient of x1 is underestimated (but still in the confidence interval), while the larger coefficient of x2 is correct. This is because the horseshoe prior is very skeptical about the importance of the variables, and so it pulls the estimates towards zero. All the other coefficients are correctly estimated as zero.
