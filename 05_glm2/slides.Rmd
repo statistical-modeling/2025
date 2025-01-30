@@ -280,7 +280,7 @@ of a binomial a.k.a. __Poisson__
 ---
 ## Count Data: Poisson Regression
 
-$$Y ~ Poisson(\lambda_i)$$
+$$Y \sim Poisson(\lambda_i)$$
 $$log(\lambda_i) = \alpha + \beta x_i $$
 
 
