@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistical models: linking data to theory</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sara Mortara" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <script src="libs/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy code <i class=\"fa fa-clipboard\"><\/i>","success":"Copied! <i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"Not copied 😕 <i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistical models: linking data to theory
+]
+.subtitle[
+## The Generalized Linear Model
+]
+.author[
+### Sara Mortara
+]
+.date[
+### 3 Fev 2025
+]
+
+---
+
+
+
+
+
+
+
+## Recap: How do we link models and data?
+
+
+- We use statistical models to formally represent an hypothesis
+
+--
+
+- General recipe for building models:
+
+1. **Identifying variables** – Distinguishing observable variables (data) from unobservable ones (parameters)
+
+2. **Defining relationships** – Expressing each variable in terms of others or probability distributions
+
+3. **Building the generative model** – Combining variables and distributions to simulate and analyze data
+
+
+---
+## Recap: How do we link models and data?
+
+- We follow a language for describing statistical models
+
+
+`$$y_i \sim Normal(\mu, sigma)$$`
+`$$\mu_i = \beta x_i$$`
+`$$\beta \sim Normal(0, 10)$$`
+`$$\sigma \sim Exponential(1)$$`
+
+
+---
+## Why a __generative model__?
+
+
+A __Bayesian model__ is called a __generative model__ because it defines a __probabilistic process__ that can generate data. This means it specifies the joint probability distribution of both __observed data__ and __unobserved parameters__
+
+This allows us to:
+
+--
+
+__Simulate Data__ – Given parameter values, we can generate hypothetical datasets that resemble real-world observations
+
+
+--
+__Infer Parameters__ – Given observed data, we update our beliefs about the parameters using Bayes' theorem
+
+
+
+
+---
+## Answering questions in Ecology: Ecological detective
+
+
+ .pull-left[
+How do we confront multiple hypotheses with data and assign degrees of belief
+to different hypotheses?
+      
+&lt;img src="figs/Ecological_Detective.jpg" width="70%" /&gt;
+    
+]
+
+.pull-right[
+Beyond *How do we link models and data?*
+
+The tools of the ecological detective
+  
+- __Hypotheses__
+  
+- __Data__
+  
+- __Goodness of fit__
+  
+- __Numerical procedures__
+]
+
+
+---
+## Hypotheses
+
+
+.pull-left[
+&lt;img src="figs/detective_toolkit.png" width="640" /&gt;
+
+]
+
+
+.pull-right[
+- Science consists of confronting different __descriptions__ of how the world works
+with data
+
+
+- We use __data__ to arbitrate between different descriptions
+
+
+- We use the "__best__" description to make additional predictions and decisions
+
+- If we translate different hypotheses into quantitative predictions via models
+we can simultaneously confront all of them
+]
+
+---
+## Data
+
+.pull-left[
+&lt;img src="figs/data.jfif" width="120%" /&gt;
+
+]
+
+.pull-right[
+- Represents a particular view of the world
+
+- Know your data
+
+- Define the likelihood of your data
+]
+
+
+---
+## Data
+
+
+.pull-left[
+&lt;img src="figs/Carey1991.png" width="643" /&gt;
+[Carey 1991](https://www.science.org/doi/epdf/10.1126/science.1896848)
+
+]
+
+.pull-right[
+- Mediterranean fruit fly (medfly) *Creatitis capitata*
+
+- Destructive agricultural pest
+
+- Climatic and host contitions are right for its establishment in California
+
+- Sporadic outbreaks over decades
+
+- New colonization event or medfly is established below the level for detection?
+
+]
+
+
+---
+## Data
+
+
+.pull-left[
+&lt;img src="figs/Carey1991_fig3.png" width="628" /&gt;
+[Carey 1991](https://www.science.org/doi/epdf/10.1126/science.1896848)
+
+
+]
+
+.pull-right[
+- Medfly captures from 1975-1990
+
+- Each point represents a location of medfly captures
+
+- Intervals between captures are decreasing 
+
+- Area over which they are detected is expanding 
+
+- Evidence that previous eradication programs did not eradicate the medfly 
+from California 
+]
+
+
+---
+## Goodness of fit
+
+
+- Data are used to arbitrate between different hypotheses or models 
+
+- Measure of how each description of the world fits the observations
+
+ __MSE__: Squared error between predictions &amp; observed data
+
+
+
+---
+## Numerical procedures
+
+Emphasize __predictive performance__ rather than just model fit to observed data
+
+
+--
+__Posterior Predictive Checks__: Simulated Data Replication: Generate synthetic datasets using posterior 
+samples and compare them to observed data
+
+
+--
+__Cross-validation__
+- __LOO-CV__ (Leave-One-Out Cross-Validation): Uses Pareto-smoothed importance
+sampling (PSIS-LOO) to estimate predictive accuracy by leaving out one 
+observation at a time
+
+
+--
+__Information criteria__
+- __Akaike Information Criterion__ (AIC): Balances model fit with complexity by 
+penalizing the number of parameters
+- __WAIC__ (Widely Applicable Information Criterion): A Bayesian alternative 
+to AIC that estimates out-of-sample predictive accuracy using the log 
+pointwise posterior predictive density (lppd)
+
+
+
+---
+
+
+## Inferences about competing models
+
+
+
+.pull-left[
+
+**The data-generating process (a.k.a. true model):**
+
+`$$\begin{align}
+y_i &amp;\sim \mathcal{N}(\mu_i, \sigma) \\
+\mu_i &amp; = e^{(x_i - 0.3)^2} -1 \\
+\sigma &amp; = C
+\end{align}$$`
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+]]
+
+---
+
+## The models
+
+.pull-left[
+$$
+`\begin{align}
+\textbf{M1}: &amp; \mu_i = \alpha + \beta_1 x_i \\[1em]
+\textbf{M2}: &amp; \mu_i = \alpha + \beta_1 x_i + \beta_2 {x_i}^2\\[1em]
+\textbf{M3}: &amp; \mu_i = \alpha + \beta_1 x_i + \beta_2 {x_i}^2 + \\
+&amp;+ \beta_3 {x_i}^3  + \beta_4 {x_i}^4 + \beta_5 {x_i}^5
+\end{align}`
+$$
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+]]
+
+---
+## Instead of collecting data, we will simulate
+
+
+``` r
+# Define the dataset as a list for building
+# our model in rethinking
+set.seed(4221)
+N &lt;- 21
+x &lt;- runif(N)
+d &lt;- list(
+  x = x,
+  y = dexp((x - 0.3) ^ 2) - 1
+)
+```
+
+
+---
+
+## Over-fitting
+
+.pull-left[
+
+
+``` r
+# Model 3: Higher-order polynomial model
+m3 &lt;- alist(
+    y ~ dnorm(mu, sigma),
+    mu &lt;- a + b1 * x + b2 * x^2 + b3 * x^3 + b4 * x^4 + b5 * x^5,
+    a ~ dnorm(0, 1),
+    b1 ~ dnorm(0, .1),
+    b2 ~ dnorm(0, .1),
+    b3 ~ dnorm(0, .1),
+    b4 ~ dnorm(0, .1),
+    b5 ~ dnorm(0, .1),
+    sigma ~ dexp(1)
+  )
+
+fit_m3 &lt;- quap(
+  m3,
+  data = d
+)
+```
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+]
+]
+
+
+
+---
+
+## Over-fitting
+
+.pull-left[
+
+
+``` r
+# Model 3: Higher-order polynomial model
+precis(fit_m3)
+```
+
+```
+##              mean          sd        5.5%       94.5%
+## a     -0.04049016 0.012729980 -0.06083513 -0.02014519
+## b1     0.19672444 0.084275515  0.06203589  0.33141299
+## b2    -0.26591334 0.107472122 -0.43767455 -0.09415214
+## b3    -0.25959957 0.099705227 -0.41894778 -0.10025136
+## b4    -0.10613584 0.082677361 -0.23827023  0.02599855
+## b5     0.05116587 0.099429707 -0.10774200  0.21007375
+## sigma  0.01064068 0.003260175  0.00543029  0.01585107
+```
+
+&gt; To make inferences about unique features of the data at hand, as if they applied to all (or most all) samples (hence the population)
+&gt;
+.right[Burham &amp; Anderson (2002)]
+
+
+]
+
+
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+]
+]
+
+---
+## Under-fitting
+
+.pull-left[
+
+
+``` r
+# Model 1: Linear model
+m1 &lt;- alist(
+    y ~ dnorm(mu, sigma),
+    mu &lt;- a + b * x,
+    a ~ dnorm(0, 1),
+    b ~ dnorm(0, 1),
+    sigma ~ dexp(1)
+  )
+fit_m1 &lt;- quap(
+  m1,
+  data = d
+)
+```
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]
+]
+
+---
+## Under-fitting
+
+.pull-left[
+
+
+``` r
+precis(fit_m1)
+```
+
+```
+##              mean          sd        5.5%       94.5%
+## a      0.05225982 0.019436389  0.02119672  0.08332293
+## b     -0.30053901 0.038216969 -0.36161710 -0.23946091
+## sigma  0.04603736 0.007081021  0.03472052  0.05735420
+```
+
+
+&gt; Failure to identify features in the data-generating process that are
+strongly replicable
+
+.right[Burham &amp; Anderson (2002)]
+
+]
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+]
+]
+
+
+---
+
+## A good fit
+
+
+.pull-left[
+
+
+``` r
+# Model 2: Quadratic model
+m2 &lt;- alist(
+  y ~ dnorm(mu, sigma),
+  mu &lt;- a + b1 * x + b2 * x^2,
+  a ~ dnorm(0, 1),
+  b1 ~ dnorm(0, 1),
+  b2 ~ dnorm(0, 1),
+  sigma ~ dexp(1)
+)
+fit_m2 &lt;- quap(
+  m2,
+  data = d
+)
+precis(fit_m2)
+```
+
+```
+##               mean          sd         5.5%        94.5%
+## a     -0.074127804 0.003612674 -0.079901556 -0.068354052
+## b1     0.476156869 0.018608915  0.446416229  0.505897509
+## b2    -0.818888308 0.019132172 -0.849465215 -0.788311401
+## sigma  0.004906003 0.000626433  0.003904842  0.005907164
+```
+]
+
+.pull-right[
+.center[
+![](slides_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+]
+]
+
+---
+class: middle, inverse
+
+## How to compare different model fit?
+
+
+---
+## Mean Square Errors (MSE)
+
+
+Mean Squared Error (MSE) is a measure of how well a model’s predictions match 
+the observed data. It is calculated as:
+
+`$$MSE = \frac{1}{n}\sum^{n}_{i=1}(y_i - \hat{y_i})^2$$`
+
+- Lower MSE indicates that predictions are closer to actual values
+- Sensitive to outliers: Squaring the residuals means that large errors impact 
+the MSE more
+- Does not account for model complexity: A more complex model will always have 
+lower MSE, even if it overfits
+
+
+
+
+
+---
+## Rethinking MSE
+
+
+`$$\text{MSE}_{\text{Bayesian}} = \frac{1}{n} \sum_{i=1}^{n} \left(y_i - \mathbb{E}[\hat{y}_i] \right)^2$$`
+
+
+
+
+``` r
+calc_MSE_sim &lt;- function(fit, data, response_var) {
+  pred &lt;- sim(fit, data = data) # Simulate new observations from the posterior
+  pred_mean &lt;- apply(pred, 2, mean) # Compute mean of simulated observations
+  residuals &lt;- data[[response_var]] - pred_mean 
+  mean(residuals^2)
+}
+
+calc_MSE_sim(fit_m1, d, "y")
+```
+
+```
+## [1] 0.002072995
+```
+
+``` r
+calc_MSE_sim(fit_m2, d, "y")
+```
+
+```
+## [1] 2.377269e-05
+```
+
+``` r
+calc_MSE_sim(fit_m3, d, "y")
+```
+
+```
+## [1] 0.0001112253
+```
+
+
+
+---
+## Leave-One-Out Cross-Validation (LOO-CV)
+
+- LOO-CV is a method to estimate a model's out-of-sample predictive accuracy
+
+- It works by:
+1. __Removing__ one observation from the dataset
+2. __Fitting__ the model to the remaining data
+3. __Predicting__ the left-out observation and computing the error
+4. __Repeating__ this for every observation
+
+- The average prediction error across all iterations gives a robust measure 
+of model performance
+
+
+---
+## Why use LOO-CV?
+
+- Avoids __overfitting__ – Complex models might fit training data well 
+but fail on new data
+
+- Better than Mean Squared Error (MSE) – MSE always decreases as __model 
+complexity increases__, even when overfitting occurs
+
+- More robust for Bayesian models – Bayesian LOO-CV __accounts for
+uncertainty__ in parameter estimates.
+
+
+---
+## Compute LOO-CV for our models
+
+
+``` r
+loo_cv = function(m, fit_m) {
+  r = numeric(length(d$y)) # Store residuals
+  
+  for (i in 1:length(d$y)) {
+    d_i = list(x = d$x[-i], y = d$y[-i])  # Remove one observation
+    fit = quap(m, data = d_i, start = fit_m@start)  # Fit model without i-th obs
+    # Predict for left-out observation using the posterior mean
+    pred &lt;- link(fit, data = list(x = d$x[i])) 
+    pred_mean &lt;- mean(pred)  # Compute the mean prediction
+    r[i] &lt;- (d$y[i] - pred_mean)^2  # Squared error
+  }
+  
+  mean(r)  # Return LOO-CV mean squared error
+}
+```
+
+
+---
+## Compute LOO-CV for our models
+
+
+.pull-left[
+
+``` r
+models &lt;- list(m1, m2, m3)
+fit_models &lt;-  list(fit_m1, fit_m2, fit_m3)
+loo_errors &lt;- map2_dbl(models, fit_models, loo_cv, .progress = TRUE)
+```
+]
+
+.pull-right[
+![](slides_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+
+]
+
+
+---
+## Akaike information criterion
+
+.left-column[
+.center[
+![](figs/Akaike.jpg)
+Hirotugu Akaike (1927-2009)
+]]
+
+.right-column[
+
+
+AIC estimates a statistical distance between two probability
+distributions: the true one, which is the reference, and a given model
+fitted to a sample from the true distribution.
+
+AIC is an estimate of the information of the true data-generating 
+distribution that is preserved by a model.
+
+More specifically, AIC is an estimate of the Kullback-Leibler
+divergence (or K-L relative entropy) of the model to the reference
+true distribution that generated the data.  
+]
+
+
+---
+
+## AIC for Gaussian models
+
+
+`$$AIC = -2 \sum_i \log \left [ p(y_i | \theta) \right ] + 2k$$`
+
+Where `\(\sum_i \log [ p(y_i | \theta) ]\)` is the estimate of the residual variance of
+the model, in this case, the mean sum of squares of residuals:
+
+
+
+`$$\sum_i \log [ p(y_i | \theta) ]\, = \, \frac{1}{N} \, \sum_{i = 1}^N (Y_i - \widehat{Y_i})^2$$`
+
+And `\(K\)` is the number of parameters of the model.
+
+
+
+
+
+---
+
+
+## How to use AIC
+
+* AIC expresses distance to the true model, or loss of information by the fitted model;
+
+* Thus, the model with the lowest value of AIC among a set of
+  competing models is the most plausible one (or best supported by the
+  data);
+  
+* Canonical rule: models that differ `\(\leq 2\)` in their AIC values are
+  equally supported by data;
+
+* To ease model selection, we calculate `\(\Delta \mathrm{AIC}\)`: 
+`$$\Delta_i \, = \, \textrm{AIC}_i - \min (\textrm{AIC})$$`
+
+* The best supported , or more plausible, model will have `\(\Delta_i = 0\)`
+
+---
+
+## AICc: correction for small samples
+
+For  `\(n/K \, &lt; \,40\)`, multiply `\(K\)` by the correction term
+
+
+$$ \left(\frac{n}{n-K-1}\right) $$
+
+### AICc for Gaussian models:
+
+$$ \textrm{AICc} \, = \, -2\,\sum_i \log [ p(y_i | \theta) ] + 2\,K \left(\frac{n}{n-K-1}\right) $$
+
+
+Where `\(n\)` is the sample size.
+
+
+---
+
+## Evidence weights 
+
+`$$w_i\,=\, \frac{e^{-1/2 \Delta_i}}{\sum e^{-1/2 \Delta_i}}$$`
+
+* Evidence or Akaike weights sum up one;
+
+* Thus, `\(w_i\)` express the relative support of each model in the set of
+  competing models, in a standardized scale;
+
+* In a frequentist approach, `\(w_i\)` estimates the probability that each
+  model will be the best supported one, if you repeat the sample and then the selection many
+  times
+  
+* In a Bayesian framework, `\(w_i\)` are interpreted as a relative measure of model 
+plausibility based on their out-of-sample predictive accuracy, i.e. they reflect
+predictive performance, not absolute model probability
+
+
+---
+
+## Model selection with AIC: example
+
+.pull-left[
+
+
+
+``` r
+library(bbmle)
+AICctab(fit_m1, fit_m2, fit_m3, logLik = TRUE, base = TRUE,
+        weights = TRUE, nobs = N)
+```
+
+```
+##        logLik AICc   dLogLik dAICc  df weight
+## fit_m2   82.0 -153.5   47.2     0.0 4  1     
+## fit_m3   65.8 -108.9   30.9    44.7 7  &lt;0.001
+## fit_m1   34.8  -62.3    0.0    91.3 3  &lt;0.001
+```
+
+``` r
+AICtab(fit_m1, fit_m2, fit_m3, logLik = TRUE, base = TRUE,
+       weights = TRUE, nobs = N)
+```
+
+```
+##        logLik AIC    dLogLik dAIC   df weight
+## fit_m2   82.0 -156.0   47.2     0.0 4  1     
+## fit_m3   65.8 -117.5   30.9    38.5 7  &lt;0.001
+## fit_m1   34.8  -63.7    0.0    92.4 3  &lt;0.001
+```
+
+]
+
+
+.pull-right[
+.center[
+
+![](slides_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+]]
+
+
+---
+
+## Remarks on AIC
+
+   * Ties can and do happen: more than one model with `\(\Delta_i &lt; 2\)`
+   tell us that the data does not contain enough evidence to spot
+   the best model;
+   
+   * Model selection with AIC is not a statistical test; 
+   
+   * Model selection is restricted to competing models: if all
+     competing models are bad, the selected model will just be the
+     least bad.
+   
+   * AIC does not express goodness of fit. The selected model can still have a poor fit; 
+   
+   * AIC cannot be used to compare models fitted to different datasets; 
+   
+   * For the same reason, the AIC cannot be used to compare models
+     fitted to transformed and untransformed data.
+
+
+---
+## Incorporating uncertainty into model comparisons
+
+__Widely Applicable Information Criterion or Watanabe-Akaike Information Criterion__
+(WAIC)
+
+.left-column[
+&lt;img src="figs/Watanabe.jfif" width="90%" /&gt;
+
+Sumio Watanabe
+
+]
+
+.right-column[
+
+- WAIC (Widely Applicable Information Criterion) estimates **out-of-sample 
+predictive accuracy**
+
+- Like AIC, it **penalizes model complexity**, but incorporates 
+**posterior uncertainty**
+
+- The key concept is the **log pointwise predictive density (lppd)**, which 
+replaces the likelihood in AIC
+
+]
+
+---
+## Define Log Pointwise Predictive Density (lppd)
+
+
+`$$\text{lppd} = \sum_i \log \left( \frac{1}{S} \sum_{s=1}^{S} p(y_i | \theta_s) \right)$$`
+
+
+- Instead of using a **single maximum likelihood estimate**, WAIC 
+**averages log-likelihoods** over **posterior samples** \( \theta_s \)
+
+- This means **parameter uncertainty is incorporated** directly
+
+
+---
+## Accounting for Model Complexity
+
+
+`$$\text{WAIC} = -2 \left [ \text{lppd} - \sum_i \text{var}_{\theta} \log p(y_i|\theta) \right ]$$`
+
+
+- **Penalty for model complexity:** The second term is 
+the **variance of log-likelihood across posterior samples**
+
+
+- Higher variance = More model flexibility = **Stronger penalty** to prevent 
+overfitting
+
+
+---
+## WAIC formula &amp; interpretation
+
+
+`$$\text{WAIC} = -2 \sum_{i} \log \left( \frac{1}{S} \sum_{s=1}^{S} p(y_i | \theta_s) \right) + 2 p_{\text{WAIC}}$$`
+
+where:  
+- `\(S\)` = number of posterior samples  
+- `\(theta_s\)` = posterior sample `\(s\)`  
+- `\(p_{WAIC}\)` = `\(\sum_i \text{var}_{\theta} \log p(y_i|\theta)\)` (effective number of parameters)
+
+--
+### Why Use WAIC?
+- **Incorporates parameter uncertainty** (unlike AIC)  
+- **Works for hierarchical &amp; complex Bayesian models**  
+- **Useful for model comparison** – lower WAIC = better predictive accuracy  
+
+
+---
+## Back to our three models 
+
+$$
+`\begin{align}
+\textbf{M1}: &amp; \mu_i = \alpha + \beta_1 x_i \\[1em]
+\textbf{M2}: &amp; \mu_i = \alpha + \beta_1 x_i + \beta_2 {x_i}^2\\[1em]
+\textbf{M3}: &amp; \mu_i = \alpha + \beta_1 x_i + \beta_2 {x_i}^2 + \\
+&amp;+ \beta_3 {x_i}^3  + \beta_4 {x_i}^4 + \beta_5 {x_i}^5
+\end{align}`
+$$
+
+
+
+
+
+
+``` r
+# Computes WAIC-based model comparison
+compare(fit_m1, fit_m2, fit_m3, func = WAIC)  
+```
+
+```
+##              WAIC        SE    dWAIC       dSE     pWAIC       weight
+## fit_m2 -149.67873 13.726260  0.00000        NA  7.603714 1.000000e+00
+## fit_m3 -102.63255 16.404528 47.04618 14.276198 16.391116 6.082082e-11
+## fit_m1  -59.70291  8.717573 89.97581  7.627784  5.003421 2.897344e-20
+```
+
+
+
+---
+## Comparison of Model Selection Methods
+
+&lt;table class="table" style="font-size: 20px; color: black; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Criterion &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; What it Measures &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Complexity Penalty &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Parameter Uncertainty &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Predictive Accuracy &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Computational Cost &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Best Use Case &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; MSE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Squared error between predictions &amp;amp; observed data &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Low &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Quick model fit check &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; AIC &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Model fit via likelihood &amp;amp; complexity tradeoff &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Low &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Frequentist model selection &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LOO-CV &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Out-of-sample predictive accuracy &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; High &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bayesian model comparison &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; WAIC &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bayesian model comparison balancing fit &amp;amp; complexity &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Moderate &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fully Bayesian alternative to AIC &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+---
+class: middle, inverse
+
+## The Ecological Detective: Field Course 2024
+
+---
+## Atlantic Forest field course
+
+.pull-left[
+- The antlion larvae adopts a sit-and-wait predatory strategy by 
+constructing funnel-shaped traps in the soil
+
+- This study investigates how energy expenditure and intraspecific competition 
+affect trap adjustment behavior and body condition
+
+- They expect a positive relationship between adjustment behavior and interespecific 
+competition
+
+- They also expect that depending on the environment the energetic demand would
+be different
+
+]
+
+.pull-right[
+![](figs/formiga_leao_Jonathan_Numer.jpg)&lt;!-- --&gt;
+
+]
+
+---
+## Hypotheses
+
+The more intense the __interespecific competition__, the more the antlion needs to
+adjust its __behavior__, and in __high demanding environments__, this relationship is 
+even stronger
+
+&lt;img src="figs/hypotheses_field.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Predictions
+
+The more intense the __interespecific competition__, the higher the ratio
+`\(trap~diameter/head~width\)`, and in exposed environments, this relationship is 
+even stronger, i.e. changes in `\(\alpha\)` only or both `\(\alpha\)` and `\(\beta\)` 
+
+
+
+&lt;img src="figs/predictions_field.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## The environment
+
+.pull-left[
+&lt;img src="figs/sitio_abrigado.png" width="560" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+&lt;img src="figs/sitio_exposto.png" width="565" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+## The behaviour adjustment
+
+.pull-left[
+&lt;img src="figs/metodo_largura_cabeca.png" width="759" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+&lt;img src="figs/funil_aberto.png" width="564" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+## Understanding the interespecific competition
+
+&lt;img src="figs/distribuicao_espacial_ambientes.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Competition variable
+
+
+
+`$$Competition_i = \frac{1}{K}\sum^{k}_{j=1}\frac{1}{D_{ij}}$$`
+
+
+- `\(K\)` = number of competitors, maximum 3
+- `\(D_{ij}\)` = distance between individual `\(i\)` and the competitor `\(j\)`
+
+
+---
+## Translating the hypothesis into models
+
+`$$Y_i \sim Normal(\mu, \sigma)$$`
+
+
+--
+1. `\(\mu_i = \alpha + \beta*Environment + \beta*C\)`
+
+
+--
+2. `\(\mu_i = \alpha_{Env} + \beta*Environment + \beta*C\)`
+
+
+--
+3.  `\(\mu_i = \alpha + \beta*C\)`
+
+
+--
+4. `\(\mu_i = \alpha + \beta*Environment\)`
+
+
+--
+5.  `\(\mu_i = \alpha\)`
+
+
+---
+## The data
+
+
+``` r
+head(data)
+```
+
+```
+##    Env        C    ratio
+## 1 open 1.506429 30.10252
+## 2 open 1.397413 25.78991
+## 3 open 1.465836 22.10678
+## 4 open 1.416630 17.03102
+## 5 open 1.792986 37.64292
+## 6 open 2.013705 37.73293
+```
+
+``` r
+data$Env_fac &lt;- as.numeric(as.factor(data$Env) == "shelter")
+data$Env_int &lt;- as.numeric(as.factor(data$Env))
+```
+
+
+---
+## Model #1
+
+`$$\mu_i = \alpha + \beta*Environment + \beta*C$$`
+
+
+``` r
+m1 &lt;- alist(
+  ratio ~ dnorm(mu, sigma), 
+  mu &lt;- a + b1*Env_fac + b2*C, 
+  a ~ dnorm(20, 5), 
+  b1 ~ dnorm(0, 1), 
+  b2 ~ dnorm(0, 1), 
+  sigma ~ dexp(1)
+)
+```
+
+
+
+---
+## Model #2
+
+`$$\mu_i = \alpha_{Env} + \beta*Environment + \beta*C$$`
+
+
+``` r
+m2 &lt;- alist(
+  ratio ~ dnorm(mu, sigma), 
+  mu &lt;- a[Env_int] + b1*Env_fac + b2*C, 
+  a[Env_int] ~ dnorm(20, 5), 
+  b1 ~ dnorm(0, 1), 
+  b2 ~ dnorm(0, 1), 
+  sigma ~ dexp(1)
+)
+```
+
+
+
+---
+## Model #3
+
+`$$\mu_i = \alpha + \beta*C$$`
+
+
+``` r
+m3 &lt;- alist(
+  ratio ~ dnorm(mu, sigma), 
+  mu &lt;- a + b*C, 
+  a ~ dnorm(20, 5), 
+  b ~ dnorm(0, 1), 
+  sigma ~ dexp(1)
+)
+```
+
+
+
+---
+## Model #4
+
+$$\mu_i = \alpha + \beta*Environment $$
+
+
+``` r
+m4 &lt;- alist(
+  ratio ~ dnorm(mu, sigma), 
+  mu &lt;- a + b*Env_fac,
+  a ~ dnorm(20, 5), 
+  b ~ dnorm(0, 1),
+  sigma ~ dexp(1)
+)
+```
+
+
+
+
+
+---
+## Model #5
+
+`$$\mu_i = \alpha$$`
+
+
+``` r
+m5 &lt;- alist(
+  ratio ~ dnorm(mu, sigma), 
+  mu &lt;- a,
+  a ~ dnorm(20, 5), 
+  sigma ~ dexp(1)
+)
+```
+
+
+---
+## Model fit
+
+
+
+
+
+
+``` r
+m1_fit &lt;- quap(m1, data = data)
+m2_fit &lt;- quap(m2, data = data)
+m3_fit &lt;- quap(m3, data = data)
+m4_fit &lt;- quap(m4, data = data)
+m5_fit &lt;- quap(m5, data = data)
+```
+
+
+---
+## Model comparison
+
+
+
+
+
+``` r
+compare(m1_fit, m2_fit, m3_fit, m4_fit, m5_fit, func = WAIC)
+```
+
+```
+##            WAIC       SE    dWAIC      dSE    pWAIC     weight
+## m2_fit 749.8972 19.91900 0.000000       NA 4.106904 0.73733197
+## m1_fit 753.2311 18.26691 3.333931 4.349914 3.243604 0.13922240
+## m3_fit 755.2390 17.74252 5.341748 5.684025 2.821182 0.05101726
+## m4_fit 755.6789 17.67361 5.781733 5.333986 2.678392 0.04094262
+## m5_fit 756.2042 17.21700 6.307006 6.126250 2.300551 0.03148576
+```
+
+
+---
+## Simulate posterior distributions 
+
+__Step #1__: Simulate posterior distributions
+
+
+``` r
+# Number of posterior draws
+n_samples &lt;- 1000
+
+# Extract posterior samples
+posterior &lt;- extract.samples(m2_fit, n = n_samples)
+```
+
+---
+## Simulate posterior distributions
+
+__Step #2__: Generate predictions for each `\(C\)` value 
+
+
+``` r
+# Create a sequence of C values for prediction
+C_seq &lt;- seq(from = min(data$C), to = max(data$C), length.out = 100)
+
+# Matrices to store predictions
+mu_matrix_open &lt;- matrix(NA, nrow = n_samples, ncol = length(C_seq))  # For "open"
+mu_matrix_shelter &lt;- matrix(NA, nrow = n_samples, ncol = length(C_seq))  # For "shelter"
+
+# Loop over posterior samples
+for (i in 1:n_samples) {
+  # Compute mu for each C_seq
+  mu_matrix_open[i, ] &lt;- posterior$a[i, 1] + 0 * posterior$b1[i] + posterior$b2[i] * C_seq  # "Open" (reference level)
+  mu_matrix_shelter[i, ] &lt;- posterior$a[i, 2] + 1 * posterior$b1[i] + posterior$b2[i] * C_seq  # "Shelter" effect
+}
+
+# Compute mean and credible intervals
+mu_mean_open &lt;- apply(mu_matrix_open, 2, mean, na.rm = TRUE)
+mu_PI_open &lt;- apply(mu_matrix_open, 2, function(x) PI(x[is.finite(x)], prob = 0.89))
+
+mu_mean_shelter &lt;- apply(mu_matrix_shelter, 2, mean, na.rm = TRUE)
+mu_PI_shelter &lt;- apply(mu_matrix_shelter, 2, function(x) PI(x[is.finite(x)], prob = 0.89))  # Apply PI only on finite values
+```
+
+---
+## Simulate posterior distributions
+
+__Step #3__: Plot the results
+
+&lt;img src="slides_files/figure-html/unnamed-chunk-50-1.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## What they found
+
+&lt;img src="figs/formiga_leao.png" width="875" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+## **Key Takeaways**
+
+- **MSE**: Measures fit but does **not** help with model selection
+
+
+--
+- **AIC**: Penalizes complexity but **ignores parameter uncertainty**
+
+
+--
+- **LOO-CV**: Best for **prediction**, but computationally expensive  
+
+
+--
+- **WAIC**: A fully Bayesian alternative to AIC that incorporates **uncertainty**
+
+
+--
+**Which method to use?**  
+
+✅ If you want **prediction**, use **LOO-CV**.
+
+✅ If you want **Bayesian model comparison**, use **WAIC**.
+
+✅ If you are working in **frequentist settings**, use **AIC**.
+
+
+---
+
+## Further reading
+
++ Burnham, K. P., &amp; Anderson, D. R. 2002. Model Selection and
+  Multimodel Inference: A Practical-Theoretic Approach, 2nd ed. New
+  York, Springer-Verlag.
+
++ Bolker, B.M. 2008. Ecological
+  Models and Data in R. Princeton: Princeton University Press.
+
++ Hilborn R, Mangel M. 2013. The ecological detective: confronting models with data 
+  (MPB-28). Princeton University Press; 2013 Dec 31.
+
++ McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with
+  Examples in R and Stan, 2nd ed. CRC Press.
+  
+  
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
