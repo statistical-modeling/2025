@@ -93,9 +93,6 @@ This is rarely a good idea, because the sum of squared residuals always decrease
 
 ```{r polynomial_model, eval = FALSE}
 mass_grid = seq(min(d$mass_s), max(d$mass_s), by = 0.1)
-getPredictions = function(fit, data){
-  sim(fit, data = data) |> colMeans()
-}
 
 m2 = alist(
   brain_s ~ dnorm( mu , exp(log_sigma) ),
