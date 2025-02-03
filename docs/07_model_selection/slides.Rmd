@@ -1032,7 +1032,7 @@ constructing funnel-shaped traps in the soil
 - This study investigates how energy expenditure and intraspecific competition 
 affect trap adjustment behavior and body condition
 
-- They expect a positive relationship between adjustment behavior and interespecific 
+- They expect a positive relationship between adjustment behavior and intraspecific 
 competition
 
 - They also expect that depending on the environment the energetic demand would
@@ -1050,7 +1050,7 @@ include_graphics("figs/formiga_leao_Jonathan_Numer.jpg")
 ---
 ## Hypotheses
 
-The more intense the __interespecific competition__, the more the antlion needs to
+The more intense the __intraspecific competition__, the more the antlion needs to
 adjust its __behavior__, and in __high demanding environments__, this relationship is 
 even stronger
 
@@ -1062,7 +1062,7 @@ include_graphics("figs/hypotheses_field.png")
 ---
 ## Predictions
 
-The more intense the __interespecific competition__, the higher the ratio
+The more intense the __intraspecific competition__, the higher the ratio
 $trap~diameter/head~width$, and in exposed environments, this relationship is 
 even stronger, i.e. changes in $\alpha$ only or both $\alpha$ and $\beta$ 
 
@@ -1110,7 +1110,7 @@ include_graphics("figs/funil_aberto.png")
 
 
 ---
-## Understanding the interespecific competition
+## Understanding the intraspecific competition
 
 ```{r, echo =FALSE, out.width="70%", fig.align="center"}
 include_graphics("figs/distribuicao_espacial_ambientes.png")
