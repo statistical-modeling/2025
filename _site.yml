@@ -20,7 +20,7 @@ navbar:
         - text: "Bayesian statistics"
           href: 06_bayesian_statistics.html
         - text: "Model selection"
-          href: 07_model_selection.html
+          href: 07_Model_Selection.html
         - text: "Causal thinking"
           href: 08_causal_thinking.html
         - text: "Mixed and hierarchical models"
