@@ -18,10 +18,10 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r slides}
 #| eval: true
-xaringanExtra::embed_xaringan("06_model_selection/slides.html")
+xaringanExtra::embed_xaringan("07_model_selection/slides.html")
 ```
 
-[Open slides in new window](06_model_selection/slides.html)
+[Open slides in new window](07_model_selection/slides.html)
 
 # Lab
 

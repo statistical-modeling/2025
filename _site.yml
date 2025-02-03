@@ -1,4 +1,4 @@
-name: "2024_serrapilheira_ICTP"
+name: "2025_serrapilheira"
 title: "Statistical Modelling"
 theme: theme.css
 description: |
@@ -31,9 +31,11 @@ navbar:
           href: labs/LinearModels/lab.html
         - text: "Generalized Linear Models"
           href: labs/GLMs/lab.html
+        - text: "Bayesian statistics and model comparison"
+          href: labs/BayesianStatistics/lab.html
     - text: "About us"
       href: about.html
     - icon: fa fa-github
-      href: https://github.com/statistical-modeling-qeco/2024_website
+      href: https://github.com/statistical-modeling/2025
 output: distill::distill_article
 
