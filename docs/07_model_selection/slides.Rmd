@@ -1136,11 +1136,11 @@ $$Y_i \sim Normal(\mu, \sigma)$$
 
 
 --
-1. $\mu_i = \alpha + \beta*Environment + \beta*C$
+1. $\mu_i = \alpha + \beta_1*Environment + \beta_2*C$
 
 
 --
-2. $\mu_i = \alpha_{Env} + \beta*Environment + \beta*C$
+2. $\mu_i = \alpha_{Env} + \beta_1*Environment + \beta_2*C$
 
 
 --
@@ -1168,7 +1168,7 @@ data$Env_int <- as.numeric(as.factor(data$Env))
 ---
 ## Model #1
 
-$$\mu_i = \alpha + \beta*Environment + \beta*C$$
+$$\mu_i = \alpha + \beta_1*Environment + \beta_2*C$$
 
 ```{r}
 m1 <- alist(
@@ -1186,7 +1186,7 @@ m1 <- alist(
 ---
 ## Model #2
 
-$$\mu_i = \alpha_{Env} + \beta*Environment + \beta*C$$
+$$\mu_i = \alpha_{Env} + \beta_1*Environment + \beta_2*C$$
 
 ```{r}
 m2 <- alist(

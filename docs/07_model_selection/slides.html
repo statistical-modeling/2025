@@ -898,7 +898,7 @@ compare(fit_m1, fit_m2, fit_m3, func = WAIC)
 ---
 ## Comparison of Model Selection Methods
 
-&lt;table class="table" style="font-size: 20px; color: black; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+&lt;table class="table" style="font-size: 20px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt; Criterion &lt;/th&gt;
@@ -968,7 +968,7 @@ constructing funnel-shaped traps in the soil
 - This study investigates how energy expenditure and intraspecific competition 
 affect trap adjustment behavior and body condition
 
-- They expect a positive relationship between adjustment behavior and interespecific 
+- They expect a positive relationship between adjustment behavior and intraspecific 
 competition
 
 - They also expect that depending on the environment the energetic demand would
@@ -977,14 +977,14 @@ be different
 ]
 
 .pull-right[
-![](figs/formiga_leao_Jonathan_Numer.jpg)&lt;!-- --&gt;
+&lt;img src="figs/formiga_leao_Jonathan_Numer.jpg" width="615" /&gt;
 
 ]
 
 ---
 ## Hypotheses
 
-The more intense the __interespecific competition__, the more the antlion needs to
+The more intense the __intraspecific competition__, the more the antlion needs to
 adjust its __behavior__, and in __high demanding environments__, this relationship is 
 even stronger
 
@@ -994,7 +994,7 @@ even stronger
 ---
 ## Predictions
 
-The more intense the __interespecific competition__, the higher the ratio
+The more intense the __intraspecific competition__, the higher the ratio
 `\(trap~diameter/head~width\)`, and in exposed environments, this relationship is 
 even stronger, i.e. changes in `\(\alpha\)` only or both `\(\alpha\)` and `\(\beta\)` 
 
@@ -1032,7 +1032,7 @@ even stronger, i.e. changes in `\(\alpha\)` only or both `\(\alpha\)` and `\(\be
 
 
 ---
-## Understanding the interespecific competition
+## Understanding the intraspecific competition
 
 &lt;img src="figs/distribuicao_espacial_ambientes.png" width="70%" style="display: block; margin: auto;" /&gt;
 
@@ -1056,11 +1056,11 @@ even stronger, i.e. changes in `\(\alpha\)` only or both `\(\alpha\)` and `\(\be
 
 
 --
-1. `\(\mu_i = \alpha + \beta*Environment + \beta*C\)`
+1. `\(\mu_i = \alpha + \beta_1*Environment + \beta_2*C\)`
 
 
 --
-2. `\(\mu_i = \alpha_{Env} + \beta*Environment + \beta*C\)`
+2. `\(\mu_i = \alpha_{Env} + \beta_1*Environment + \beta_2*C\)`
 
 
 --
@@ -1102,7 +1102,7 @@ data$Env_int &lt;- as.numeric(as.factor(data$Env))
 ---
 ## Model #1
 
-`$$\mu_i = \alpha + \beta*Environment + \beta*C$$`
+`$$\mu_i = \alpha + \beta_1*Environment + \beta_2*C$$`
 
 
 ``` r
@@ -1121,7 +1121,7 @@ m1 &lt;- alist(
 ---
 ## Model #2
 
-`$$\mu_i = \alpha_{Env} + \beta*Environment + \beta*C$$`
+`$$\mu_i = \alpha_{Env} + \beta_1*Environment + \beta_2*C$$`
 
 
 ``` r
