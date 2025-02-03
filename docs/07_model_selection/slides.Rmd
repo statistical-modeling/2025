@@ -1,6 +1,6 @@
 ---
 title: "Statistical models: linking data to theory"
-subtitle: "The Generalized Linear Model"  
+subtitle: "Model comparison and selecion"  
 author: 
   - "Sara Mortara"
 date: '3 Fev 2025'
@@ -1016,6 +1016,7 @@ df %>%
 
 
 
+
 ---
 class: middle, inverse
 
@@ -1283,9 +1284,16 @@ compare(m1_fit, m2_fit, m3_fit, m4_fit, m5_fit, func = WAIC)
 
 
 ---
-## Simulate posterior distributions 
+## Comparing with posterior distributions 
 
 __Step #1__: Simulate posterior distributions
+
+- The `extract.samples()` function generates posterior samples for the model
+parameters
+
+- Useful for understanding uncertainty in __parameters estimates__
+
+
 
 ```{r}
 # Number of posterior draws
@@ -1296,7 +1304,7 @@ posterior <- extract.samples(m2_fit, n = n_samples)
 ```
 
 ---
-## Simulate posterior distributions
+## Comparing with posterior distributions
 
 __Step #2__: Generate predictions for each $C$ value 
 
@@ -1323,10 +1331,31 @@ mu_mean_shelter <- apply(mu_matrix_shelter, 2, mean, na.rm = TRUE)
 mu_PI_shelter <- apply(mu_matrix_shelter, 2, function(x) PI(x[is.finite(x)], prob = 0.89))  # Apply PI only on finite values
 ```
 
----
-## Simulate posterior distributions
 
-__Step #3__: Plot the results
+---
+## Comparing with posterior distributions
+
+__Step #4__: Simulate new observations
+
+- The `sim()` function generates posterior predictive distributions
+
+- Samples from the full posterior including the observation model (likelihood)
+
+- Useful for simulating new observations
+
+- Predict new data based on posterior __uncertainty__
+
+```{r}
+# Generating posterior samples
+posterior_sim <- sim(m2_fit, n = 100)
+```
+
+
+
+---
+## Comparing with posterior distributions
+
+__Step #4__: Plot the results
 
 ```{r echo = FALSE, fig.align='center', out.width="40%"}
 # Set plot range manually to ensure lines fit
@@ -1354,13 +1383,65 @@ legend("topright", legend = c("Open", "Shelter"),
 ```
 
 
+
+
+---
+## Comparing with posterior distributions
+
+__Step #4__: Plot the results
+
+```{r, echo = FALSE, fig.align='center', out.width="40%"}
+par(bty = "l", las = 1)
+plot(data$C, data$ratio, col = ifelse(data$Env == "open", "red", "blue"), pch = 19,
+     xlab = "Competition (log)", ylab = "Ratio trap/head", 
+     xlim = range(C_seq), ylim = c(min(data$ratio), max(data$ratio)), 
+     cex = 1.5, cex.lab = 1.5, cex.axis = 1.5)  # Force x and y limits
+
+for(i in 1:nrow(posterior_sim)){
+  points(data$C, posterior_sim[i, 1:nrow(data)],
+         col = c(rep("#FF000020", 28), rep("#0000FF20", 79))
+         )
+}
+
+points(data$C, data$ratio, col = ifelse(data$Env == "open", "red", "blue"))
+
+# Add legend
+legend("topright", legend = c("Open", "Shelter"), 
+       col = c("red", "blue"), lwd = 2, pch = 16)
+
+```
+
+
 ---
 ## What they found
 
-```{r, echo=FALSE, fig.align="center"}
+```{r, echo=FALSE, fig.align="center", out.width="80%"}
 include_graphics("figs/formiga_leao.png")
 ```
 
+
+---
+## Model Selection in the Bayesian Context
+
+__Bayesian model selection is diverse__: Multiple criteria exist
+depending on the goal of inference
+
+
+Bayesian model selection differs from frequentist approaches by incorporating 
+uncertainty in model comparison
+
+Unlike AIC, Bayesian model selection methods often rely on posterior model 
+probabilities, computed using:
+
+- Bayes Factors – Relative support for models via marginal likelihoods
+- WAIC – Fully Bayesian alternative to AIC, penalizing model complexity using 
+posterior variance
+- Cross-validation (LOO-CV) – Estimates predictive performance by testing model
+predictions on held-out data
+- No single best approach – Choice depends on whether the goal is prediction, 
+explanation, or inference
+
+[Hooten and Hobbs 2015](https://esajournals.onlinelibrary.wiley.com/doi/10.1890/14-0661.1)
 
 
 ---
@@ -1375,7 +1456,9 @@ include_graphics("figs/formiga_leao.png")
 
 
 --
-- **LOO-CV**: Best for **prediction**, but computationally expensive  
+- **LOO-CV**: Best for **prediction**, but computationally expensive - __PSIS-LOO __
+(Pareto Smoothed Importance Sampling LOO) provides a computationally efficient 
+approximation to traditional LOO-CV
 
 
 --
@@ -1405,6 +1488,9 @@ include_graphics("figs/formiga_leao.png")
 
 + Hilborn R, Mangel M. 2013. The ecological detective: confronting models with data 
   (MPB-28). Princeton University Press; 2013 Dec 31.
+  
++ Hooten, M.B. and Hobbs, N.T. 2015. A guide to Bayesian model selection for 
+  ecologists. Ecological monographs, 85(1), pp.3-28.
 
 + McElreath, R., 2018. Statistical Rethinking: A Bayesian Course with
   Examples in R and Stan, 2nd ed. CRC Press.
