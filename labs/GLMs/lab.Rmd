@@ -92,6 +92,7 @@ any evidence for gender biases. Let's take a look at that data set.
 
 ```{r UC-Berkeley_visualizing}
 library(tidyverse)
+library(rethinking)
 
 berk_data <- as.data.frame(UCBAdmissions)
 berk_data$Admit <- fct_relevel(berk_data$Admit, "Rejected", "Admitted")
@@ -190,7 +191,7 @@ berk_data_long <-
 # Model 0: Only intercept, overall probability of admission
 m0 <- glm(Admit ~ 1, data = berk_data_long, family = "binomial")
 ## Model summary
-summary(m0)
+precis(m0)
 ```
 
 As you can see in the model summary, this model has estimates a single
@@ -221,7 +222,7 @@ Now let's include the information on gender.
 ```{r UC_Berkeley_m1}
 # Model 1: Effect of Gender on admission
 m1 <- glm(Admit ~ Gender, data = berk_data_long, family = "binomial")
-summary(m1)
+precis(m1)
 ```
 
 Does it seem like there is a gender bias in acceptance rate? 
@@ -262,7 +263,7 @@ Now let' take a closer look and estimate the effect of both gender and departmen
 ```{r UCBerkeley_m2}
 # Model 2: Effect of Gender and Department on Admissions
 m2 <- glm(Admit ~ Gender + Dept, data = berk_data_long, family = "binomial")
-summary(m2)
+precis(m2)
 
 ```
 
@@ -279,7 +280,7 @@ department "F" you can do that:
 ## Men
 m2.pFM <- m2.cf[1] + m2.cf[7]
 ## Women
-m2.pFW <- m2.cf[1] + m2.cf[1]+ m2.cf[7]
+m2.pFW <- m2.cf[1] + m2.cf[2] + m2.cf[7]
 ## Predicted probabilities (inverse logit function)
 ## Men
 exp(m2.pFM) / (1 + exp(m2.pFM))
@@ -376,7 +377,7 @@ mean(subset(berk_data, Admit == "Admitted")$Freq)
 ```{r UC_Berkeley_Poisson_m1}
 # Model 1: Effect of Gender on Admission
 m1_poi <- glm(Freq ~ Admit + Gender, data = berk_data, family = "poisson")
-summary(m1_poi)
+precis(m1_poi)
 
 ```
 And the number of admmited women expected by this model in a single R command:
@@ -393,7 +394,7 @@ exp(sum(m1_poi$coefficients[1:3]))
 ```{r UC_Berkeley_Poisson_m2}
 # Model 2: Effect of Gender and Department on Admission
 m2_poi <- glm(Freq ~ Admit + Gender + Dept, family=poisson(), data = berk_data)
-summary(m2_poi)
+precis(m2_poi)
 ```
 
 Now you can explore the expected number of admitted students by gender and 
