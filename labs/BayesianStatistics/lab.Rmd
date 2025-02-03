@@ -403,16 +403,16 @@ compare(fit_m1, fit_m2, fit_m3, fit_m4, fit_m5, func = WAIC)
 
 This is class of mixture models that attempt to figure out which variables are important for prediction and which are not. The idea is to use a prior that is very skeptical about the importance of the variables, and then let the data tell us which variables are important. This is a form of _automatic variable selection_, and is a very powerful tool. Important variables should get non-zero estimates, while other variables should get estimates close to zero. This is an extreme form of _shrinkage_, where the estimates are pulled towards zero. 
 
-Several methods exist to implement this idea, such as the LASSO, Ridge regression, and Elastic Net. Here, we will use a Bayesian version, called the _horseshoe prior_. This prior is defined as:
+Several methods exist to implement this idea, such as the LASSO, Ridge regression, and Elastic Net. Here, we will use a Bayesian version, called the _horseshoe prior_. For a (potentially large) set of $p$ predictors $\{x_1, x_2, \cdots, x_p\}$, this prior is defined as:
 
 \[
   \begin{aligned}
-  y &\sim Normal(\mu, \sigma) \\
+  y &\sim \text{Normal}(\mu, \sigma) \\
   \mu &= \alpha + \sum_{j=1}^p \beta_j x_j \\
-  \alpha &\sim Normal(0, 1) \\
-  \beta_j &\sim Normal(0, \lambda_j \tau) \\
-  \lambda_j &\sim Cauchy(0, 1) \\
-  \tau &\sim dexp(1)
+  \alpha &\sim \text{Normal}(0, 1) \\
+  \beta_j &\sim \text{Normal}(0, \lambda_j \tau) \\
+  \lambda_j &\sim \text{Cauchy}^+(0, 1) \\
+  \tau &\sim \text{Cauchy}^+(0, \tau_0) 
   \end{aligned}
 \]
 
@@ -427,7 +427,9 @@ library(bayesplot)
 library(ggplot2)
 m_horseshoe = stan_glm(y ~ x1 + x2 + z1 + z2 + z3, data = d, 
           prior = hs(global_scale = (2/3)/10), 
-          prior_intercept = normal(0, 1), chains = 4, cores = 4, iter = 2000)
+          prior_intercept = normal(0, 1), 
+          chains = 4, cores = 4, iter = 2000)
+          
 mcmc_intervals(m_horseshoe) +  
   geom_point(data = data.frame(y = c(2:6), x = c(0, 0, 0, -0.4, 0.15)), 
              col =  "red", aes(y = y, x = x)) 
