@@ -33,6 +33,8 @@ navbar:
           href: labs/GLMs/lab.html
         - text: "Bayesian statistics and model comparison"
           href: labs/BayesianStatistics/lab.html
+        - text: "Causal Thinking"
+          href: labs/CausalThinking/lab.html
     - text: "About us"
       href: about.html
     - icon: fa fa-github
