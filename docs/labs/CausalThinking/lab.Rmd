@@ -369,9 +369,11 @@ plot(precis(mFull, prob = 0.95))
 abline(v = 1, col = 2)
 ```
 
-**Challenge**: What if B was unobserved? How would you estimate the effect of X on Y in this case?
+**Challenge**: What if B was unobserved? How would you estimate the effect of X on Y in this case? Think about how we can still use this model even if one of the variables is unobserved.
 
 ```{r, eval=FALSE }
 # Make B unobserved
 df_noB = data.frame(X, Y, W, A, Z)
 ```
+
+**Extra reading**: The [brms package](https://paulbuerkner.com/brms/) can handle [missing data imputation](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html) on the fly, simultaneously fitting the model parameters and estimating the missing values. 

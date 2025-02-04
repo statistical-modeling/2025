@@ -2715,13 +2715,14 @@ interface</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref">
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="fl">1</span>, col <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre>
 </div>
 </div>
-<p><strong>Challenge</strong>: What if B was unobserved? How would you estimate the effect of X on Y in this case?</p>
+<p><strong>Challenge</strong>: What if B was unobserved? How would you estimate the effect of X on Y in this case? Think about how we can still use this model even if one of the variables is unobserved.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class="co"># Make B unobserved</span></span>
 <span><span class="va">df_noB</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, <span class="va">W</span>, <span class="va">A</span>, <span class="va">Z</span><span class="op">)</span></span></code></pre>
 </div>
 </div>
+<p><strong>Extra reading</strong>: The <a href="https://paulbuerkner.com/brms/">brms package</a> can handle <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html">missing data imputation</a> on the fly, simultaneously fitting the model parameters and estimating the missing values.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
