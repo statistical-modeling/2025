@@ -35,6 +35,8 @@ navbar:
           href: labs/BayesianStatistics/lab.html
         - text: "Causal Thinking"
           href: labs/CausalThinking/lab.html
+        - text: "Mixed and hierarchical models"
+          href: labs/MixedModels/lab.html
     - text: "About us"
       href: about.html
     - icon: fa fa-github
