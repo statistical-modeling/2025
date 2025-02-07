@@ -93,7 +93,7 @@ p2 <-
 p2
 ```
 
-In the following sections we will fit and compare three alternative
+In the following sections, we will fit and compare three alternative
 models to this data, assuming that the response follows a Gaussian
 distribution:
 
@@ -113,8 +113,8 @@ richness, and $x_i$ is the standardized value of the logarithm of
 island area, for each island $i$
 
 **Independent slopes and intercepts for each site:** this model
-corresponds to fit a separate linear regression for each archipelago
-(study site). Thus, there is a independent intercept and slope for the
+corresponds to fitting a separate linear regression for each archipelago
+(study site). Thus, there is an independent intercept and slope for the
 linear predictor at each site:
 
 $$
@@ -129,9 +129,9 @@ intercept and slope for the site of the observation $i$.
 
 **Pooled slopes and intercepts across sites:** there is a different
 slope and intercept for the linear predictor for each site, but pooled
-in a assumed distribution. This is an hierarchical model, where slopes
-and intercepts for each site follow each one some theoretical
-distribution, usually a Gaussian distribution.
+in an assumed distribution. This is a hierarchical model, where slopes
+and intercepts for each site follow some probability
+distribution, usually Gaussian distributions.
 
 $$
 \begin{aligned}
@@ -142,11 +142,17 @@ $$
 \end{aligned}
 $$
 
-By pooling the parameters in the same distribution we assume that
+By pooling the parameters in the same distribution, we assume that
 there is some dependence among them.
 
-In the next sections we will show how to fit and compare these three
+In the next sections, we will show how to fit and compare these three
 models using the Bayesian and Maximum Likelihood approaches.
+
+To recap, the 3 models are:
+
+1. m0: Single slope and intercept (complete pooling)
+2. m1: Different slopes and intercepts for each site (no pooling)
+3. m2: Pooled slopes and intercepts across sites (partial pooling)
 
 ## The Bayesian way
 
@@ -160,8 +166,8 @@ each island, as shown in the first lines of the data set below:
 head(islands[, c("ls_area", "lc_S")])
 ```
 
-We need also to define prior distributions for the three parameters of the
-model. Here we use a log-normal prior for the slope, as we know that
+We need to define prior distributions for the three parameters of the
+model. Here, we use a log-normal prior for the slope, as we know that
 the species-area relationship is positive. The chosen log-normal prior assigns a
 low probability (p<0.05) to slopes larger than 1.5. The priors for the
 intercept and standard deviation are less informative:
@@ -186,11 +192,11 @@ m0 <- ulam(
         alpha ~ dnorm(0, 2),
         beta ~ dlnorm(0, 0.7), 
         sigma ~ dexp(1)
-    ) , data = islands[, c("ls_area", "lc_S")] , chains=4 , cores=4 , log_lik=TRUE )
+    ) , data = islands[, c("ls_area", "lc_S")] , chains=4 , cores=4 , log_lik=TRUE ) # we add the log_lik argument to get the 
+                   # log-likelihood per observation and do model comparison
 ```
 
 You get a summary of the posterior distributions of the parameters with:
-
 
 ```{r }
 (m0.cf <- precis(m0, digits =3))
@@ -199,20 +205,19 @@ You get a summary of the posterior distributions of the parameters with:
 And we can use the mean of the posterior distributions of the intercept
 and slope to draw the regression line on the data for each site:
 
-
 ```{r }
 p2 +
     geom_abline(aes(intercept = m0.cf["alpha", 1], slope = m0.cf["beta",1]))
 ```
 
-Assuming the same regression line for every site is a huge
-underfitting.
+Assuming the same regression line for every site is greatly
+underfitting the data, we need a more complex model.
 
 ### Different slopes and intercepts for each site
 
-Clearly we need a model with more parameters to describe the
+Clearly, we need a model with more parameters to describe the
 variations of the species-area relationship we see across study
-sites. Thus, we can try to allow different intercepts and slopes for
+sites. Thus, we can try allowing different intercepts and slopes for
 each of the sites. Now we will need a third variable, a numeric index
 that codes the site:
 
@@ -239,12 +244,11 @@ $$
 \end{aligned}
 $$
 
-For all intercepts and slopes we choose the same priors used for the
+For all intercepts and slopes, we choose the same priors used for the
 single intercept and slope of the previous model. We also kept the
-same prior for single parameter $\sigma$ .
+same prior for single parameter $\sigma$, the residual standard deviation.
 
 We can fit this model with:
-
 
 ```{r }
 m1 <- ulam(
@@ -269,7 +273,7 @@ for each site as columns of a data frame, and adds the site name for
 each one. We can then use this data frame to add the regression lines
  to the scatter plots for each site:
  
- 
+
 ```{r }
 nsites <- max(islands$site)
 ## Data frame with linear parameters and site name
@@ -286,12 +290,11 @@ p2 +
 ```
 
 As we would expect, the fit improved very much, but at the cost of
-adding 34 parameters to the model. We
-switched from underfitting to a possible overfitting. 
+adding 34 parameters to the model. We switched from underfitting to possible overfitting. 
 
 ### Pooled intercepts and slopes
 
-A  possible middle-ground is to
+A possible middle-ground is to
 allow varying parameters across sites, but pooling them in a
 distribution. Thus, now we have **hyperparameters**, which are the
 parameters of the distributions of the parameters of the linear
@@ -325,8 +328,8 @@ m2 <- ulam(
         ##prior
         sigma ~ dexp(1),
         ## hyper-priors
-        mu_a ~ dnorm(0, 2),
-        mu_b~ dlnorm(0, 0.7),
+        mu_a ~ dnorm(0, 2),   # prior for the mean intercept
+        mu_b ~ dlnorm(0, 0.7),# prior for the mean slope
         sigma_a ~ dexp(1),
         sigma_b ~ dexp(0.25)
     ) , data = islands[, c("ls_area", "lc_S", "site")] , chains=4 , cores=4 , log_lik=TRUE )
@@ -348,7 +351,7 @@ m2.ab <- data.frame(
     slope = m2.cf[(nsites+1):(2*nsites),1])
 ```
 
-And them we can add the regression lines of this model and the of the
+And then, we can add the regression lines of this model and the of the
 previous one to the scatter plots:
 
 
@@ -362,7 +365,7 @@ p2 +
                 col="red")
 ```
 
-Pooled slopes (red lines) are less variable, because the fit to each
+Pooled slopes (red lines) are less variable because the fit to each
 site uses information from the other sites. Thus, the parameters
 shrink towards a common mean:
 
@@ -394,16 +397,15 @@ This model assumes a normal distribution for the slopes of the
 regression, which is the parameter of interest in an analysis of
 species-area relationships. 
 
-How variable would be these slopes among archipelagoes, if our model
+How variable would these slopes among archipelagoes be, assuming our model
 provides a good prediction? We can assess this by simulating the
-posterior distributions of the slopes. To do that, we first take 
+posterior distributions of the slopes. To achieve this, we first take 
 samples from the posterior distributions of the mean and standard
 deviations of the normal that describe the distribution of slopes. To
 simulate an archipelago taken at random, we then simulate a sample,
 from a normal using these parameters. By repeating this many times we
 can approximate the posterior distribution of the slopes. For
-reference, we added also the prior distributions of this slopes used
-in the fit:
+reference, we also added the prior distributions of the slopes:
 
 ```{r }
 ## Sample posteriors of mean and standard deviation of slope distributions
@@ -545,14 +547,14 @@ regression with categorical variables like that in R is
 $$mu_i = \alpha_0 + \alpha_{site[i]} + (\beta_0 + \beta_{site[i]}) \, \text{ls_area}$$
 
 Where $\alpha_0$ is the intercept for the first level of the
-categorical variable (the site coded as #1), $\beta_0$ is the slope
-also for the first level of the categorical variable. And thus
+categorical variable (the site coded as #1), $\beta_0$ is also the slope
+for the first level of the categorical variable. And thus
 $\alpha_{site[i]}$ are the **differences between intercepts** for
 observations at the level 1 of the categorical predictor and level
 $i$. In the same way, $\beta_{site[i]}$ are the differences between
 the slopes for level 1 and level $i$.
 
-Therefore, in our model the coefficients labeled as *"(Intercept)"*
+Therefore, in our model, the coefficients labeled as *"(Intercept)"*
 and *"ls_area"* are the intercept and slopes estimated for the study
 site 1. You can get the estimates of intercepts for sites 2 to 18 with:
 
@@ -671,7 +673,7 @@ p2 +
                 col="red")
 ```
 
-**Questions:** why the lines do not match exactly? Why some match more than others?
+**Questions:** why do the lines not match exactly? Why do some match more than others?
 
 ### Model comparison
 
@@ -681,7 +683,7 @@ Use the `bbmle::AICctab` function to build a model selection table using AIC cor
 ```{r }
 AICctab(m0.ML, m1.ML, m2.ML, nobs=nrow(islands))
 ```
-According to this model selection, fitting independent intercepts and slopes is definitely overfitting. Without priors, the model with independent intercepts overfits the data, and the model with partially-pooled intercepts and slopes is the best model.
+According to this model selection, fitting independent intercepts and slopes is definitely overfitting. Without priors, the model with independent intercepts overfits the data, and the model with partially pooled intercepts and slopes is the best model.
 
 
 # References
