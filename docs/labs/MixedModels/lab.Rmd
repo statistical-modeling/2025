@@ -4,6 +4,9 @@ author:
  - "Paulo Inácio Prado"
  - "Diogo Melo"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
+
+
+
 output:
     distill::distill_article:
       toc: true
