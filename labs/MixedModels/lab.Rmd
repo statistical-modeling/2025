@@ -3,9 +3,7 @@ title: "Mixed-effects and hierarchical models lab"
 author:
  - "Paulo Inácio Prado"
  - "Diogo Melo"
-date:  "`r format(Sys.time(), '%d %B, %Y')`"
-
-
+date: "07 February, 2025"
 
 output:
     distill::distill_article:
