@@ -3,7 +3,7 @@ title: "Mixed-effects and hierarchical models lab"
 author:
  - "Paulo Inácio Prado"
  - "Diogo Melo"
-date: "2024-02-09"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
     distill::distill_article:
       toc: true
@@ -24,33 +24,6 @@ htmltools::tagList(
   )
 ```
 
-
--<!-- 
-Tadpoles rethinkg: proporcoes de sobrevivencia, sem random intercept e com random intercept: shrinkage de estimativas pooled e non-pooled. Usar lme4:glmer . Ver graficos shrinkage do Rethinking
-desafio : alguma interpretação do efeito do tamanho do tanque sobre o shrikage
-
-https://blogs.rstudio.com/ai/posts/2019-05-06-tadpoles-on-tensorflow/
-https://github.com/waldronlab/Statistical-Rethinking/blob/master/2018-05-23%20Multilevel%20Models.Rpres=
-
-
-Especie-area de varios arquipélagos: modelo logS x logA com slopes variados, com e sem efeito fixo do tipo de arquipélago. começar mostrando as regressões para cada arquipélago. Usar quap
-
-Notação: ver slides Ogro
-
-The commands below uses [tidyverse](https://www.tidyverse.org/) syntax
-to select only data for insular systems^[that is, excludes data for
-"islands" thata are actually habitat patches], and archipelagoes with
-at least five islands. After that, we calculate the logarithms of the
-area and number of species of each island, and then standardize the
-logarithm of areas^[by subtracting the mean of log area from each
-value and then by dividing by the standard deviation of the value of
-log area], and center the logarithm of number of species^[by
-subtracting the mean of log species richness from each value]. The
-code also creates a numeric index for each study site (archipelago).
-
--->
-
-
 # Introduction
 
 
@@ -64,7 +37,7 @@ Start loading the required libraries and the data (which is
 available in the supplementary material in Ohyama *et al.* 2021):
 
 
-```{r}
+```{r, eval =TRUE}
 ## load required libraries
 library(tidyverse)
 library(rethinking)
@@ -310,7 +283,7 @@ p2 +
 ```
 
 As we would expect, the fit improved very much, but at the cost of
-adding `r nrow(m1.cf) - nrow(m0.cf)` parameters to the model. We
+adding 34 parameters to the model. We
 switched from underfitting to a possible overfitting. 
 
 ### Pooled intercepts and slopes
@@ -457,12 +430,17 @@ predictive information (or with the smaller loss of information of the
 data-generating process) has the smaller value of WAIC:
 
 ```{r }
-compare(m0, m1, m2)
+(comp = compare(m0, m1, m2))
+
+# Or plot the comparison:
+plot(comp)
 ```
 
-The WAIC tells us that the model with polled intercepts and slopes is
-as good to predict future observations as the model with independent
-slopes and intercepts. This suggests that the former may be overfitted.
+In the WAIC plot, the filled black circle is the in-sample Deviance (a measure of model-fit to the data) the unfilled circle is the WAIC value, an estimate of the out-of-sample predictive performance of the model (which considers model complexity and parameter uncertainty), and the unfilled triangles are the posterior distribution of the difference in WAIC between the models. This distribution of WAIC differences is a major advantage of WAIC over AIC, because it provides a much more principled way of comparing WAIC values.
+
+The WAIC tells us that the model with partially-polled intercepts and slopes is
+about as good at predicting future observations as the model with independent
+slopes and intercepts. This suggests that the latter may be mildly overfitted, but our carefully chosen priors for the slopes and intercepts of the model with independent slopes and intercepts have helped to avoid overfitting. One advantage of the model with partially-pooled slopes and intercepts is that this prior choice is done for us, and the effective number of parameters is actually smaller.
 
 
 ## The maximum likelihood way
@@ -573,7 +551,7 @@ the slopes for level 1 and level $i$.
 
 Therefore, in our model the coefficients labeled as *"(Intercept)"*
 and *"ls_area"* are the intercept and slopes estimated for the study
-site 1. You can get the estimates of intercepts for sites 2 to `r nsites` with:
+site 1. You can get the estimates of intercepts for sites 2 to 18 with:
 
 
 ```{r }
@@ -700,7 +678,7 @@ Use the `bbmle::AICctab` function to build a model selection table using AIC cor
 ```{r }
 AICctab(m0.ML, m1.ML, m2.ML, nobs=nrow(islands))
 ```
-According to this model selection, fitting independent intercepts and slopes is definitely overfitting.
+According to this model selection, fitting independent intercepts and slopes is definitely overfitting. Without priors, the model with independent intercepts overfits the data, and the model with partially-pooled intercepts and slopes is the best model.
 
 
 # References
