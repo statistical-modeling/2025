@@ -1,0 +1,35 @@
+---
+title: "Course wrap-up"
+description: "A wrap-up of the full course"
+author:
+  - name: Sara Mortara & Diogo Melo
+    url: 
+    affiliation: 
+    affiliation_url: 
+date: "2025-02-07"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+# Slides
+
+```{r slides}
+#| eval: true
+xaringanExtra::embed_xaringan("10_wrapup/slides.html")
+```
+
+[Open slides in new window](09_mixed_models/slides.html)
+
+[Slides PDF](10_wrapup/wrapup.pdf)
+
+# Further reading
+
+* Hilborn, R. & Mangel, M. The Ecological Detective. (Princeton University Press, Princeton, NJ, 2013). doi:10.1515/9781400847310.
+  
+* McElreath, R. Statistical Rethinking: A Bayesian Course with Examples in R and Stan. (Chapman and Hall/CRC, 2018).
+
+* Bolker, B. M. Ecological Models and Data in R. (Princeton University Press, Princeton, NJ, 2008).
+
+* Pearl, J., Glymour, M. & Jewell, N. P. Causal Inference in Statistics: A Primer. (John Wiley & Sons, 2016).

@@ -25,6 +25,8 @@ navbar:
           href: 08_causal_thinking.html
         - text: "Mixed and hierarchical models"
           href: 09_mixed_and_hierarchical_models.html
+        - text: "Course Wrap-up"
+          href: 10_wrapup.html
     - text: "Computer Labs"
       menu:
         - text: "Linear Models"
